@@ -89,20 +89,20 @@
     <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
   </footer>
 
-  <!-- Externe Skripte (mit defer) -->
+  <!-- Externe Skripte in der richtigen Reihenfolge -->
   <!-- React & ReactDOM -->
-  <script src="https://unpkg.com/react@17/umd/react.production.min.js" defer></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" defer></script>
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
   
-  <!-- Ethers.js (verwende jsDelivr für eine stabile Version) -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" defer></script>
+  <!-- Ethers.js (Version 5.7.2) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   
   <!-- Uniswap Widget UMD-Bundle (Version 0.2.8) -->
-  <script src="https://unpkg.com/@uniswap/widgets@0.2.8/dist/widgets.umd.js" defer></script>
+  <script src="https://unpkg.com/@uniswap/widgets@0.2.8/dist/widgets.umd.js"></script>
 
-  <!-- Haupt-Skript -->
-  <script defer>
-    window.addEventListener("DOMContentLoaded", async () => {
+  <!-- Haupt-Skript, das das Widget rendert -->
+  <script>
+    (async () => {
       // Debug-Ausgabe: Prüfen, ob UniswapWidgets verfügbar ist
       console.log("UniswapWidgets:", window.UniswapWidgets);
       if (typeof window.UniswapWidgets === 'undefined') {
@@ -111,7 +111,7 @@
         return;
       }
 
-      // Prüfen, ob MetaMask (oder ein anderes Ethereum-Wallet) verfügbar ist
+      // Prüfen, ob MetaMask oder ein anderes Ethereum-Wallet vorhanden ist
       if (typeof window.ethereum === 'undefined') {
         document.getElementById('uniswap-widget').innerHTML =
           '<p>Keine Wallet gefunden. Bitte MetaMask installieren oder aktivieren.</p>';
@@ -145,7 +145,7 @@
         }),
         document.getElementById('uniswap-widget')
       );
-    });
+    })();
   </script>
 </body>
 </html>
