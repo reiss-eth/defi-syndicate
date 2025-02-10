@@ -8,7 +8,8 @@
   <!-- Google Font: Orbitron -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
 
-  <!-- Hinweis: Den Link zu fonts.css von Uniswap entfernen, da er in der aktuellen Version nicht vorhanden ist -->
+  <!-- Uniswap Widget Fonts CSS (Version 0.2.8) -->
+  <link rel="stylesheet" href="https://unpkg.com/@uniswap/widgets@0.2.8/dist/fonts.css" />
 
   <style>
     * {
@@ -88,41 +89,41 @@
     <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
   </footer>
 
-  <!-- Externe Skripte – bitte in dieser Reihenfolge laden -->
+  <!-- Externe Skripte (mit defer) -->
   <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@17/umd/react.production.min.js" defer></script>
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" defer></script>
   
-  <!-- Ethers.js: Verwende hier den jsDelivr-Link für eine stabile Version -->
+  <!-- Ethers.js (verwende jsDelivr für eine stabile Version) -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" defer></script>
   
-  <!-- Uniswap Widget UMD-Bundle in Version 2.59.0 -->
-  <script src="https://unpkg.com/@uniswap/widgets@2.59.0/dist/widgets.umd.js" defer></script>
+  <!-- Uniswap Widget UMD-Bundle (Version 0.2.8) -->
+  <script src="https://unpkg.com/@uniswap/widgets@0.2.8/dist/widgets.umd.js" defer></script>
 
-  <!-- Haupt-Skript – es wird erst ausgeführt, wenn alle externen Skripte geladen sind -->
+  <!-- Haupt-Skript -->
   <script defer>
     window.addEventListener("DOMContentLoaded", async () => {
-      // Debug: Ausgabe des globalen UniswapWidgets-Objekts
+      // Debug-Ausgabe: Prüfen, ob UniswapWidgets verfügbar ist
       console.log("UniswapWidgets:", window.UniswapWidgets);
       if (typeof window.UniswapWidgets === 'undefined') {
         console.error("UniswapWidgets ist nicht definiert.");
         document.getElementById('uniswap-widget').innerHTML = '<p>Fehler: UniswapWidgets ist nicht verfügbar.</p>';
         return;
       }
-      
-      // Prüfen, ob eine Wallet (z. B. MetaMask) verfügbar ist
+
+      // Prüfen, ob MetaMask (oder ein anderes Ethereum-Wallet) verfügbar ist
       if (typeof window.ethereum === 'undefined') {
         document.getElementById('uniswap-widget').innerHTML =
           '<p>Keine Wallet gefunden. Bitte MetaMask installieren oder aktivieren.</p>';
         return;
       }
-      
+
       // Zugriff auf die Wallet anfordern
       await window.ethereum.request({ method: 'eth_requestAccounts' });
-      
+
       // Ethers-Provider erstellen
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      
+
       // Benutzerdefiniertes Farb-Theme (Rot/Schwarz/Grau)
       const customTheme = {
         accent: '#ff3b3b',      // Haupt-Akzentfarbe (Rot)
@@ -132,7 +133,7 @@
         interactive: '#ff3b3b', // Hover-/Fokus-Farbe
         fontFamily: 'Orbitron, sans-serif',
       };
-      
+
       // Uniswap Swap Widget rendern
       ReactDOM.render(
         React.createElement(window.UniswapWidgets.SwapWidget, {
