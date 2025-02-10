@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proof of Burn - DeFi Syndicate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
+            padding: 40px;
+        }
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .logo {
+            max-width: 150px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #2a2a2a;
+            color: white;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #ff3b3b;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #e63232;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            
+            let name = document.getElementById('name').value;
+            let phone = document.getElementById('phone').value;
+            let wallet = document.getElementById('wallet').value;
+            let txHash = document.getElementById('txHash').value;
+            
+            let nameRegex = /^[A-Za-z ]+$/;
+            let phoneRegex = /^[0-9]{8,15}$/;
+            let walletRegex = /^0x[a-fA-F0-9]{40}$/;
+            let txHashRegex = /^0x[a-fA-F0-9]{64}$/;
+            
+            if (!nameRegex.test(name)) {
+                alert('Bitte nur Buchstaben im Namen verwenden.');
+                return false;
+            }
+            if (!phoneRegex.test(phone)) {
+                alert('Bitte eine gültige Telefonnummer eingeben (8-15 Ziffern).');
+                return false;
+            }
+            if (!walletRegex.test(wallet)) {
+                alert('Bitte eine gültige Wallet-Adresse eingeben.');
+                return false;
+            }
+            if (!txHashRegex.test(txHash)) {
+                alert('Bitte eine gültige Transaktions-Hash eingeben.');
+                return false;
+            }
+            
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('phone', phone);
+            formData.append('wallet', wallet);
+            formData.append('txHash', txHash);
+            
+            fetch('send_email.php', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text()).then(data => {
+                alert(data);
+            }).catch(error => {
+                alert('Fehler beim Senden der E-Mail.');
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logo">
+    </header>
+    <div class="container">
+        <h1>Proof of Burn</h1>
+        <form onsubmit="validateForm(event)">
+            <label for="name">Vor- und Nachname</label>
+            <input type="text" id="name" required>
+            
+            <label for="phone">WhatsApp-Nummer</label>
+            <input type="text" id="phone" required>
+            
+            <label for="wallet">Wallet-Adresse</label>
+            <input type="text" id="wallet" required>
+            
+            <label for="txHash">Transaktions-Hash</label>
+            <input type="text" id="txHash" required>
+            
+            <button type="submit" class="button">Senden</button>
+        </form>
+    </div>
+    <a href="index.html" class="button">Zurück zur Startseite</a>
+    <footer>
+        <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logo">
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
+    </footer>
+</body>
+</html>
