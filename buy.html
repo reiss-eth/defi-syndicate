@@ -78,7 +78,7 @@
   </header>
 
   <div class="container">
-    <!-- Uniswap Swap Widget (React) -->
+    <!-- Hier wird das Uniswap Swap Widget eingebunden -->
     <div id="uniswap-widget"></div>
     <br />
     <a href="dfs.html" class="button">Zurück</a>
@@ -89,7 +89,7 @@
     <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
   </footer>
 
-  <!-- Externe Skripte in der richtigen Reihenfolge -->
+  <!-- Externe Skripte – in dieser Reihenfolge (ohne defer, damit sie synchron geladen werden) -->
   <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
@@ -99,31 +99,32 @@
   
   <!-- Uniswap Widget UMD-Bundle (Version 0.2.8) -->
   <script src="https://unpkg.com/@uniswap/widgets@0.2.8/dist/widgets.umd.js"></script>
-
-  <!-- Haupt-Skript, das das Widget rendert -->
+  
+  <!-- Unser Haupt-Skript, das das Widget rendert -->
   <script>
     (async () => {
-      // Debug-Ausgabe: Prüfen, ob UniswapWidgets verfügbar ist
+      // Debug-Ausgabe: Prüfe, ob die globale Variable vorhanden ist
       console.log("UniswapWidgets:", window.UniswapWidgets);
       if (typeof window.UniswapWidgets === 'undefined') {
         console.error("UniswapWidgets ist nicht definiert.");
-        document.getElementById('uniswap-widget').innerHTML = '<p>Fehler: UniswapWidgets ist nicht verfügbar.</p>';
+        document.getElementById('uniswap-widget').innerHTML =
+          '<p>Fehler: UniswapWidgets ist nicht verfügbar.</p>';
         return;
       }
-
-      // Prüfen, ob MetaMask oder ein anderes Ethereum-Wallet vorhanden ist
+      
+      // Prüfen, ob MetaMask bzw. ein Ethereum-Wallet verfügbar ist
       if (typeof window.ethereum === 'undefined') {
         document.getElementById('uniswap-widget').innerHTML =
           '<p>Keine Wallet gefunden. Bitte MetaMask installieren oder aktivieren.</p>';
         return;
       }
-
+      
       // Zugriff auf die Wallet anfordern
       await window.ethereum.request({ method: 'eth_requestAccounts' });
-
+      
       // Ethers-Provider erstellen
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-
+      
       // Benutzerdefiniertes Farb-Theme (Rot/Schwarz/Grau)
       const customTheme = {
         accent: '#ff3b3b',      // Haupt-Akzentfarbe (Rot)
@@ -133,8 +134,8 @@
         interactive: '#ff3b3b', // Hover-/Fokus-Farbe
         fontFamily: 'Orbitron, sans-serif',
       };
-
-      // Uniswap Swap Widget rendern
+      
+      // Widget rendern: Es wird der SwapWidget von UniswapWidgets verwendet
       ReactDOM.render(
         React.createElement(window.UniswapWidgets.SwapWidget, {
           provider: provider,
