@@ -1,443 +1,95 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DeFi & Tokenisierung | Daniel Reiss</title>
-
-  <!-- Google Fonts Beispiel -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Open+Sans:wght@300;400;700&display=swap" 
-    rel="stylesheet">
-  
-  <!-- AOS CSS -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
-    integrity="sha512-Ho7Iyy9cPcqAHbBWfDw2qE2F02SxAM7lSNfPn6HW9P6z3Ow7VsiRmivpCSU0bHG3PO5BBvYoxZ8iqDu+SmEEDQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-
-  <style>
-    :root {
-      --main-bg: #0E2A47;       /* Dunkles Blau */
-      --accent: #00FFC8;       /* Türkis/Neon-Grün */
-      --light-bg: #F7F7F7;     /* Helles Grau/Weiß */
-      --text-color: #333333;   /* Standard Textfarbe */
-      --font-headline: 'Orbitron', sans-serif;
-      --font-body: 'Open Sans', sans-serif;
-    }
-
-    * {
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-body);
-      background-color: var(--light-bg);
-      color: var(--text-color);
-      line-height: 1.6;
-      scroll-behavior: smooth; /* Sanfter Scroll */
-    }
-
-    header {
-      background-color: var(--main-bg);
-      color: #fff;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 999; /* Header bleibt beim Scrollen oben kleben */
-    }
-
-    header h1 {
-      font-family: var(--font-headline);
-      font-size: 1.8rem;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s;
-    }
-
-    nav a:hover {
-      color: var(--accent);
-    }
-
-    /* Social Icons */
-    .social-icons {
-      display: flex;
-      gap: 1rem;
-      margin-left: 2rem;
-    }
-
-    .social-icons a {
-      color: #fff;
-      font-size: 1.2rem;
-      transition: color 0.3s, transform 0.3s;
-    }
-
-    .social-icons a:hover {
-      color: var(--accent);
-      transform: scale(1.1);
-    }
-
-    /* Hero Section */
-    .hero {
-      height: 100vh;
-      background: url('https://via.placeholder.com/1600x900') center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: #fff;
-      position: relative;
-      background-attachment: fixed; /* Parallax-Effekt */
-    }
-
-    .hero-overlay {
-      position: absolute;
-      top: 0; 
-      left: 0; 
-      right: 0; 
-      bottom: 0;
-      background: rgba(14, 42, 71, 0.7); /* leichtes Overlay */
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-content h2 {
-      font-family: var(--font-headline);
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .hero-content p {
-      font-size: 1.2rem;
-      max-width: 600px;
-      margin: 0 auto 2rem;
-    }
-
-    .btn {
-      background-color: var(--accent);
-      padding: 0.75rem 1.5rem;
-      color: #000;
-      font-weight: 700;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.3s, transform 0.3s;
-      display: inline-block;
-    }
-
-    .btn:hover {
-      background-color: #00e6b0;
-      transform: translateY(-2px);
-    }
-
-    /* Allgemeine Section Styles */
-    section {
-      padding: 3rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Über mich */
-    .about {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .about img {
-      width: 300px;
-      border-radius: 10px;
-      object-fit: cover;
-      transition: transform 0.3s;
-    }
-
-    .about img:hover {
-      transform: scale(1.05);
-    }
-
-    .about-text {
-      flex: 1;
-    }
-
-    .about-text h3 {
-      font-family: var(--font-headline);
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    /* Services / Mastermind */
-    #services h3 {
-      text-align: center; 
-      font-family: var(--font-headline); 
-      font-size: 2rem; 
-      margin-bottom:2rem;
-    }
-
-    .services {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      text-align: center;
-    }
-
-    .service-box {
-      background: #fff;
-      padding: 2rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .service-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 15px rgba(0,0,0,0.15);
-    }
-
-    .service-box h4 {
-      font-family: var(--font-headline);
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-    }
-
-    /* Community */
-    #community h3 {
-      text-align:center; 
-      font-family: var(--font-headline); 
-      font-size: 2rem; 
-      margin-bottom:2rem;
-    }
-
-    /* Kontakt */
-    #contact h3 {
-      text-align:center; 
-      font-family: var(--font-headline); 
-      font-size: 2rem; 
-      margin-bottom:2rem;
-    }
-
-    #contact p {
-      text-align:center; 
-      max-width: 600px; 
-      margin: 0 auto 2rem;
-    }
-
-    #contact form {
-      max-width: 600px; 
-      margin: 0 auto;
-    }
-
-    #contact label {
-      font-weight: 600;
-    }
-
-    #contact input, #contact textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-family: var(--font-body);
-    }
-
-    /* Footer */
-    footer {
-      background-color: var(--main-bg);
-      color: #fff;
-      padding: 2rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    footer p, footer a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0.2rem 0;
-    }
-
-    footer a:hover {
-      color: var(--accent);
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Syndicate</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: white;
+            text-align: center;
+        }
+        header {
+            background: linear-gradient(135deg, #700000, #333);
+            padding: 40px;
+            font-size: 28px;
+            font-weight: bold;
+            position: relative;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #8b0000;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            border-radius: 5px;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .button:hover {
+            background: #b30000;
+            transform: scale(1.1);
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #333, #700000);
+            box-shadow: 0px -5px 15px rgba(255, 0, 0, 0.3);
+        }
+        .logo {
+            max-width: 200px;
+            margin: 20px auto;
+            transition: transform 0.5s;
+        }
+        .logo:hover {
+            transform: rotate(10deg) scale(1.1);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Header / Navigation -->
-  <header>
-    <h1>DeFi & Tokenisierung</h1>
-    <nav>
-      <ul>
-        <li><a href="#home">Start</a></li>
-        <li><a href="#about">Über mich</a></li>
-        <li><a href="#services">Leistungen</a></li>
-        <li><a href="#community">Community</a></li>
-        <li><a href="#contact">Kontakt</a></li>
-      </ul>
-    </nav>
-    <!-- Social Icons -->
-    <div class="social-icons">
-      <a href="https://www.instagram.com/deinprofil" target="_blank" rel="noopener">
-        <i class="fab fa-instagram"></i>
-      </a>
-      <a href="https://www.linkedin.com/in/deinprofil" target="_blank" rel="noopener">
-        <i class="fab fa-linkedin"></i>
-      </a>
-      <a href="https://wa.me/deineNummer" target="_blank" rel="noopener">
-        <i class="fab fa-whatsapp"></i>
-      </a>
+    <header>
+        <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logo fade-in">
+    </header>
+    <div class="container fade-in">
+        <h1>Willkommen bei DeFi Syndicate</h1>
+        <p>Die dezentrale Community für Wissen, Wachstum und finanzielle Freiheit durch DeFi.</p>
+        <h2>Unsere Mission</h2>
+        <p>Wir bauen eine starke, unabhängige Gemeinschaft auf, in der jeder profitieren kann. Kein Verkaufsdruck, keine zentrale Kontrolle – nur echtes DeFi-Wissen.</p>
+        <h2>Trete unserer Community bei</h2>
+        <p>Diskutiere mit anderen Mitgliedern, teile dein Wissen und erfahre mehr über unsere exklusiven Inhalte.</p>
+        <a href="https://chat.whatsapp.com/Fpeg56eSE4eFu9Ete2BC83" class="button">Jetzt beitreten</a>
     </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero" id="home" data-aos="fade-in" data-aos-duration="1200">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h2>Dezentral. Frei. Innovativ.</h2>
-      <p>
-        Willkommen in der Welt von DeFi, Tokenisierung und finanzieller Unabhängigkeit. 
-        Hier lernst du, dein Kapital in der Zukunft des Finanzwesens zu vermehren und dich selbst zu verwirklichen.
-      </p>
-      <a href="#community" class="btn" data-aos="zoom-in" data-aos-delay="300">
-        Community beitreten
-      </a>
-    </div>
-  </section>
-
-  <!-- Über mich -->
-  <section class="about" id="about" data-aos="fade-up" data-aos-duration="1000">
-    <img 
-      src="https://via.placeholder.com/300x300" 
-      alt="Daniel Reiss" 
-      data-aos="fade-right" 
-      data-aos-delay="200"
-    />
-    <div class="about-text" data-aos="fade-left" data-aos-delay="400">
-      <h3>Über Daniel Reiss</h3>
-      <p>
-        Ich bin Daniel Reiss, DeFi-Experte und Tokenisierungs-Spezialist mit jahrelanger Erfahrung in der Krypto-Branche. 
-        Schon früh habe ich das Potenzial von Blockchain-Technologie erkannt und helfe seither Privatpersonen 
-        und Unternehmen dabei, von der dezentralisierten Finanzrevolution zu profitieren.
-      </p>
-      <p>
-        Ob Beratung, Umsetzung oder Strategien zur finanziellen Unabhängigkeit – 
-        ich teile mein Wissen gerne mit dir.
-      </p>
-    </div>
-  </section>
-
-  <!-- Leistungen / Services -->
-  <section id="services" data-aos="fade-up" data-aos-duration="1000">
-    <h3>Meine Leistungen</h3>
-    <div class="services">
-      <div class="service-box" data-aos="fade-up" data-aos-delay="100">
-        <h4>DeFi-Beratung</h4>
-        <p>Individuelle Analysen, Portfolio-Strategien und Risikomanagement.</p>
-      </div>
-      <div class="service-box" data-aos="fade-up" data-aos-delay="200">
-        <h4>Tokenisierungs-Projekte</h4>
-        <p>Von der Idee bis zum Launch: Technische & rechtliche Insights, Projektbegleitung.</p>
-      </div>
-      <div class="service-box" data-aos="fade-up" data-aos-delay="300">
-        <h4>Mastermind</h4>
-        <p>
-          Regelmäßige Retreats, Events, Workshops und Webinare rund um passive Einnahmen 
-          mit Krypto und finanzielle Unabhängigkeit.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Community / Gruppe -->
-  <section id="community" data-aos="fade-up" data-aos-duration="1000">
-    <h3>Werde Teil unserer Community</h3>
-    <p style="max-width: 700px; margin: 0 auto 2rem; text-align: center;">
-      In meiner exklusiven Community dreht sich alles um Austausch, gegenseitige Unterstützung 
-      und das Lernen voneinander. Erhalte Zugriff auf Insider-Infos und Praxis-Tipps, 
-      um deine finanzielle Unabhängigkeit voranzutreiben.  
-      <br><br>
-      <strong>Die Teilnahme an unserer WhatsApp-Gruppe ist kostenlos!</strong>  
-      Verpasse keine Updates mehr und tausche dich mit Gleichgesinnten aus.
-    </p>
-    <div style="text-align:center;">
-      <a href="https://wa.me/deineNummer" target="_blank" rel="noopener" class="btn" data-aos="zoom-in" data-aos-delay="200">
-        Jetzt WhatsApp-Gruppe beitreten
-      </a>
-    </div>
-  </section>
-
-  <!-- Kontakt -->
-  <section id="contact" data-aos="fade-up" data-aos-duration="1000">
-    <h3>Kontakt</h3>
-    <p>
-      Du hast Fragen, möchtest ein individuelles Angebot oder willst einfach nur Hallo sagen? 
-      Fülle das Formular aus und ich melde mich bei dir!
-    </p>
-    <form>
-      <label for="name">Name</label><br/>
-      <input type="text" id="name" name="name"/><br/>
-      
-      <label for="email">E-Mail</label><br/>
-      <input type="email" id="email" name="email"/><br/>
-      
-      <label for="message">Nachricht</label><br/>
-      <textarea id="message" name="message" rows="5"></textarea><br/><br/>
-      
-      <button type="submit" class="btn">Senden</button>
-    </form>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 Daniel Reiss</p>
-    <p>
-      <a href="#" style="text-decoration:none;">Impressum</a> | 
-      <a href="#" style="text-decoration:none;">Datenschutz</a>
-    </p>
-  </footer>
-
-  <!-- AOS JavaScript -->
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
-    integrity="sha512-4tyR8aDr7r1xG/7gC9nlk30JL6L5CZclq5zZTr3ODSLnr6siZkngmpmj7k12Pd3RAmT/d1JZkW7SZO8x0K8elA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer">
-  </script>
-  <script>
-    // Initialisierung von AOS mit optionalen globalen Einstellungen
-    AOS.init({
-      duration: 1000, // Dauer jeder Animation (in ms)
-      easing: 'ease', // Art der Animation
-      once: false,    // Animation bei jedem Scroll-Durchgang abspielen?
-      mirror: false   // Elemente animieren, wenn man zurückscrollt?
-    });
-  </script>
+    <footer>
+        <img src="logo.png" alt="Syndicate Symbol" class="logo fade-in">
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
+    </footer>
 </body>
 </html>
