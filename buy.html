@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <title>DFS Token - DeFi Syndicate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <!-- Google Font: Orbitron -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
 
-  <!-- Hinweis: Den Verweis auf fonts.css von Uniswap entfernen, da dieser in der aktuellen Version nicht vorhanden ist -->
+  <!-- Hinweis: Den Link zu fonts.css von Uniswap entfernen, da er in der aktuellen Version nicht vorhanden ist -->
 
   <style>
     * {
@@ -88,20 +88,21 @@
     <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
   </footer>
 
-  <!-- Externe Skripte in folgender Reihenfolge laden -->
+  <!-- Externe Skripte mit defer laden -->
   <!-- React & ReactDOM -->
-  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js" defer></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" defer></script>
   
-  <!-- Ethers.js: Verwende hier den jsDelivr-Link statt cdn.ethers.io -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.2.umd.min.js"></script>
+  <!-- Ethers.js: Verwende jsDelivr-Link für Version 5.7.2 -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" defer></script>
   
   <!-- Uniswap Widget UMD-Bundle -->
-  <script src="https://unpkg.com/@uniswap/widgets@latest/dist/widgets.umd.js"></script>
+  <script src="https://unpkg.com/@uniswap/widgets@latest/dist/widgets.umd.js" defer></script>
 
-  <script>
-    (async () => {
-      // Prüfen, ob eine Wallet (z. B. MetaMask) verfügbar ist
+  <!-- Unser Haupt-Skript, das nach allen externen Skripten ausgeführt wird -->
+  <script defer>
+    window.addEventListener("DOMContentLoaded", async () => {
+      // Prüfen, ob MetaMask oder ein anderes Wallet vorhanden ist
       if (typeof window.ethereum === 'undefined') {
         document.getElementById('uniswap-widget').innerHTML =
           '<p>Keine Wallet gefunden. Bitte MetaMask installieren oder aktivieren.</p>';
@@ -135,7 +136,7 @@
         }),
         document.getElementById('uniswap-widget')
       );
-    })();
+    });
   </script>
 </body>
 </html>
