@@ -5,16 +5,13 @@
   <title>DFS Token - DeFi Syndicate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- Schriftart -->
+  <!-- Google Font: Orbitron -->
   <link
     href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
     rel="stylesheet"
   />
-  <!-- Schriften für das Uniswap-Widget -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/@uniswap/widgets@latest/fonts.css"
-  />
+
+  <!-- Hinweis: Den Verweis auf fonts.css von Uniswap entfernen, da dieser in der aktuellen Version nicht vorhanden ist -->
 
   <style>
     * {
@@ -85,7 +82,6 @@
   <div class="container">
     <!-- Uniswap Swap Widget (React) -->
     <div id="uniswap-widget"></div>
-
     <br />
     <a href="dfs.html" class="button">Zurück</a>
   </div>
@@ -95,26 +91,27 @@
     <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
   </footer>
 
+  <!-- Externe Skripte in folgender Reihenfolge laden -->
   <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-
+  
   <!-- Ethers.js (alternativer CDN-Link) -->
   <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-
+  
   <!-- Uniswap Widget UMD-Bundle -->
   <script src="https://unpkg.com/@uniswap/widgets@latest/dist/widgets.umd.js"></script>
 
   <script>
     (async () => {
-      // Prüfen, ob eine Wallet (z. B. MetaMask) vorhanden ist
+      // Prüfen, ob MetaMask oder ein anderes Wallet verfügbar ist
       if (typeof window.ethereum === 'undefined') {
         document.getElementById('uniswap-widget').innerHTML =
           '<p>Keine Wallet gefunden. Bitte MetaMask installieren oder aktivieren.</p>';
         return;
       }
 
-      // Zugriff anfordern
+      // Zugriff auf die Wallet anfordern
       await window.ethereum.request({ method: 'eth_requestAccounts' });
 
       // Ethers-Provider erstellen
@@ -122,11 +119,11 @@
 
       // Benutzerdefiniertes Farb-Theme (Rot/Schwarz/Grau)
       const customTheme = {
-        accent: '#ff3b3b',
-        background: '#121212',
-        module: '#1f1f1f',
-        dialog: '#2c2f36',
-        interactive: '#ff3b3b',
+        accent: '#ff3b3b',      // Haupt-Akzentfarbe (Rot)
+        background: '#121212',  // Seitenhintergrund (Dunkel)
+        module: '#1f1f1f',      // Panel-Hintergrund
+        dialog: '#2c2f36',      // Popup-/Dialog-Hintergrund
+        interactive: '#ff3b3b', // Hover-/Fokus-Farbe
         fontFamily: 'Orbitron, sans-serif',
       };
 
@@ -134,7 +131,7 @@
       ReactDOM.render(
         React.createElement(UniswapWidgets.SwapWidget, {
           provider: provider,
-          jsonRpcUrl: 'https://arb1.arbitrum.io/rpc', // Arbitrum RPC
+          jsonRpcUrl: 'https://arb1.arbitrum.io/rpc', // Arbitrum RPC-Endpunkt
           theme: customTheme,
           defaultInputTokenAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
           defaultOutputTokenAddress: '0x3b60FF35D3f7F62d636b067dD0dC0dFdAd670E4E',
