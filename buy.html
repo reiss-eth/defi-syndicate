@@ -1,150 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>DFS Token - DeFi Syndicate</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Schriftart -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-  <!-- Schriften für das Uniswap-Widget -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/@uniswap/widgets@latest/fonts.css"
-  />
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Orbitron', sans-serif;
-    }
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      text-align: center;
-      padding: 40px;
-    }
-    header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .logotop {
-      max-width: 150px;
-      height: auto;
-    }
-    .logobottom {
-      max-width: 40px;
-      height: auto;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    h1,
-    h2 {
-      margin-bottom: 15px;
-    }
-    p {
-      margin-bottom: 20px;
-      line-height: 1.6;
-      color: #b0b0b0;
-    }
-    .button {
-      display: inline-block;
-      padding: 12px 24px;
-      background: #ff3b3b;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-      margin: 10px;
-    }
-    .button:hover {
-      background: #e63232;
-    }
-    footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #777;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DFS Token - DeFi Syndicate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
+            padding: 40px;
+        }
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .logotop {
+            max-width: 150px;
+            height: auto;
+        }
+        .logobottom {
+            max-width: 40px;
+            height: auto;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #b0b0b0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #ff3b3b;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            margin: 10px;
+        }
+        .button:hover {
+            background: #e63232;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logotop" />
-  </header>
+    <header>
+        <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logotop">
+    </header>
+    <div class="container">
+    
 
-  <div class="container">
-    <!-- Uniswap Swap Widget (React) -->
-    <div id="uniswap-widget"></div>
 
-    <br />
-    <a href="dfs.html" class="button">Zurück</a>
-  </div>
+		<iframe id="dextools-widget"
+    		title="DEXTools Trading Chart"
+   		 width="500" height="400"
+   		 src="https://www.dextools.io/widget-chart/en/arbitrum/pe-light/0xc31e54c7a869b9fcbecc14363cf510d1c41fa443?theme=dark&chartType=1&chartResolution=30&drawingToolbars=false"></iframe>
 
-  <footer>
-    <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom" />
-    <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
-  </footer>
 
-  <!-- React & ReactDOM -->
-  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
 
-  <!-- Ethers.js -->
-  <script src="https://unpkg.com/ethers@5.2.umd.min.js"></script>
 
-  <!-- Uniswap Widget UMD-Bundle -->
-  <script src="https://unpkg.com/@uniswap/widgets@latest/dist/widgets.umd.js"></script>
-
-  <script>
-    (async () => {
-      // 1) Prüfen, ob eine Wallet (z. B. MetaMask) vorhanden ist
-      if (typeof window.ethereum === 'undefined') {
-        document.getElementById('uniswap-widget').innerHTML =
-          '<p>Keine Wallet gefunden. Bitte MetaMask installieren oder aktivieren.</p>';
-        return;
-      }
-
-      // 2) Zugriff anfordern
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-      // 3) Ethers-Provider erstellen
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-      // 4) Dein eigenes Farb-Theme (Rot/Schwarz/Grau)
-      const customTheme = {
-        accent: '#ff3b3b',      // Haupt-Akzentfarbe (Rot)
-        background: '#121212',  // Seitenhintergrund (Dunkel)
-        module: '#1f1f1f',      // Panel-Hintergrund
-        dialog: '#2c2f36',      // ggf. Popup-Fenster
-        interactive: '#ff3b3b', // Hover- / Fokus-Farbe
-        fontFamily: 'Orbitron, sans-serif',
-      };
-
-      // 5) Uniswap Swap Widget einbetten
-      //    Netzwerk: Arbitrum (https://arb1.arbitrum.io/rpc)
-      //    Standard: Von USDC (0xaf88...) zu 0x3b60F...
-      ReactDOM.render(
-        React.createElement(UniswapWidgets.SwapWidget, {
-          provider: provider,
-          jsonRpcUrl: 'https://arb1.arbitrum.io/rpc',
-          theme: customTheme,
-          defaultInputTokenAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-          defaultOutputTokenAddress: '0x3b60FF35D3f7F62d636b067dD0dC0dFdAd670E4E',
-        }),
-        document.getElementById('uniswap-widget')
-      );
-    })();
-  </script>
+        <a href="dfs.html" class="button">Zurück</a>
+    </div>
+    <footer>
+        <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom">
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
+    </footer>
 </body>
 </html>
