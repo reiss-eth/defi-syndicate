@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proof of Burn - DeFi Syndicate</title>
+    <title>Top 20 DFS Holder</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -33,14 +33,7 @@
             max-width: 40px;
             height: auto;
         }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-        }
-        .supply-container {
+        .supply-container, .holders-container {
             max-width: 400px;
             margin: 20px auto;
             padding: 20px;
@@ -50,20 +43,6 @@
         }
         h1 {
             margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: none;
-            border-radius: 5px;
-            background: #2a2a2a;
-            color: white;
         }
         .button {
             display: inline-block;
@@ -88,23 +67,56 @@
         }
     </style>
     <script>
-        async function fetchBurnedTokens() {
-            const contractAddress = "0xdadeca1167fe47499e53Eb50F261103630974905";
-            const burnWallet = "0x12aa00B12A0774eB62f276215289f961c8f70444";
+        async function fetchTokenData() {
+            const contractAddress = "0x6609BE1547166D1C4605F3A243FDCFf467e600C3";
+            const burnWallet = "0xCe6dfa93316E419D2daEf5461ceE73c1857AA386";
             const apiKey = "62B4HMITUWRVTHTB2745YSIPJ38MKCH3UX";
             
             try {
+                const totalSupplyUrl = `https://api.arbiscan.io/api?module=stats&action=tokensupply&contractaddress=${contractAddress}&apikey=${apiKey}`;
+                const totalResponse = await fetch(totalSupplyUrl);
+                const totalData = await totalResponse.json();
+                if (totalData.status === "1") {
+                    document.getElementById("totalSupply").innerText = Math.floor(Number(totalData.result)).toLocaleString();
+                }
+                
                 const burnUrl = `https://api.arbiscan.io/api?module=account&action=tokenbalance&contractaddress=${contractAddress}&address=${burnWallet}&apikey=${apiKey}`;
                 const burnResponse = await fetch(burnUrl);
                 const burnData = await burnResponse.json();
                 if (burnData.status === "1") {
-                    document.getElementById("burnedTokens").innerText = `Coach DeFi Syndikate hat bereits ${Math.floor(Number(burnData.result)).toLocaleString()} DFS verbrannt`;
+                    document.getElementById("burnedTokens").innerText = Math.floor(Number(burnData.result)).toLocaleString();
                 }
             } catch (error) {
                 console.error("API Fehler:", error);
             }
         }
-        window.onload = fetchBurnedTokens;
+        
+        async function fetchTopHolders() {
+            const contractAddress = "0x6609BE1547166D1C4605F3A243FDCFf467e600C3";
+            const apiKey = "62B4HMITUWRVTHTB2745YSIPJ38MKCH3UX";
+            const url = `https://api.covalenthq.com/v1/42161/tokens/${contractAddress}/token_holders/?key=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data && data.data && data.data.items) {
+                    const holdersList = document.getElementById("topHolders");
+                    holdersList.innerHTML = "";
+                    data.data.items.slice(0, 20).forEach(holder => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${holder.address}: ${Math.floor(holder.balance / Math.pow(10, 18)).toLocaleString()} Tokens`;
+                        holdersList.appendChild(listItem);
+                    });
+                }
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Tokenhalter:", error);
+            }
+        }
+        
+        window.onload = function() {
+            fetchTopHolders();
+            fetchTokenData();
+        };
     </script>
 </head>
 <body>
@@ -112,31 +124,15 @@
         <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logotop">
     </header>
     
-    <div class="container">
-        <h1>Proof of Burn</h1>
-        <form onsubmit="validateForm(event)">
-            <label for="name">Vor- und Nachname</label>
-            <input type="text" id="name" required>
-            
-            <label for="phone">WhatsApp-Nummer</label>
-            <input type="text" id="phone" required>
-            
-            <label for="coach">Coach</label>
-            <input type="text" id="coach" value="DeFI Syndikate -1" readonly>
-            
-            <label for="wallet">Wallet-Adresse</label>
-            <input type="text" id="wallet" required>
-            
-            <label for="txHash">Transaktions-Hash</label>
-            <input type="text" id="txHash" required>
-            
-            <button type="submit" class="button">Senden</button>
-        </form>
+    <div class="holders-container">
+        <h2>Top 20 DFS Holder</h2>
+        <ul id="topHolders">Lade...</ul>
     </div>
     
     <div class="supply-container">
         <h2>DFS Token Supply</h2>
-        <p id="burnedTokens">Lade...</p>
+        <p><strong>Gesamtsupply:</strong> <span id="totalSupply">Lade...</span> DFS</p>
+        <p><strong>Verbrannte Tokens:</strong> <span id="burnedTokens">Lade...</span> DFS</p>
     </div>
     
     <a href="index.html" class="button">Zurück zur Startseite</a>
