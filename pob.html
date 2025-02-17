@@ -39,6 +39,41 @@
             padding: 20px;
             background: #1e1e1e;
             border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: #ff3b3b;
+        }
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            background-color: #2a2a2a;
+            color: white;
+        }
+        .consent-container {
+            text-align: left;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .consent-container a {
+            color: #ff3b3b;
+            text-decoration: none;
+        }
+        .consent-container a:hover {
+            text-decoration: underline;
         }
         .button {
             display: inline-block;
@@ -49,12 +84,17 @@
             font-size: 16px;
             border-radius: 5px;
             transition: background 0.3s ease;
-            margin-top: 20px;
+            margin: 10px;
             border: none;
             cursor: pointer;
         }
         .button:hover {
             background: #e63232;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
         }
     </style>
     <script>
@@ -62,39 +102,27 @@
             event.preventDefault();
 
             let name = document.getElementById("name").value.trim();
-            let phone = document.getElementById("phone").value.trim();
-            let coach = document.getElementById("coach").value.trim();
             let wallet = document.getElementById("wallet").value.trim();
-            let txHash = document.getElementById("txHash").value.trim();
+            let coach = document.getElementById("coach").value.trim();
+            let consent = document.getElementById("consent").checked;
 
             let nameRegex = /^[A-Za-zäöüÄÖÜß\s]+$/;
-            let phoneRegex = /^\+[0-9]+$/;
             let walletRegex = /^0x[a-fA-F0-9]{40}$/;
-            let txHashRegex = /^0x[a-fA-F0-9]{64}$/;
 
             if (!nameRegex.test(name)) {
                 alert("❌ Der Name darf nur Buchstaben enthalten.");
-                return;
-            }
-            if (!phoneRegex.test(phone)) {
-                alert("❌ Die WhatsApp-Nummer muss mit + beginnen und nur aus Zahlen bestehen.");
                 return;
             }
             if (!walletRegex.test(wallet)) {
                 alert("❌ Die Wallet-Adresse ist ungültig! Sie muss mit 0x beginnen und genau 40 hexadezimale Zeichen enthalten.");
                 return;
             }
-            if (!txHashRegex.test(txHash)) {
-                alert("❌ Der Transaktions-Hash ist ungültig! Er muss mit 0x beginnen und genau 64 hexadezimale Zeichen enthalten.");
+            if (!consent) {
+                alert("❌ Sie müssen der Verarbeitung Ihrer Daten zustimmen.");
                 return;
             }
 
-            let message = `🚀 *Proof of Burn Submission* 🚀\n\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n💳 *Wallet:* https://arbiscan.io/address/${wallet}\n🔗 *TX Hash:* ${txHash}\n🏆 *Coach:* ${coach}`;
-
-            let whatsappNumber = "4915129147194";
-            let whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-            window.open(whatsappUrl, '_blank');
+            alert("Formular erfolgreich validiert!");
         }
     </script>
 </head>
@@ -104,25 +132,32 @@
     </header>
     
     <div class="container">
-        <h2>Proof of Burn</h2><br><br>
+        <h2>Proof of Burn</h2>
         <form onsubmit="validateForm(event)">
-            <label for="name">Vor- und Nachname</label><br>
-            <input type="text" id="name" required><br><br>
+            <label for="name">Vor- und Nachname</label>
+            <input type="text" id="name" required>
             
-            <label for="phone">WhatsApp-Nummer</label><br>
-            <input type="text" id="phone" required><br><br>
+            <label for="wallet">Wallet-Adresse</label>
+            <input type="text" id="wallet" required>
             
-            <label for="coach">Coach</label><br>
-            <input type="text" id="coach" value="DeFI Syndikate -1" readonly><br><br>
+            <label for="coach">Coach</label>
+            <input type="text" id="coach" value="DeFI Syndikate -1" readonly>
             
-            <label for="wallet">Wallet-Adresse</label><br>
-            <input type="text" id="wallet" required><br><br>
-            
-            <label for="txHash">Transaktions-Hash</label><br>
-            <input type="text" id="txHash" required><br><br>
+            <div class="consent-container">
+                <input type="checkbox" id="consent" required>
+                <label for="consent">Ich stimme zu, dass meine Daten über WhatsApp weitergeleitet werden. <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a></label>
+            </div>
             
             <button type="submit" class="button">Senden</button>
         </form>
     </div>
+    
+    <br>
+    <a href="dfs.html" class="button">Zurück</a>
+    
+    <footer>
+        <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom">
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
+    </footer>
 </body>
 </html>
