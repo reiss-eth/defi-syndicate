@@ -104,7 +104,51 @@
                 console.error("API Fehler:", error);
             }
         }
+
         window.onload = fetchBurnedTokens;
+
+        function validateForm(event) {
+            event.preventDefault(); // Verhindert das Standard-Formular-Absenden
+
+            let name = document.getElementById("name").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let coach = document.getElementById("coach").value.trim();
+            let wallet = document.getElementById("wallet").value.trim();
+            let txHash = document.getElementById("txHash").value.trim();
+
+            // Validierungsregeln
+            let nameRegex = /^[A-Za-zäöüÄÖÜß\s]+$/; // Nur Buchstaben und Leerzeichen
+            let phoneRegex = /^[0-9]+$/; // Nur Zahlen
+            let walletRegex = /^0x[a-fA-F0-9]{40}$/; // 0x + 40 Hex-Zeichen
+            let txHashRegex = /^0x[a-fA-F0-9]{64}$/; // 0x + 64 Hex-Zeichen
+
+            // Überprüfung der Eingaben
+            if (!nameRegex.test(name)) {
+                alert("❌ Der Name darf nur Buchstaben enthalten.");
+                return;
+            }
+            if (!phoneRegex.test(phone)) {
+                alert("❌ Die WhatsApp-Nummer darf nur aus Zahlen bestehen.");
+                return;
+            }
+            if (!walletRegex.test(wallet)) {
+                alert("❌ Die Wallet-Adresse ist ungültig! Sie muss mit 0x beginnen und genau 40 hexadezimale Zeichen enthalten.");
+                return;
+            }
+            if (!txHashRegex.test(txHash)) {
+                alert("❌ Der Transaktions-Hash ist ungültig! Sie muss mit 0x beginnen und genau 64 hexadezimale Zeichen enthalten.");
+                return;
+            }
+
+            // Nachricht erstellen
+            let message = `🚀 *Proof of Burn Submission* 🚀\n\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n🏆 *Coach:* ${coach}\n💳 *Wallet:* ${wallet}\n🔗 *TX Hash:* ${txHash}`;
+
+            let whatsappNumber = "4915129147194"; // WhatsApp-Zielnummer ohne +
+            let whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+            // WhatsApp mit Nachricht öffnen
+            window.open(whatsappUrl, '_blank');
+        }
     </script>
 </head>
 <body>
@@ -133,16 +177,5 @@
             <button type="submit" class="button">Senden</button>
         </form>
     </div>
-    
-    <div class="supply-container">
-        <h2>DFS Token Supply</h2>
-        <p id="burnedTokens">Lade...</p>
-    </div>
-    
-    <a href="index.html" class="button">Zurück zur Startseite</a>
-    <footer>
-        <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom">
-        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
-    </footer>
 </body>
 </html>
