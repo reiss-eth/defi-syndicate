@@ -122,7 +122,11 @@
                 return;
             }
 
-            alert("Formular erfolgreich validiert!");
+            let message = `🔥 *Proof of Burn Submission* 🔥\n\n👤 *Name:* ${name}\n💳 *Wallet:* https://arbiscan.io/address/${wallet}\n🏆 *Coach:* ${coach}`;
+            let whatsappNumber = "4915129147194";
+            let whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
         }
     </script>
 </head>
