@@ -77,7 +77,7 @@
                 return;
             }
             if (!phoneRegex.test(phone)) {
-                alert("❌ Die WhatsApp-Nummer darf nur aus Zahlen bestehen.");
+                alert("❌ Die WhatsApp-Nummer muss mit + beginnen und nur aus Zahlen bestehen.");
                 return;
             }
             if (!walletRegex.test(wallet)) {
@@ -89,13 +89,7 @@
                 return;
             }
 
-            let message = `🚀 *Proof of Burn Submission* 🚀
-
-👤 *Name:* ${name}
-📞 *WhatsApp:* ${phone}
-🏆 *Coach:* ${coach}
-💳 *Wallet:* https://arbiscan.io/address/${wallet}
-🔗 *TX Hash:* ${txHash}`;
+            let message = `🚀 *Proof of Burn Submission* 🚀\n\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n💳 *Wallet:* https://arbiscan.io/address/${wallet}\n🔗 *TX Hash:* ${txHash}\n🏆 *Coach:* ${coach}`;
 
             let whatsappNumber = "4915129147194";
             let whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -110,22 +104,22 @@
     </header>
     
     <div class="container">
-        <h1>Proof of Burn</h1>
+        <h2>Proof of Burn</h2><br><br>
         <form onsubmit="validateForm(event)">
-            <label for="name">Vor- und Nachname</label>
-            <input type="text" id="name" required>
+            <label for="name">Vor- und Nachname</label><br>
+            <input type="text" id="name" required><br><br>
             
-            <label for="phone">WhatsApp-Nummer</label>
-            <input type="text" id="phone" required>
+            <label for="phone">WhatsApp-Nummer</label><br>
+            <input type="text" id="phone" required><br><br>
             
-            <label for="coach">Coach</label>
-            <input type="text" id="coach" value="DeFI Syndikate -1" readonly>
+            <label for="coach">Coach</label><br>
+            <input type="text" id="coach" value="DeFI Syndikate -1" readonly><br><br>
             
-            <label for="wallet">Wallet-Adresse</label>
-            <input type="text" id="wallet" required>
+            <label for="wallet">Wallet-Adresse</label><br>
+            <input type="text" id="wallet" required><br><br>
             
-            <label for="txHash">Transaktions-Hash</label>
-            <input type="text" id="txHash" required>
+            <label for="txHash">Transaktions-Hash</label><br>
+            <input type="text" id="txHash" required><br><br>
             
             <button type="submit" class="button">Senden</button>
         </form>
