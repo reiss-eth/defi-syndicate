@@ -40,31 +40,6 @@
             background: #1e1e1e;
             border-radius: 10px;
         }
-        .supply-container {
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #222;
-            border-radius: 10px;
-            color: #fff;
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: none;
-            border-radius: 5px;
-            background: #2a2a2a;
-            color: white;
-        }
         .button {
             display: inline-block;
             padding: 12px 24px;
@@ -81,34 +56,10 @@
         .button:hover {
             background: #e63232;
         }
-        footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #777;
-        }
     </style>
     <script>
-        async function fetchBurnedTokens() {
-            const contractAddress = "0xdadeca1167fe47499e53Eb50F261103630974905";
-            const burnWallet = "0x12aa00B12A0774eB62f276215289f961c8f70444";
-            const apiKey = "62B4HMITUWRVTHTB2745YSIPJ38MKCH3UX";
-            
-            try {
-                const burnUrl = `https://api.arbiscan.io/api?module=account&action=tokenbalance&contractaddress=${contractAddress}&address=${burnWallet}&apikey=${apiKey}`;
-                const burnResponse = await fetch(burnUrl);
-                const burnData = await burnResponse.json();
-                if (burnData.status === "1") {
-                    document.getElementById("burnedTokens").innerText = `Coach DeFi Syndikate hat bereits ${Math.floor(Number(burnData.result)).toLocaleString()} DFS verbrannt`;
-                }
-            } catch (error) {
-                console.error("API Fehler:", error);
-            }
-        }
-
-        window.onload = fetchBurnedTokens;
-
         function validateForm(event) {
-            event.preventDefault(); // Verhindert das Standard-Formular-Absenden
+            event.preventDefault();
 
             let name = document.getElementById("name").value.trim();
             let phone = document.getElementById("phone").value.trim();
@@ -116,13 +67,11 @@
             let wallet = document.getElementById("wallet").value.trim();
             let txHash = document.getElementById("txHash").value.trim();
 
-            // Validierungsregeln
-            let nameRegex = /^[A-Za-zäöüÄÖÜß\s]+$/; // Nur Buchstaben und Leerzeichen
-            let phoneRegex = /^[0-9]+$/; // Nur Zahlen
-            let walletRegex = /^0x[a-fA-F0-9]{40}$/; // 0x + 40 Hex-Zeichen
-            let txHashRegex = /^0x[a-fA-F0-9]{64}$/; // 0x + 64 Hex-Zeichen
+            let nameRegex = /^[A-Za-zäöüÄÖÜß\s]+$/;
+            let phoneRegex = /^\+[0-9]+$/;
+            let walletRegex = /^0x[a-fA-F0-9]{40}$/;
+            let txHashRegex = /^0x[a-fA-F0-9]{64}$/;
 
-            // Überprüfung der Eingaben
             if (!nameRegex.test(name)) {
                 alert("❌ Der Name darf nur Buchstaben enthalten.");
                 return;
@@ -136,17 +85,21 @@
                 return;
             }
             if (!txHashRegex.test(txHash)) {
-                alert("❌ Der Transaktions-Hash ist ungültig! Sie muss mit 0x beginnen und genau 64 hexadezimale Zeichen enthalten.");
+                alert("❌ Der Transaktions-Hash ist ungültig! Er muss mit 0x beginnen und genau 64 hexadezimale Zeichen enthalten.");
                 return;
             }
 
-            // Nachricht erstellen
-            let message = `🚀 *Proof of Burn Submission* 🚀\n\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n🏆 *Coach:* ${coach}\n💳 *Wallet:* https://arbiscan.io/address/${wallet}\n🔗 *TX Hash:* ${txHash}`;
+            let message = `🚀 *Proof of Burn Submission* 🚀
 
-            let whatsappNumber = "4915129147194"; // WhatsApp-Zielnummer ohne +
+👤 *Name:* ${name}
+📞 *WhatsApp:* ${phone}
+🏆 *Coach:* ${coach}
+💳 *Wallet:* https://arbiscan.io/address/${wallet}
+🔗 *TX Hash:* ${txHash}`;
+
+            let whatsappNumber = "4915129147194";
             let whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-            // WhatsApp mit Nachricht öffnen
             window.open(whatsappUrl, '_blank');
         }
     </script>
