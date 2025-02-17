@@ -101,16 +101,16 @@
         function validateForm(event) {
             event.preventDefault();
 
-            let name = document.getElementById("name").value.trim();
+            let username = document.getElementById("username").value.trim();
             let wallet = document.getElementById("wallet").value.trim();
             let coach = document.getElementById("coach").value.trim();
             let consent = document.getElementById("consent").checked;
 
-            let nameRegex = /^[A-Za-zäöüÄÖÜß\s]+$/;
+            let usernameRegex = /^[A-Za-z0-9]+$/;
             let walletRegex = /^0x[a-fA-F0-9]{40}$/;
 
-            if (!nameRegex.test(name)) {
-                alert("❌ Der Name darf nur Buchstaben enthalten.");
+            if (!usernameRegex.test(username)) {
+                alert("❌ Der Benutzername darf nur Buchstaben und Zahlen enthalten.");
                 return;
             }
             if (!walletRegex.test(wallet)) {
@@ -122,7 +122,7 @@
                 return;
             }
 
-            let message = `🔥 *Proof of Burn Submission* 🔥\n\n👤 *Name:* ${name}\n💳 *Wallet:* https://arbiscan.io/address/${wallet}\n🏆 *Coach:* ${coach}`;
+            let message = `🔥 *Proof of Burn Submission* 🔥\n\n👤 *Benutzername:* ${username}\n💳 *Wallet:* https://arbiscan.io/address/${wallet}\n🏆 *Coach:* ${coach}`;
             let whatsappNumber = "4915129147194";
             let whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
             
@@ -138,8 +138,8 @@
     <div class="container">
         <h2>Proof of Burn</h2>
         <form onsubmit="validateForm(event)">
-            <label for="name">Vor- und Nachname</label>
-            <input type="text" id="name" required>
+            <label for="username">Benutzername</label>
+            <input type="text" id="username" required>
             
             <label for="wallet">Wallet-Adresse</label>
             <input type="text" id="wallet" required>
