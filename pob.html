@@ -102,10 +102,27 @@
             try {
                 let response = await fetch('https://api.dexscreener.com/latest/dex/pairs/arbitrum/0xcda53b1f66614552f834ceef361a8d12a0b8dad8');
                 let data = await response.json();
-                let price = data.pairs[0].priceUsd;
-                document.getElementById('token-price').innerText = `DFS Token Preis: $${price}`;
+                let price = parseFloat(data.pairs[0].priceUsd);
+                document.getElementById('token-price').innerText = `DFS Token Preis: $${price.toFixed(4)}`;
+                
+                function updateTokenAmount() {
+                    let subscription = document.getElementById('subscription').value;
+                    let amount = 0;
+                    if (subscription === 'Monats Abo (30 USD)') {
+                        amount = 30 / price;
+                    } else if (subscription === 'Jahres Abo (299 USD)') {
+                        amount = 299 / price;
+                    } else if (subscription === 'Lifetime Abo (1499 USD)') {
+                        amount = 1499 / price;
+                    }
+                    document.getElementById('token-amount').innerText = `Benötigte DFS Tokens: ${amount.toFixed(4)}`;
+                }
+                
+                document.getElementById('subscription').addEventListener('change', updateTokenAmount);
+                updateTokenAmount();
             } catch (error) {
                 document.getElementById('token-price').innerText = 'DFS Token Preis: N/A';
+                document.getElementById('token-amount').innerText = 'Benötigte DFS Tokens: N/A';
             }
         }
         window.onload = fetchUniswapPrice;
@@ -142,7 +159,8 @@
             
             <button type="submit" class="button">Senden</button>
         </form>
-        <p id="token-price" class="token-price" style="color: #ffffff !important;">DFS Token Preis: Lade...</p>
+        <p id="token-price" class="token-price">DFS Token Preis: Lade...</p>
+        <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
     </div>
     
     <br>
