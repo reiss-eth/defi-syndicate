@@ -131,7 +131,24 @@
             <label for="username">Benutzername</label>
             <input type="text" id="username" required>
             
-            <label for="wallet">Wallet Adresse</label><a href="pobscan.html">📷</a>
+            <label for="wallet">Wallet Adresse</label>
+
+
+
+
+<div id="reader" style="width: 300px;"></div>
+<p>Gescannt: <span id="result">Noch nichts gescannt</span></p>
+
+
+
+
+
+
+
+
+
+
+
             <input type="text" id="wallet" required>
             
             <label for="coach">Coach</label>
@@ -214,6 +231,33 @@ function copyToClipboard(text) {
     });
 }
 </script>
+
+
+
+
+
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    function onScanSuccess(decodedText, decodedResult) {
+        if (decodedText.startsWith("0x") && decodedText.length === 42) {
+            document.getElementById('result').textContent = decodedText;
+        } else {
+            document.getElementById('result').textContent = "Kein gültiger Ethereum-QR-Code!";
+        }
+    }
+
+    function onScanError(errorMessage) {
+        console.warn(errorMessage);
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess, onScanError);
+</script>
+
+
+
+
 
 
 
