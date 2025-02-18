@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,10 +29,6 @@
         }
         .logotop {
             max-width: 150px;
-            height: auto;
-        }
-        .logobottom {
-            max-width: 40px;
             height: auto;
         }
         .container {
@@ -87,6 +84,8 @@
         }
     </style>
     <script>
+        let dfsTokenAmount = 0;
+        
         async function fetchUniswapPrice() {
             try {
                 let response = await fetch('https://api.dexscreener.com/latest/dex/pairs/arbitrum/0xcda53b1f66614552f834ceef361a8d12a0b8dad8');
@@ -96,15 +95,14 @@
                 
                 function updateTokenAmount() {
                     let subscription = document.getElementById('subscription').value;
-                    let amount = 0;
                     if (subscription === 'Monats Abo (30 USD)') {
-                        amount = 30 / price;
+                        dfsTokenAmount = 30 / price;
                     } else if (subscription === 'Jahres Abo (299 USD)') {
-                        amount = 299 / price;
+                        dfsTokenAmount = 299 / price;
                     } else if (subscription === 'Lifetime Abo (1499 USD)') {
-                        amount = 1499 / price;
+                        dfsTokenAmount = 1499 / price;
                     }
-                    document.getElementById('token-amount').innerText = `Benötigte DFS Tokens: ${amount.toFixed(4)}`;
+                    document.getElementById('token-amount').innerText = `Benötigte DFS Tokens: ${dfsTokenAmount.toFixed(4)}`;
                 }
                 
                 document.getElementById('subscription').addEventListener('change', updateTokenAmount);
@@ -121,9 +119,8 @@
             let username = document.getElementById('username').value;
             let proof = document.getElementById('wallet').value;
             let coach = document.getElementById('coach').value;
-            let subscription = document.getElementById('subscription').value;
-            let dfsAmount = subscription.match(/\d+/)[0];
-            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proof}%0A📜 *Coach:* ${coach}%0A💰 *Betrag:* ${dfsAmount} DFS%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsAmount} DFS an die Burn Wallet.`;
+            
+            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proof}%0A📜 *Coach:* ${coach}%0A🔥 *Benötigte DFS Tokens:* ${dfsTokenAmount.toFixed(4)} DFS%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsTokenAmount.toFixed(4)} DFS an die Burn Wallet.`;
             
             let whatsappUrl = `https://api.whatsapp.com/send?phone=+4915129147194&text=${message}`;
             window.open(whatsappUrl, '_blank');
@@ -162,5 +159,3 @@
     </div>
 </body>
 </html>
-
-   
