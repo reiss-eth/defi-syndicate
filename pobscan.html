@@ -118,6 +118,8 @@
         }
         window.onload = fetchUniswapPrice;
     </script>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
     <header>
@@ -135,7 +137,7 @@
 
 
 
-<div id="reader" style="width: 360px;"></div>
+<center><div id="reader" style="width: 330px;"></div></center>
 
 
            <input type="text" id="wallet" value="Jetzt QR Code scannen" readonly style="width: 360px; padding: 5px; font-size: 16px;">
@@ -227,20 +229,22 @@ function copyToClipboard(text) {
 
 
 <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            if (decodedText.startsWith("0x") && decodedText.length === 42) {
-                document.getElementById('wallet').value = decodedText; // Speichert die Adresse im Input-Feld
-            } else {
-                document.getElementById('wallet').value = "Kein gültiger Ethereum-QR-Code!";
+        document.addEventListener("DOMContentLoaded", function() {
+            function onScanSuccess(decodedText, decodedResult) {
+                if (decodedText.startsWith("0x") && decodedText.length === 42) {
+                    document.getElementById('wallet').value = decodedText; // Speichert die Adresse im Input-Feld
+                } else {
+                    document.getElementById('wallet').value = "Kein gültiger Ethereum-QR-Code!";
+                }
             }
-        }
 
-        function onScanError(errorMessage) {
-            console.warn(errorMessage);
-        }
+            function onScanError(errorMessage) {
+                console.warn(errorMessage);
+            }
 
-        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess, onScanError);
+            let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess, onScanError);
+        });
     </script>
 
 
