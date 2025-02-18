@@ -151,10 +151,51 @@
                 <label for="whatsapp-consent">Ich stimme zu, dass meine Daten über WhatsApp übermittelt werden.</label>
             </div>
 
-    <button type="submit" class="button">Senden</button>
-        </form>
-    </div>
+
+
+
+
+
+
+
+   <button type="button" class="button" onclick="sendWhatsAppMessage()">Senden</button>
+
+<script>
+function sendWhatsAppMessage() {
+    var phoneNumber = "4915129147194"; // WhatsApp Nummer ohne "+"
+    var username = document.getElementById("username").value;
+    var walletAddress = document.getElementById("wallet").value;
+    var coachName = document.getElementById("coach").value;
+    var subscriptionType = document.getElementById("subscription").value;
+    var dfsTokenAmount = document.getElementById("burn-amount").innerText; // Anzahl der DFS Tokens
+
+    if (!username || !walletAddress || !coachName || !dfsTokenAmount) {
+        alert("Bitte fülle alle Felder aus, bevor du die Nachricht sendest.");
+        return;
+    }
+
+    var message = `🔥*Proof of Burn*🔥\n\n` +
+                  `👨🏼‍🎓 *Benutzername:* ${username}\n` +
+                  `🔎 *Proof:* https://arbiscan.io/address/${walletAddress}\n` +
+                  `🎖️ *Coach:* ${coachName}\n` +
+                  `🔥 *Abo Preis:* ${subscriptionType}\n\n` +
+                  `Ich sende innerhalb von 24 Stunden ${dfsTokenAmount} an die Burning Adresse:\n` +
+                  `0x1dEaD0000000000000000000000000000000dEaD`;
+
+    var whatsappURL = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + encodeURIComponent(message);
+    window.open(whatsappURL, "_blank");
+}
+</script>
+
     
+
+
+
+
+
+
+
+
     <br><br>Bitte sende vor- oder 24 Stunden nach dem absenden des Formulars <p id="burn-amount" class="token-price"></p> an folgende Adresse:
     <H3><p>0x1dEaD000...000dEaD</p></H3>
 
