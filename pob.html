@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>/Users/danielreiss/Desktop/Defi Syndicate/pob.html
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -101,7 +101,7 @@
                     } else if (subscription === 'Lifetime Abo (1499 USD)') {
                         dfsTokenAmount = 1499 / price;
                     }
-                    document.getElementById('token-amount').innerText = `Benötigte DFS Tokens: ${dfsTokenAmount.toFixed(4)}`;
+                    document.getElementById('token-amount').innerText = `Ich bestätige, dass ich ${dfsTokenAmount.toFixed(4)} DFS innerhalb von 24 Stunden an die unten aufgeführte Burn Adress senden werde.`;
                 }
                 
                 document.getElementById('subscription').addEventListener('change', updateTokenAmount);
@@ -152,11 +152,11 @@
                 <option value="Jahres Abo (299 USD)">Jahres Abo (299 USD)</option>
                 <option value="Lifetime Abo (1499 USD)">Lifetime Abo (1499 USD)</option>
             </select>
-            
+           
+        <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
             <button type="submit" class="button">Senden</button>
-            
-            <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
         </form>
     </div>
+ 0x1dEaD0000000000000000000000000000000dEaD
 </body>
 </html>
