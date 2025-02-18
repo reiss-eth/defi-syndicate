@@ -63,12 +63,6 @@
             background-color: #2a2a2a;
             color: white;
         }
-        .token-price {
-            margin-top: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #ff3b3b;
-        }
         .consent-container {
             text-align: left;
             font-size: 12px;
@@ -109,9 +103,9 @@
                 let response = await fetch('https://api.dexscreener.com/latest/dex/pairs/arbitrum/0xcda53b1f66614552f834ceef361a8d12a0b8dad8');
                 let data = await response.json();
                 let price = data.pairs[0].priceUsd;
-                document.getElementById('token-price').innerText = `<span style='color: #ffffff;'>Aktueller DFS Token Preis: <span style='color: #ff3b3b;'></span> $${price}`;
+                document.getElementById('token-price').innerText = `DFS Token Preis: $${price}`;
             } catch (error) {
-                document.getElementById('token-price').innerText = 'Token Preis: N/A';
+                document.getElementById('token-price').innerText = 'DFS Token Preis: N/A';
             }
         }
         window.onload = fetchUniswapPrice;
@@ -148,7 +142,7 @@
             
             <button type="submit" class="button">Senden</button>
         </form>
-        <p id="token-price" class="token-price" style="color: #ffffff !important;">Token Preis: Lade...</p>
+        <p id="token-price" class="token-price" style="color: #ffffff !important;">DFS Token Preis: Lade...</p>
     </div>
     
     <br>
