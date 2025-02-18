@@ -152,48 +152,49 @@
             </div>
 
 
-
-
-
-
-
-
    <button type="button" class="button" onclick="sendWhatsAppMessage()">Senden</button>
 
 <script>
 function sendWhatsAppMessage() {
     var phoneNumber = "4915129147194"; // WhatsApp Nummer ohne "+"
-    var username = document.getElementById("username").value;
-    var walletAddress = document.getElementById("wallet").value;
-    var coachName = document.getElementById("coach").value;
+    var username = document.getElementById("username").value.trim();
+    var walletAddress = document.getElementById("wallet").value.trim();
+    var coachName = document.getElementById("coach").value.trim();
     var subscriptionType = document.getElementById("subscription").value;
-    var dfsTokenAmount = document.getElementById("burn-amount").innerText; // Anzahl der DFS Tokens
+    var dfsTokenAmount = document.getElementById("burn-amount").innerText.trim(); // Anzahl der DFS Tokens
+    var consentChecked = document.getElementById("whatsapp-consent").checked;
 
+    // Prüfe, ob alle Felder ausgefüllt sind
     if (!username || !walletAddress || !coachName || !dfsTokenAmount) {
         alert("Bitte fülle alle Felder aus, bevor du die Nachricht sendest.");
         return;
     }
 
+    // Wallet-Adresse prüfen (0x + genau 40 hexadezimale Zeichen)
+    var walletRegex = /^0x[a-fA-F0-9]{40}$/;
+    if (!walletRegex.test(walletAddress)) {
+        alert("Ungültige Wallet-Adresse! Stelle sicher, dass sie mit '0x' beginnt und 40 hexadezimale Zeichen enthält.");
+        return;
+    }
+
+    // Prüfe, ob die Checkbox aktiviert ist
+    if (!consentChecked) {
+        alert("Bitte stimme der Übermittlung der Daten über WhatsApp zu.");
+        return;
+    }
+
     var message = `🔥*Proof of Burn*🔥\n\n` +
                   `👨🏼‍🎓 *Benutzername:* ${username}\n` +
-                  `🔎 *Proof:* https://arbiscan.io/address/${walletAddress}\n` +
+                  `🔎 *Proof:* https://arbiscan.io/token/0x912ce59144191c1204e64559fe8253a0e49e6548?a=${walletAddress}\n` +
                   `🎖️ *Coach:* ${coachName}\n` +
                   `🔥 *Abo Preis:* ${subscriptionType}\n\n` +
-                  `Ich sende innerhalb von 24 Stunden ${dfsTokenAmount} an die Burning Adresse:\n` +
+                  `✅Ich sende innerhalb von 24 Stunden ${dfsTokenAmount} an die Burning Adresse:\n` +
                   `0x1dEaD0000000000000000000000000000000dEaD`;
 
     var whatsappURL = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + encodeURIComponent(message);
     window.open(whatsappURL, "_blank");
 }
 </script>
-
-    
-
-
-
-
-
-
 
 
     <br><br>Bitte sende vor- oder 24 Stunden nach dem absenden des Formulars <p id="burn-amount" class="token-price"></p> an folgende Adresse:
@@ -211,8 +212,6 @@ function copyToClipboard(text) {
     });
 }
 </script>
-
-
 
 
  <br><br><footer>
