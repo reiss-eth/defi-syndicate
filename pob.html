@@ -126,6 +126,17 @@
             }
         }
         window.onload = fetchUniswapPrice;
+
+        function validateForm(event) {
+            event.preventDefault();
+            let username = document.getElementById('username').value;
+            let wallet = document.getElementById('wallet').value;
+            let subscription = document.getElementById('subscription').value;
+            let message = `Benutzername: ${username}%0A Wallet-Adresse: ${wallet}%0A Abo-Typ: ${subscription}`;
+            
+            let whatsappUrl = `https://api.whatsapp.com/send?phone=+491234567890&text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        }
     </script>
 </head>
 <body>
@@ -159,12 +170,9 @@
             
             <button type="submit" class="button">Senden</button>
         </form>
-        <p id="token-price" class="token-price">DFS Token Preis: Lade...</p>
-        <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
+        <p id="token-price">DFS Token Preis: Lade...</p>
+        <p id="token-amount">Benötigte DFS Tokens: Lade...</p>
     </div>
-    
-    <br>
-    <a href="dfs.html" class="button">Zurück</a>
     
     <footer>
         <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom">
