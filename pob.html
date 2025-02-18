@@ -63,17 +63,10 @@
             background-color: #2a2a2a;
             color: white;
         }
-        .consent-container {
-            text-align: left;
-            font-size: 12px;
+        .token-price {
+            font-size: 14px;
             margin-top: 10px;
-        }
-        .consent-container a {
             color: #ff3b3b;
-            text-decoration: none;
-        }
-        .consent-container a:hover {
-            text-decoration: underline;
         }
         .button {
             display: inline-block;
@@ -90,11 +83,6 @@
         }
         .button:hover {
             background: #e63232;
-        }
-        footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #777;
         }
     </style>
     <script>
@@ -134,7 +122,7 @@
             let coach = document.getElementById('coach').value;
             let subscription = document.getElementById('subscription').value;
             let dfsAmount = subscription.match(/\d+/)[0];
-            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proof}%0A📜 *Coach:* ${coach}%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsAmount} DFS an die Burn Wallet.`;
+            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proof}%0A📜 *Coach:* ${coach}%0A💰 *Betrag:* ${dfsAmount} DFS%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsAmount} DFS an die Burn Wallet.`;
             
             let whatsappUrl = `https://api.whatsapp.com/send?phone=+4915129147194&text=${message}`;
             window.open(whatsappUrl, '_blank');
@@ -148,6 +136,7 @@
     
     <div class="container">
         <h2>Proof of Burn</h2>
+        <p id="token-price" class="token-price">DFS Token Preis: Lade...</p>
         <form onsubmit="validateForm(event)">
             <label for="username">Benutzername</label>
             <input type="text" id="username" required>
@@ -164,6 +153,8 @@
                 <option value="Jahres Abo (299 USD)">Jahres Abo (299 USD)</option>
                 <option value="Lifetime Abo (1499 USD)">Lifetime Abo (1499 USD)</option>
             </select>
+            
+            <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
             
             <button type="submit" class="button">Senden</button>
         </form>
