@@ -130,9 +130,11 @@
         function validateForm(event) {
             event.preventDefault();
             let username = document.getElementById('username').value;
-            let wallet = document.getElementById('wallet').value;
+            let proof = document.getElementById('wallet').value;
+            let coach = document.getElementById('coach').value;
             let subscription = document.getElementById('subscription').value;
-            let message = `🔥 *Proof of Burn - DeFi Syndicate* 🔥%0A%0A👤 *Benutzername:* ${username}%0A💼 *Wallet-Adresse:* ${wallet}%0A📜 *Abo-Typ:* ${subscription}%0A%0A✅ Ich bestätige die Angaben und sende den Nachweis!`;
+            let dfsAmount = subscription.match(/\d+/)[0];
+            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proof}%0A📜 *Coach:* ${coach}%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsAmount} DFS an die Burn Wallet.`;
             
             let whatsappUrl = `https://api.whatsapp.com/send?phone=+4915129147194&text=${message}`;
             window.open(whatsappUrl, '_blank');
@@ -150,7 +152,7 @@
             <label for="username">Benutzername</label>
             <input type="text" id="username" required>
             
-            <label for="wallet">Wallet-Adresse</label>
+            <label for="wallet">Proof</label>
             <input type="text" id="wallet" required>
             
             <label for="coach">Coach</label>
@@ -162,11 +164,6 @@
                 <option value="Jahres Abo (299 USD)">Jahres Abo (299 USD)</option>
                 <option value="Lifetime Abo (1499 USD)">Lifetime Abo (1499 USD)</option>
             </select>
-            
-            <div class="consent-container">
-                <input type="checkbox" id="consent" required>
-                <label for="consent">Ich stimme zu, dass meine Daten über WhatsApp weitergeleitet werden. <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a></label>
-            </div>
             
             <button type="submit" class="button">Senden</button>
         </form>
