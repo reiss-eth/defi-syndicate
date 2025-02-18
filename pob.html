@@ -156,7 +156,24 @@
     </div>
     
     <br><br>Bitte sende vor- oder 24 Stunden nach dem absenden des Formulars <p id="burn-amount" class="token-price"></p> an folgende Adresse:
-    <H3><p>0x1dEaD0000000000000000000000000000000dEaD</p></H3>
+    <H3><p>0x1dEaD000...000dEaD</p></H3>
+
+
+<button onclick="copyToClipboard('0x1dEaD0000000000000000000000000000000dEaD')">Burn Adresse kopieren</button>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Burning Adresse wurde kopiert: " + text);
+    }).catch(err => {
+        console.error("Fehler beim Kopieren: ", err);
+    });
+}
+</script>
+
+
+
+
  <br><br><footer>
         <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom">
         <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
