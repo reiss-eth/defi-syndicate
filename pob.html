@@ -21,6 +21,7 @@
         }
         header {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -132,11 +133,11 @@
 <body>
     <header>
         <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logotop">
+        <p id="token-price" class="token-price">DFS Token Preis: Lade...</p>
     </header>
     
     <div class="container">
         <h2>Proof of Burn</h2>
-        <p id="token-price" class="token-price">DFS Token Preis: Lade...</p>
         <form onsubmit="validateForm(event)">
             <label for="username">Benutzername</label>
             <input type="text" id="username" required>
@@ -154,10 +155,12 @@
                 <option value="Lifetime Abo (1499 USD)">Lifetime Abo (1499 USD)</option>
             </select>
             
-            <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
-            
             <button type="submit" class="button">Senden</button>
+            
+            <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
         </form>
     </div>
 </body>
 </html>
+
+   
