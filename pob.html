@@ -119,7 +119,9 @@
             let proof = document.getElementById('wallet').value;
             let coach = document.getElementById('coach').value;
             
-            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proof}%0A📜 *Coach:* ${coach}%0A🔥 *Benötigte DFS Tokens:* ${dfsTokenAmount.toFixed(4)} DFS%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsTokenAmount.toFixed(4)} DFS an die Burn Wallet.`;
+            let proofLink = `https://arbiscan.io/token/0x912ce59144191c1204e64559fe8253a0e49e6548?a=${proof}`;
+            
+            let message = `🔥 *Proof of Burn* 🔥%0A%0A👤 *Benutzername:* ${username}%0A🛡️ *Proof:* ${proofLink}%0A📜 *Coach:* ${coach}%0A🔥 *Benötigte DFS Tokens:* ${dfsTokenAmount.toFixed(4)} DFS%0A%0A✅ Ich sende innerhalb von 24 Stunden ${dfsTokenAmount.toFixed(4)} DFS an die Burn Wallet.`;
             
             let whatsappUrl = `https://api.whatsapp.com/send?phone=+4915129147194&text=${message}`;
             window.open(whatsappUrl, '_blank');
