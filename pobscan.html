@@ -105,7 +105,7 @@
                     } else if (subscription === 'Lifetime Abo (1499 USD)') {
                         dfsTokenAmount = 1499 / price;
                     }
-                    document.getElementById('token-amount').innerText = `Mit dem senden des Formulars bestätige ich, dass ich ${dfsTokenAmount.toFixed(4)} DFS innerhalb von 24 Stunden an die unten aufgeführte Burn Adresse senden werde.`;
+                    document.getElementById('token-amount').innerText = `Mit dem Senden des Formulars bestätige ich, dass ich ${dfsTokenAmount.toFixed(4)} DFS kaufen und an die unten aufgeführte Walletadresse zum Zwecke des Tokenburns senden werde. Ebenfalls werden alle hier angegebenen Daten, inklusive meiner Wallet-Adresse über WhatsApp als Auftragsbestätigung verschickt. Ich bin mit diesem Vorgehen und der beschriebenen Datenübermittlung einverstanden.`;
                     document.getElementById('burn-amount').innerText = `${dfsTokenAmount.toFixed(4)} DFS`;
                 }
                 
@@ -148,9 +148,9 @@
             
             <label for="subscription">Abo-Typ</label>
             <select id="subscription" required>
-                <option value="Monats Abo (30 USD)">Monats Abo (30 USD)</option>
-                <option value="Jahres Abo (299 USD)">Jahres Abo (299 USD)</option>
-                <option value="Lifetime Abo (1499 USD)">Lifetime Abo (1499 USD)</option>
+                <option value="Monats Abo (30 USD)">Monats Zugang (30 USD)</option>
+                <option value="Jahres Abo (299 USD)">Jahres Zugang (299 USD)</option>
+                <option value="Lifetime Abo (1499 USD)">Lifetime Zugang (1499 USD)</option>
             </select>
            
         <p id="token-amount" class="token-price">Benötigte DFS Tokens: Lade...</p>
@@ -197,7 +197,7 @@ function sendWhatsAppMessage() {
                   `🔎 *Proof:* https://arbiscan.io/token/0x912ce59144191c1204e64559fe8253a0e49e6548?a=${walletAddress}\n` +
                   `🎖️ *Coach:* ${coachName}\n` +
                   `🔥 *Abo Preis:* ${subscriptionType}\n\n` +
-                  `✅Ich sende innerhalb von 24 Stunden ${dfsTokenAmount} an die Burning Adresse:\n` +
+                  `✅Ich sende ${dfsTokenAmount} an die Burning Adresse:\n` +
                   `0x1dEaD0000000000000000000000000000000dEaD`;
 
     var whatsappURL = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + encodeURIComponent(message);
@@ -206,7 +206,7 @@ function sendWhatsAppMessage() {
 </script>
 </div>
 
-    <br><br>Bitte sende vor- oder 24 Stunden nach dem absenden des Formulars <p id="burn-amount" class="token-price"></p> an folgende Adresse:
+    <br><br>Bitte sende nach dem absenden des Formulars <p id="burn-amount" class="token-price"></p> an folgende Adresse:
     <H3><p>0x1dEaD000...000dEaD</p></H3>
 
 
