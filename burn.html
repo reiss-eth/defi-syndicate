@@ -152,45 +152,58 @@
 
 
     <button id="swapButton">ETH gegen BURN tauschen</button>
-    <script>
-        const UNISWAP_ROUTER_ADDRESS = "0xC873fEcbd354f5A56E00E710B90EF4201db2448d";
+   <script>
+    async function swapETHForTokens() {
+        if (!window.ethereum) return alert("Bitte MetaMask installieren!");
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+
+        // Uniswap Router-Adresse in korrekter Checksum-Form
+        const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xc873fecbd354f5a56e00e710b90ef4201db2448d");
         const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
         const RECEIVER_ADDRESS = "0x1DEAd0000000000000000000000000000000DEAd";
 
-        async function swapETHForTokens() {
-            if (!window.ethereum) return alert("Bitte MetaMask installieren!");
+        const router = new ethers.Contract(
+            UNISWAP_ROUTER_ADDRESS,
+            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+            signer
+        );
 
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
-            const signer = provider.getSigner();
+        try {
+            const ethAmount = ethers.utils.parseEther("0.01"); // Betrag in ETH
+            const deadline = Math.floor(Date.now() / 1000) + 600; // 10 Minuten gültig
 
-            const router = new ethers.Contract(
-                UNISWAP_ROUTER_ADDRESS,
-                ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
-                signer
+            console.log("Starte Swap...");
+            console.log("ETH Betrag:", ethAmount.toString());
+            console.log("Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
+            console.log("Token-Adresse:", TOKEN_ADDRESS);
+            console.log("Empfänger-Adresse:", RECEIVER_ADDRESS);
+
+            const tx = await router.swapExactETHForTokens(
+                0, // Kein Mindestbetrag
+                ["0xC02aaa39b223FE8D0A0e5C4F27ead9083C756Cc2", TOKEN_ADDRESS], // ETH → Token Path
+                RECEIVER_ADDRESS,
+                deadline,
+                { value: ethAmount }
             );
 
-            try {
-                const ethAmount = ethers.utils.parseEther("0.01");
-                const deadline = Math.floor(Date.now() / 1000) + 600;
-                
-                const tx = await router.swapExactETHForTokens(
-                    0,
-                    ["0xC02aaa39b223FE8D0A0e5C4F27ead9083C756Cc2", TOKEN_ADDRESS],
-                    RECEIVER_ADDRESS,
-                    deadline,
-                    { value: ethAmount }
-                );
-                
-                await tx.wait();
-                alert("Swap erfolgreich!");
-            } catch (error) {
-                console.error(error);
-                alert("Swap fehlgeschlagen");
-            }
+            console.log("Transaktion gesendet:", tx.hash);
+            await tx.wait();
+            alert("Swap erfolgreich!");
+        } catch (error) {
+            console.error("Swap fehlgeschlagen:", error);
+            alert("Swap fehlgeschlagen: " + error.message);
         }
-        document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
-    </script><br><br><br>
+    }
+
+    document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
+</script>
+
+
+
+<br><br><br>
 
 
 
