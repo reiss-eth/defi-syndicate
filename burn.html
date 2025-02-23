@@ -102,29 +102,37 @@
 
 
  <button id="connectWallet">Wallet verbinden</button>
-    <p id="walletAddress"></p>
+    <p id="walletStatus">Nicht verbunden</p>
+    
     <script>
         async function connectWallet() {
             if (!window.ethereum) {
-                alert("Bitte MetaMask oder eine kompatible Wallet installieren!");
+                alert("Bitte installiere MetaMask oder eine kompatible Wallet!");
                 return;
             }
-            
+
             try {
+                // Verbinde mit dem Ethereum-Provider (MetaMask/Rabby)
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
+                
+                // Fordere den Benutzer auf, seine Wallet zu verbinden
                 await provider.send("eth_requestAccounts", []);
+
+                // Hole den Signer (verbundene Wallet)
                 const signer = provider.getSigner();
                 const address = await signer.getAddress();
-                document.getElementById("walletAddress").innerText = "Verbunden mit: " + address;
+
+                // Zeige die Wallet-Adresse an
+                document.getElementById("walletStatus").innerText = "Verbunden mit: " + address;
             } catch (error) {
-                console.error(error);
-                alert("Wallet Verbindung fehlgeschlagen");
+                console.error("Wallet Verbindung fehlgeschlagen:", error);
+                alert("Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
             }
         }
-        
+
+        // Event Listener für den Button
         document.getElementById("connectWallet").addEventListener("click", connectWallet);
     </script>
-
 
 
 
