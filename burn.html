@@ -162,8 +162,9 @@
 
         // Adressen mit korrekter Checksum-Formatierung
         const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xc873fecbd354f5a56e00e710b90ef4201db2448d");
-        const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
+        const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
         const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead"); // Fix
+        const WETH_ADDRESS = ethers.utils.getAddress("0xBCbfe52Db6006BD90ceDa4BF3A331a2DcD738714"); // ✅ WETH-Adresse für Sepolia
 
         const router = new ethers.Contract(
             UNISWAP_ROUTER_ADDRESS,
@@ -180,10 +181,11 @@
             console.log("Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
             console.log("Token-Adresse:", TOKEN_ADDRESS);
             console.log("Empfänger-Adresse:", RECEIVER_ADDRESS);
+            console.log("WETH-Adresse:", WETH_ADDRESS); // Debugging
 
             const tx = await router.swapExactETHForTokens(
                 0, // Kein Mindestbetrag
-                ["0xC02aaa39b223FE8D0A0e5C4F27ead9083C756Cc2", TOKEN_ADDRESS], // ETH → Token Path
+                [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ Korrekte WETH-Adresse für Sepolia
                 RECEIVER_ADDRESS,
                 deadline,
                 { value: ethAmount }
@@ -204,7 +206,8 @@
 
 
 
-<br><br><br>2
+
+<br><br><br>1
 
 
 
