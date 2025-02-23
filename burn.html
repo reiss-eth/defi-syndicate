@@ -152,7 +152,7 @@
 
 
     <button id="swapButton">ETH gegen BURN tauschen</button>
-   <script>
+  <script>
     async function swapETHForTokens() {
         if (!window.ethereum) return alert("Bitte MetaMask installieren!");
 
@@ -160,10 +160,10 @@
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
 
-        // Uniswap Router-Adresse in korrekter Checksum-Form
+        // Adressen mit korrekter Checksum-Formatierung
         const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xc873fecbd354f5a56e00e710b90ef4201db2448d");
         const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
-        const RECEIVER_ADDRESS = "0x1DEAd0000000000000000000000000000000DEAd";
+        const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead"); // Fix
 
         const router = new ethers.Contract(
             UNISWAP_ROUTER_ADDRESS,
@@ -203,7 +203,8 @@
 
 
 
-<br><br><br>
+
+<br><br><br>2
 
 
 
