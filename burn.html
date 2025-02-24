@@ -194,19 +194,19 @@
 
     <button id="swapButton">ETH gegen BURN tauschen</button>
   <script>
-   async function swapETHForTokens() {
+  async function swapETHForTokens() {
     if (!window.ethereum) return alert("Bitte MetaMask installieren!");
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
 
-    // ✅ Uniswap V2 Router für Sepolia
-    const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0x6c1bBfD6330CA6c3f27C29b3a3330dB2B6B0980a");
+    // ✅ Neuer Uniswap V2 Router für Sepolia (von dir vorgegeben)
+    const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008");
     const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
-    const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
+    const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9"); // WETH für Sepolia
 
-    // ❗ Hier bleibt die Empfänger-Adresse unverändert!
+    // ❗ Die Empfänger-Adresse bleibt unverändert (z.B. Burn-Adresse)
     const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
 
     const router = new ethers.Contract(
@@ -216,19 +216,19 @@
     );
 
     try {
-        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ ETH Betrag
+        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
         const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
 
-        console.log("🔥 Starte Swap...");
+        console.log("🔥 Starte Swap mit neuem Router...");
         console.log("🔹 ETH Betrag:", ethAmount.toString());
-        console.log("🔹 Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
+        console.log("🔹 Neuer Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
         console.log("🔹 Token-Adresse:", TOKEN_ADDRESS);
         console.log("🔹 Empfänger-Adresse:", RECEIVER_ADDRESS);
         console.log("🔹 WETH-Adresse:", WETH_ADDRESS);
 
-        // ✅ Swap ausführen mit festgelegtem Empfänger
+        // ✅ Swap ausführen mit dem neuen Router
         const tx = await router.swapExactETHForTokens(
-            0, // ✅ Kein Mindestbetrag, Swap wird nicht blockiert
+            0, // ✅ Setze auf 0, damit kein Mindestbetrag den Swap blockiert
             [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ WETH → TOKEN
             RECEIVER_ADDRESS, // ❗ Tokens gehen an diese Adresse!
             deadline,
@@ -246,14 +246,13 @@
 
 // Event-Listener für den Button
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
-
 </script>
 
 
 
 
 
-<br><br><br> Rakete
+<br><br><br> moon
 
 
 
