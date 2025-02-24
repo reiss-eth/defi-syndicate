@@ -150,7 +150,7 @@
             return;
         }
 
-        // Nach erfolgreichem Swap Popup anzeigen
+        // Zeige das Popup mit den Details
         showPopup(community, level, access, ethAmount, senderAddress, etherscanLink);
     }
 
@@ -186,7 +186,15 @@
 
         document.body.appendChild(popup);
     }
-</script>
 
+    function updateAccess() {
+        document.getElementById("accessDiv").classList.remove("hidden");
+    }
+
+    function updatePrice() {
+        document.getElementById("priceDiv").classList.remove("hidden");
+    }
+</script>
+Check
 </body>
 </html>
