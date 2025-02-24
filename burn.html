@@ -218,11 +218,10 @@
 
     try {
         const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
-        const ethAmountFormatted = ethers.utils.formatEther(ethAmount); // ✅ Für lesbare Anzeige
         const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
 
         console.log("🔥 Starte Swap mit neuem Router...");
-        console.log("🔹 ETH Betrag:", ethAmountFormatted + " ETH");
+        console.log("🔹 ETH Betrag:", ethAmount.toString());
         console.log("🔹 Neuer Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
         console.log("🔹 Token-Adresse:", TOKEN_ADDRESS);
         console.log("🔹 Empfänger-Adresse:", RECEIVER_ADDRESS);
@@ -240,8 +239,8 @@
         console.log("✅ Transaktion gesendet:", tx.hash);
         await tx.wait();
 
-        // ✅ Erfolgreiches Popup anzeigen mit zwei Schritten
-        showPopup(walletAddress, ethAmountFormatted);
+        // ✅ Erfolgreiches Popup anzeigen mit zwei identischen Schritten
+        showPopup();
         
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
@@ -249,12 +248,9 @@
     }
 }
 
-// 📌 Funktion für das Popup-Fenster mit zwei Schritten (Zahlungsnachweis einreichen + Gruppenbeitritt)
-function showPopup(walletAddress, ethAmountFormatted) {
-    const etherscanLink = `https://sepolia.etherscan.io/address/${walletAddress}`;
-    const whatsappMessage = encodeURIComponent(etherscanLink);
-    const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`; // ✅ Nachricht an Admin senden
-
+// 📌 Funktion für das Popup-Fenster mit zwei identischen Schritten
+function showPopup() {
+    const whatsappLink = `https://wa.me/4915129147194`; // ✅ Nachricht an Admin senden
     const whatsappGroupLink = "https://chat.whatsapp.com/FNobqMQWhhkK5zQ8bhrP8j"; // ✅ WhatsApp-Gruppenlink
 
     // ✅ QR-Codes für beide Links generieren
@@ -274,21 +270,19 @@ function showPopup(walletAddress, ethAmountFormatted) {
     popup.style.textAlign = "center";
     popup.style.fontSize = "16px";
     popup.style.zIndex = "1000";
-    popup.style.width = "80%"; // Mehr Platz für zwei Spalten
+    popup.style.width = "80%";
 
     popup.innerHTML = `
         <h2>🚀 Community Zugang erfolgreich!</h2>
-        <p>Du hast die Community-Mitgliedschaft für <b>${ethAmountFormatted} ETH</b> erworben.</p>
         <p>Folge diesen zwei Schritten, um dich freizuschalten:</p>
         
         <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
             <!-- Schritt 1 -->
-            <div style="width: 45%; padding: 10px; background: #333; border-radius: 10px;">
+            <div style="width: 45%; padding: 15px; background: #333; border-radius: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
                 <h3>📩 Schritt 1: Zahlungsnachweis einreichen</h3>
                 <p>Klicke auf den Button oder scanne den QR-Code, um deinen Nachweis über die Zahlung zu senden.</p>
-                <p><a href="${etherscanLink}" target="_blank" style="color: #00ff99;">📌 Etherscan-Link</a></p>
                 <button onclick="window.open('${whatsappLink}', '_blank')" 
-                    style="margin-top:10px; padding:8px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
+                    style="margin-top:10px; padding:10px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
                     📲 Zahlungsnachweis per WhatsApp senden
                 </button>
                 <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
@@ -296,12 +290,11 @@ function showPopup(walletAddress, ethAmountFormatted) {
             </div>
 
             <!-- Schritt 2 -->
-            <div style="width: 45%; padding: 10px; background: #444; border-radius: 10px;">
+            <div style="width: 45%; padding: 15px; background: #333; border-radius: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
                 <h3>👥 Schritt 2: Community beitreten</h3>
                 <p>Nach der Verifizierung trittst du der WhatsApp-Community bei.</p>
-                <p><a href="${whatsappGroupLink}" target="_blank" style="color: #00ff99;">🔗 WhatsApp Community Link</a></p>
                 <button onclick="window.open('${whatsappGroupLink}', '_blank')" 
-                    style="margin-top:10px; padding:8px 15px; border:none; background:#007aff; color:#fff; border-radius:5px; cursor:pointer;">
+                    style="margin-top:10px; padding:10px 15px; border:none; background:#007aff; color:#fff; border-radius:5px; cursor:pointer;">
                     🚀 Community beitreten
                 </button>
                 <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
@@ -310,7 +303,7 @@ function showPopup(walletAddress, ethAmountFormatted) {
         </div>
 
         <button onclick="this.parentElement.remove()" 
-            style="margin-top:20px; padding:8px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
+            style="margin-top:20px; padding:10px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
             ✖ Schließen
         </button>
     `;
@@ -322,13 +315,14 @@ function showPopup(walletAddress, ethAmountFormatted) {
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
 
 
+
 </script>
 
 
 
 
 
-<br><br><br>version 2
+<br><br><br>
 
 
 
