@@ -104,36 +104,77 @@
  <button id="connectWallet">Wallet verbinden</button>
     <p id="walletStatus">Nicht verbunden</p>
     
-    <script>
-        async function connectWallet() {
-            if (!window.ethereum) {
-                alert("Bitte installiere MetaMask oder eine kompatible Wallet!");
-                return;
-            }
-
-            try {
-                // Verbinde mit dem Ethereum-Provider (MetaMask/Rabby)
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                
-                // Fordere den Benutzer auf, seine Wallet zu verbinden
-                await provider.send("eth_requestAccounts", []);
-
-                // Hole den Signer (verbundene Wallet)
-                const signer = provider.getSigner();
-                const address = await signer.getAddress();
-
-                // Zeige die Wallet-Adresse an
-                document.getElementById("walletStatus").innerText = "Verbunden mit: " + address;
-            } catch (error) {
-                console.error("Wallet Verbindung fehlgeschlagen:", error);
-                alert("Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
-            }
+   <script>
+    async function connectWallet() {
+        if (!window.ethereum) {
+            alert("Bitte installiere MetaMask oder eine kompatible Wallet!");
+            return;
         }
 
-        // Event Listener für den Button
-        document.getElementById("connectWallet").addEventListener("click", connectWallet);
-    </script>
+        try {
+            // Verbinde mit dem Ethereum-Provider (MetaMask/Rabby)
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            
+            // Fordere den Benutzer auf, seine Wallet zu verbinden
+            await provider.send("eth_requestAccounts", []);
 
+            // Hole den aktuellen Netzwerk-Status
+            const network = await provider.getNetwork();
+            const sepoliaChainId = 11155111; // Chain ID für Sepolia
+
+            // Falls der Benutzer nicht auf Sepolia ist, auffordern zu wechseln
+            if (network.chainId !== sepoliaChainId) {
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId: "0xaa36a7" }] // Hex-Format für Sepolia (11155111 = 0xaa36a7)
+                    });
+                } catch (switchError) {
+                    // Falls Sepolia nicht hinzugefügt wurde, den Benutzer bitten, es hinzuzufügen
+                    if (switchError.code === 4902) {
+                        try {
+                            await window.ethereum.request({
+                                method: "wallet_addEthereumChain",
+                                params: [{
+                                    chainId: "0xaa36a7",
+                                    chainName: "Ethereum Sepolia",
+                                    rpcUrls: ["https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID"], // Ersetze mit deinem Infura-Projekt
+                                    nativeCurrency: {
+                                        name: "SepoliaETH",
+                                        symbol: "ETH",
+                                        decimals: 18
+                                    },
+                                    blockExplorerUrls: ["https://sepolia.etherscan.io/"]
+                                }]
+                            });
+                        } catch (addError) {
+                            console.error("Fehler beim Hinzufügen von Sepolia:", addError);
+                            alert("Fehler beim Hinzufügen des Sepolia Netzwerks. Bitte manuell wechseln.");
+                            return;
+                        }
+                    } else {
+                        console.error("Netzwerkwechsel fehlgeschlagen:", switchError);
+                        alert("Bitte wechsle manuell zum Sepolia Netzwerk.");
+                        return;
+                    }
+                }
+            }
+
+            // Hole den Signer (verbundene Wallet)
+            const signer = provider.getSigner();
+            const address = await signer.getAddress();
+
+            // Zeige die Wallet-Adresse an
+            document.getElementById("walletStatus").innerText = "Verbunden mit: " + address + " (Sepolia)";
+        } catch (error) {
+            console.error("Wallet Verbindung fehlgeschlagen:", error);
+            alert("Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
+        }
+    }
+
+    // Event Listener für den Button
+    document.getElementById("connectWallet").addEventListener("click", connectWallet);
+</script>
 
 
 
@@ -207,7 +248,7 @@
 
 
 
-<br><br><br>router
+<br><br><br>check
 
 
 
