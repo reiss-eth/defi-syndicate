@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Community Beitritt</title>
+    <title>DeFi Syndicate Community Beitritt</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         body {
@@ -51,7 +51,7 @@
 <body>
 
 <div class="container">
-    <h2>🔗 Verbinde dein Wallet:</h2>
+    <h2>💎 DeFi Syndicate Community Zugang</h2>
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
     <p id="walletStatus">❌ Nicht verbunden</p>
 
@@ -81,7 +81,7 @@
     <div id="priceDiv" class="hidden">
         <h3>💰 Preis:</h3>
         <input id="ethAmount" type="text" readonly>
-        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 Beitreten & ETH senden</button>
+        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 ETH senden & Community Beitreten</button>
     </div>
 </div>
 
@@ -166,15 +166,15 @@
         const priceDiv = document.getElementById("priceDiv");
 
         let price = "0.001";
-        if (level === "Fundamentale" && access === "Monats Zugang") price = "0.02";
-        if (level === "Fundamentale" && access === "Jahres Zugang") price = "0.18";
-        if (level === "Fundamentale" && access === "Lifetime Zugang") price = "0.5";
-        if (level === "Breakthrough" && access === "Monats Zugang") price = "0.05";
-        if (level === "Breakthrough" && access === "Jahres Zugang") price = "0.4";
-        if (level === "Breakthrough" && access === "Lifetime Zugang") price = "1.2";
-        if (level === "Elite" && access === "Monats Zugang") price = "0.1";
-        if (level === "Elite" && access === "Jahres Zugang") price = "0.8";
-        if (level === "Elite" && access === "Lifetime Zugang") price = "2.5";
+        if (level === "Fundamentale" && access === "Monats Zugang") price = "0.003";
+        if (level === "Fundamentale" && access === "Jahres Zugang") price = "0.03";
+        if (level === "Fundamentale" && access === "Lifetime Zugang") price = "0.09";
+        if (level === "Breakthrough" && access === "Monats Zugang") price = "0.005";
+        if (level === "Breakthrough" && access === "Jahres Zugang") price = "0.05";
+        if (level === "Breakthrough" && access === "Lifetime Zugang") price = "0.15";
+        if (level === "Elite" && access === "Monats Zugang") price = "0.01";
+        if (level === "Elite" && access === "Jahres Zugang") price = "0.1";
+        if (level === "Elite" && access === "Lifetime Zugang") price = "0.3";
 
         document.getElementById("ethAmount").value = price;
         priceDiv.classList.remove("hidden");
