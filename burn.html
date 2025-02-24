@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Community Beitritt</title>
+    <title>DeFi Synicate Community Beitritt</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         body {
@@ -51,7 +51,7 @@
 <body>
 
 <div class="container">
-    <h2>🔗 Verbinde dein Wallet:</h2>
+    <h3>DeFi Syndicate Community Zugang:</h3>
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
     <p id="walletStatus">❌ Nicht verbunden</p>
 
@@ -59,7 +59,7 @@
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
     <div id="levelDiv">
-        <h3>📚 Wähle dein Level:</h3>
+        <h4>📚 Wähle dein Level:</h4>
         <select id="level" onchange="updatePrice()">
             <option value="">-- Level wählen --</option>
             <option value="Fundamentale">Fundamentale</option>
@@ -69,7 +69,7 @@
     </div>
 
     <div id="accessDiv" class="hidden">
-        <h3>⏳ Wähle deinen Zugang:</h3>
+        <h4>⏳ Wähle deinen Zugang:</h4>
         <select id="access" onchange="updatePrice()">
             <option value="">-- Zugang wählen --</option>
             <option value="Monats Zugang">Monats Zugang</option>
@@ -79,7 +79,7 @@
     </div>
 
     <div id="priceDiv" class="hidden">
-        <h3>💰 Preis:</h3>
+        <h4>💰 Preis:</h4>
         <input id="ethAmount" type="text" readonly>
         <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 Beitreten & ETH senden</button>
     </div>
@@ -154,19 +154,19 @@
 
         if (level && access) {
             if (level === "Fundamentale") {
-                if (access === "Monats Zugang") price = "0.02";
-                if (access === "Jahres Zugang") price = "0.18";
-                if (access === "Lifetime Zugang") price = "0.5";
+                if (access === "Monats Zugang") price = "0.0003";
+                if (access === "Jahres Zugang") price = "0.003";
+                if (access === "Lifetime Zugang") price = "0.009";
             }
             if (level === "Breakthrough") {
-                if (access === "Monats Zugang") price = "0.05";
-                if (access === "Jahres Zugang") price = "0.4";
-                if (access === "Lifetime Zugang") price = "1.2";
+                if (access === "Monats Zugang") price = "0.0005";
+                if (access === "Jahres Zugang") price = "0.005";
+                if (access === "Lifetime Zugang") price = "0.015";
             }
             if (level === "Elite") {
-                if (access === "Monats Zugang") price = "0.1";
-                if (access === "Jahres Zugang") price = "0.8";
-                if (access === "Lifetime Zugang") price = "2.5";
+                if (access === "Monats Zugang") price = "0.001";
+                if (access === "Jahres Zugang") price = "0.01";
+                if (access === "Lifetime Zugang") price = "0.03";
             }
 
             document.getElementById("ethAmount").value = price;
@@ -203,6 +203,6 @@
         }
     }
 </script>
-Go
+Test
 </body>
 </html>
