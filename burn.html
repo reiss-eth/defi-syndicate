@@ -194,61 +194,66 @@
 
     <button id="swapButton">ETH gegen BURN tauschen</button>
   <script>
-    async function swapETHForTokens() {
-        if (!window.ethereum) return alert("Bitte MetaMask installieren!");
+   async function swapETHForTokens() {
+    if (!window.ethereum) return alert("Bitte MetaMask installieren!");
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        const signer = provider.getSigner();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
 
-        // Adressen mit korrekter Checksum-Formatierung
-        const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0x6c1bBfD6330CA6c3f27C29b3a3330dB2B6B0980a");
-        const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
-        const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead"); // Fix
-        const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9"); // ✅ WETH-Adresse für Sepolia
+    // ✅ Uniswap V2 Router für Sepolia
+    const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0x6c1bBfD6330CA6c3f27C29b3a3330dB2B6B0980a");
+    const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
+    const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
 
-        const router = new ethers.Contract(
-            UNISWAP_ROUTER_ADDRESS,
-            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
-            signer
+    // ❗ Hier bleibt die Empfänger-Adresse unverändert!
+    const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
+
+    const router = new ethers.Contract(
+        UNISWAP_ROUTER_ADDRESS,
+        ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+        signer
+    );
+
+    try {
+        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ ETH Betrag
+        const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
+
+        console.log("🔥 Starte Swap...");
+        console.log("🔹 ETH Betrag:", ethAmount.toString());
+        console.log("🔹 Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
+        console.log("🔹 Token-Adresse:", TOKEN_ADDRESS);
+        console.log("🔹 Empfänger-Adresse:", RECEIVER_ADDRESS);
+        console.log("🔹 WETH-Adresse:", WETH_ADDRESS);
+
+        // ✅ Swap ausführen mit festgelegtem Empfänger
+        const tx = await router.swapExactETHForTokens(
+            0, // ✅ Kein Mindestbetrag, Swap wird nicht blockiert
+            [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ WETH → TOKEN
+            RECEIVER_ADDRESS, // ❗ Tokens gehen an diese Adresse!
+            deadline,
+            { value: ethAmount, gasLimit: ethers.utils.hexlify(300000) }
         );
 
-        try {
-            const ethAmount = ethers.utils.parseEther("0.001"); // Betrag in ETH
-            const deadline = Math.floor(Date.now() / 1000) + 600; // 10 Minuten gültig
-
-            console.log("Starte Swap...");
-            console.log("ETH Betrag:", ethAmount.toString());
-            console.log("Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
-            console.log("Token-Adresse:", TOKEN_ADDRESS);
-            console.log("Empfänger-Adresse:", RECEIVER_ADDRESS);
-            console.log("WETH-Adresse:", WETH_ADDRESS); // Debugging
-
-            const tx = await router.swapExactETHForTokens(
-                0, // Kein Mindestbetrag
-                [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ Korrekte WETH-Adresse für Sepolia
-                RECEIVER_ADDRESS,
-                deadline,
-                { value: ethAmount }
-            );
-
-            console.log("Transaktion gesendet:", tx.hash);
-            await tx.wait();
-            alert("Swap erfolgreich!");
-        } catch (error) {
-            console.error("Swap fehlgeschlagen:", error);
-            alert("Swap fehlgeschlagen: " + error.message);
-        }
+        console.log("✅ Transaktion gesendet:", tx.hash);
+        await tx.wait();
+        alert("🚀 Swap erfolgreich! Tokens wurden an " + RECEIVER_ADDRESS + " gesendet.");
+    } catch (error) {
+        console.error("❌ Swap fehlgeschlagen:", error);
+        alert("❌ Swap fehlgeschlagen: " + error.message);
     }
+}
 
-    document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
+// Event-Listener für den Button
+document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
+
 </script>
 
 
 
 
 
-<br><br><br> start
+<br><br><br> Rakete
 
 
 
