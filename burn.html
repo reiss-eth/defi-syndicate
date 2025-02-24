@@ -216,33 +216,67 @@ function updatePrice() {
     }
 
     function showPopup(txHash, ethAmount) {
-        const whatsappMessage = `Ich habe ${ethAmount} ETH für den Zugang geswappt.%0A🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash}`;
-        const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
-        const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
-
-        const popup = document.createElement("div");
-        popup.className = "popup";
-        popup.innerHTML = `
-            <h2>✅ Zahlung erfolgreich!</h2>
-            <p>Du hast <b>${ethAmount} ETH</b> erfolgreich geswappt und gesendet.</p>
-            
-            <h3>📩 Zahlungsnachweis senden</h3>
-            <button onclick="window.open('${whatsappLink}', '_blank')" style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
-                📲 Per WhatsApp senden
-            </button>
-            <p>📸 Oder scanne den QR-Code:</p>
-            <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
-            
-            <button onclick="this.parentElement.remove()" style="margin-top:20px; padding:10px; background:#ff9800; color:#fff;">
-                ✖ Schließen
-            </button>
-        `;
-
-        document.body.appendChild(popup);
+    const level = document.getElementById("level").value; // Gewähltes Level abrufen
+    let communityLink = "";
+    
+    // WhatsApp-Community-Link abhängig vom gewählten Level setzen
+    if (level === "Fundamentale") {
+        communityLink = "https://chat.whatsapp.com/fundamental";
+    } else if (level === "Breakthrough") {
+        communityLink = "https://chat.whatsapp.com/breakthrough";
+    } else if (level === "Elite") {
+        communityLink = "https://chat.whatsapp.com/Elite";
     }
+
+    const whatsappMessage = `Ich habe ${ethAmount} ETH für den Zugang geswappt.%0A🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash}`;
+    const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
+    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+
+    const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
+
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.innerHTML = `
+        <h2>✅ Zahlung erfolgreich!</h2>
+        <p>Du hast <b>${ethAmount} ETH</b> erfolgreich geswappt und gesendet.</p>
+
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+            <!-- Link zum Zahlungsnachweis senden -->
+            <div style="width: 48%; background: #333; padding: 15px; border-radius: 10px;">
+                <h3>📩 Zahlungsnachweis senden</h3>
+                <button onclick="window.open('${whatsappLink}', '_blank')" 
+                    style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
+                    📲 Per WhatsApp senden
+                </button>
+                <p>📸 Oder scanne den QR-Code:</p>
+                <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
+            </div>
+
+            <!-- Link zur Community beitreten -->
+            <div style="width: 48%; background: #333; padding: 15px; border-radius: 10px;">
+                <h3>DeFi Syndicate (${level}) beitreten</h3>
+                <button onclick="window.open('${communityLink}', '_blank')" 
+                    style="padding:10px; background:#0084FF; color:#fff; border-radius:5px;">
+                    🚀 WhatsApp Community beitreten
+                </button>
+                <p>📸 Oder scanne den QR-Code:</p>
+                <img src="${qrCommunityLink}" style="width: 150px; height: 150px;">
+                <p style="font-size: 12px; color: #ccc;">Freischaltung erfolgt innerhalb von 3 bis 24 Stunden.</p>
+            </div>
+        </div>
+
+        <button onclick="this.parentElement.remove()" 
+            style="margin-top:20px; padding:10px; background:#ff9800; color:#fff; border-radius:5px;">
+            ✖ Schließen
+        </button>
+    `;
+
+    document.body.appendChild(popup);
+}
+
 </script>
 
-2.0
+Xyz
 </body>
 </html>
 
