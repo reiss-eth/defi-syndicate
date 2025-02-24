@@ -87,6 +87,7 @@
 
 <script>
     let provider, signer;
+    const SEPOLIA_CHAIN_ID = "0xaa36a7"; // Hex-Wert für Ethereum Sepolia
 
     async function connectWallet() {
         if (!window.ethereum) {
@@ -100,11 +101,41 @@
             signer = provider.getSigner();
             const walletAddress = await signer.getAddress();
             
+            // ✅ Versuche, das Netzwerk zu wechseln oder hinzuzufügen
+            await switchToSepolia();
+
             document.getElementById("walletStatus").innerText = "✅ Verbunden mit: " + walletAddress;
             document.getElementById("swapButton").disabled = false;
         } catch (error) {
             console.error("❌ Wallet Verbindung fehlgeschlagen:", error);
             alert("❌ Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
+        }
+    }
+
+    // 📌 Funktion zum Wechsel auf das Sepolia-Netzwerk
+    async function switchToSepolia() {
+        try {
+            await window.ethereum.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: SEPOLIA_CHAIN_ID }],
+            });
+        } catch (switchError) {
+            if (switchError.code === 4902) {
+                // Sepolia ist nicht in MetaMask vorhanden -> Füge es hinzu
+                await window.ethereum.request({
+                    method: "wallet_addEthereumChain",
+                    params: [{
+                        chainId: SEPOLIA_CHAIN_ID,
+                        chainName: "Ethereum Sepolia Testnet",
+                        nativeCurrency: { name: "SepoliaETH", symbol: "ETH", decimals: 18 },
+                        rpcUrls: ["https://sepolia.infura.io/v3/"],
+                        blockExplorerUrls: ["https://sepolia.etherscan.io/"],
+                    }],
+                });
+            } else {
+                console.error("❌ Fehler beim Wechsel auf Sepolia:", switchError);
+                alert("❌ Bitte wechsle manuell auf das Ethereum Sepolia Netzwerk!");
+            }
         }
     }
 
