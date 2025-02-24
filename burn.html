@@ -60,7 +60,7 @@
 
     <div id="levelDiv">
         <h3>📚 Wähle dein Level:</h3>
-        <select id="level" onchange="updateAccess()">
+        <select id="level" onchange="updatePrice()">
             <option value="">-- Level wählen --</option>
             <option value="Fundamentale">Fundamentale</option>
             <option value="Breakthrough">Breakthrough</option>
@@ -108,36 +108,44 @@
         }
     }
 
-    function updateAccess() {
-        document.getElementById("accessDiv").classList.remove("hidden");
-    }
-
     function updatePrice() {
         const level = document.getElementById("level").value;
         const access = document.getElementById("access").value;
         const priceDiv = document.getElementById("priceDiv");
         let price = "0.0";
 
-        if (level === "Fundamentale") {
-            if (access === "Monats Zugang") price = "0.02";
-            if (access === "Jahres Zugang") price = "0.18";
-            if (access === "Lifetime Zugang") price = "0.5";
+        if (!level) {
+            document.getElementById("accessDiv").classList.add("hidden");
+            document.getElementById("priceDiv").classList.add("hidden");
+            return;
         }
 
-        if (level === "Breakthrough") {
-            if (access === "Monats Zugang") price = "0.05";
-            if (access === "Jahres Zugang") price = "0.4";
-            if (access === "Lifetime Zugang") price = "1.2";
-        }
+        document.getElementById("accessDiv").classList.remove("hidden");
 
-        if (level === "Elite") {
-            if (access === "Monats Zugang") price = "0.1";
-            if (access === "Jahres Zugang") price = "0.8";
-            if (access === "Lifetime Zugang") price = "2.5";
-        }
+        if (level && access) {
+            if (level === "Fundamentale") {
+                if (access === "Monats Zugang") price = "0.02";
+                if (access === "Jahres Zugang") price = "0.18";
+                if (access === "Lifetime Zugang") price = "0.5";
+            }
+            if (level === "Breakthrough") {
+                if (access === "Monats Zugang") price = "0.05";
+                if (access === "Jahres Zugang") price = "0.4";
+                if (access === "Lifetime Zugang") price = "1.2";
+            }
+            if (level === "Elite") {
+                if (access === "Monats Zugang") price = "0.1";
+                if (access === "Jahres Zugang") price = "0.8";
+                if (access === "Lifetime Zugang") price = "2.5";
+            }
 
-        document.getElementById("ethAmount").value = price;
-        priceDiv.classList.remove("hidden");
+            document.getElementById("ethAmount").value = price;
+            document.getElementById("priceDiv").classList.remove("hidden");
+            document.getElementById("swapButton").disabled = false;
+        } else {
+            document.getElementById("priceDiv").classList.add("hidden");
+            document.getElementById("swapButton").disabled = true;
+        }
     }
 
     async function swapETHForTokens() {
@@ -158,4 +166,3 @@
 
 </body>
 </html>
-
