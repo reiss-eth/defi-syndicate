@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeFi Synicate Community Beitritt</title>
+    <title>DeFi Syndicate Community Beitritt</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         body {
@@ -46,6 +46,21 @@
         .hidden {
             display: none;
         }
+        /* Popup Styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #222;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
     </style>
 </head>
 <body>
@@ -87,8 +102,11 @@
 
 <script>
     let provider, signer;
-    const SEPOLIA_CHAIN_ID = "0xaa36a7"; // Hex-Wert für Ethereum Sepolia
-    const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead"; // Empfänger-Adresse für die ETH-Zahlung
+    const SEPOLIA_CHAIN_ID = "0xaa36a7";
+    const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";
+    const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
+    const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";
+    const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
 
     async function connectWallet() {
         if (!window.ethereum) {
@@ -100,16 +118,12 @@
             provider = new ethers.providers.Web3Provider(window.ethereum);
             await provider.send("eth_requestAccounts", []);
             signer = provider.getSigner();
-            const walletAddress = await signer.getAddress();
-            
-            // ✅ Automatisch zu Ethereum Sepolia wechseln
             await switchToSepolia();
 
-            document.getElementById("walletStatus").innerText = "✅ Verbunden mit: " + walletAddress;
+            document.getElementById("walletStatus").innerText = "✅ Wallet verbunden";
             document.getElementById("swapButton").disabled = false;
         } catch (error) {
-            console.error("❌ Wallet Verbindung fehlgeschlagen:", error);
-            alert("❌ Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
+            alert("❌ Wallet Verbindung fehlgeschlagen.");
         }
     }
 
@@ -120,63 +134,52 @@
                 params: [{ chainId: SEPOLIA_CHAIN_ID }],
             });
         } catch (switchError) {
-            if (switchError.code === 4902) {
-                await window.ethereum.request({
-                    method: "wallet_addEthereumChain",
-                    params: [{
-                        chainId: SEPOLIA_CHAIN_ID,
-                        chainName: "Ethereum Sepolia Testnet",
-                        nativeCurrency: { name: "SepoliaETH", symbol: "ETH", decimals: 18 },
-                        rpcUrls: ["https://sepolia.infura.io/v3/"],
-                        blockExplorerUrls: ["https://sepolia.etherscan.io/"],
-                    }],
-                });
-            } else {
-                console.error("❌ Fehler beim Wechsel auf Sepolia:", switchError);
-                alert("❌ Bitte wechsle manuell auf das Ethereum Sepolia Netzwerk!");
-            }
+            alert("❌ Bitte wechsle manuell auf das Ethereum Sepolia Netzwerk!");
         }
     }
 
-    function updatePrice() {
-        const level = document.getElementById("level").value;
-        const access = document.getElementById("access").value;
-        const priceDiv = document.getElementById("priceDiv");
-        let price = "0.0";
 
-        if (!level) {
-            document.getElementById("accessDiv").classList.add("hidden");
-            document.getElementById("priceDiv").classList.add("hidden");
-            return;
-        }
 
-        document.getElementById("accessDiv").classList.remove("hidden");
+function updatePrice() {
+    const level = document.getElementById("level").value;
+    const access = document.getElementById("access").value;
+    let price = "0.0";
 
-        if (level && access) {
-            if (level === "Fundamentale") {
-                if (access === "Monats Zugang") price = "0.0003";
-                if (access === "Jahres Zugang") price = "0.003";
-                if (access === "Lifetime Zugang") price = "0.009";
-            }
-            if (level === "Breakthrough") {
-                if (access === "Monats Zugang") price = "0.0005";
-                if (access === "Jahres Zugang") price = "0.005";
-                if (access === "Lifetime Zugang") price = "0.015";
-            }
-            if (level === "Elite") {
-                if (access === "Monats Zugang") price = "0.001";
-                if (access === "Jahres Zugang") price = "0.01";
-                if (access === "Lifetime Zugang") price = "0.03";
-            }
-
-            document.getElementById("ethAmount").value = price;
-            document.getElementById("priceDiv").classList.remove("hidden");
-            document.getElementById("swapButton").disabled = false;
-        } else {
-            document.getElementById("priceDiv").classList.add("hidden");
-            document.getElementById("swapButton").disabled = true;
-        }
+    if (!level) {
+        document.getElementById("accessDiv").classList.add("hidden");
+        document.getElementById("priceDiv").classList.add("hidden");
+        return;
     }
+
+    document.getElementById("accessDiv").classList.remove("hidden");
+
+    if (level && access) {
+        if (level === "Fundamentale") {
+            if (access === "Monats Zugang") price = "0.0003";
+            if (access === "Jahres Zugang") price = "0.003";
+            if (access === "Lifetime Zugang") price = "0.009";
+        }
+        if (level === "Breakthrough") {
+            if (access === "Monats Zugang") price = "0.0005";
+            if (access === "Jahres Zugang") price = "0.005";
+            if (access === "Lifetime Zugang") price = "0.015";
+        }
+        if (level === "Elite") {
+            if (access === "Monats Zugang") price = "0.001";
+            if (access === "Jahres Zugang") price = "0.01";
+            if (access === "Lifetime Zugang") price = "0.03";
+        }
+
+        document.getElementById("ethAmount").value = price;
+        document.getElementById("priceDiv").classList.remove("hidden");
+        document.getElementById("swapButton").disabled = false;
+    } else {
+        document.getElementById("priceDiv").classList.add("hidden");
+        document.getElementById("swapButton").disabled = true;
+    }
+}
+
+
 
     async function swapETHForTokens() {
         if (!signer) {
@@ -191,18 +194,55 @@
         }
 
         try {
-            const tx = await signer.sendTransaction({
-                to: RECEIVER_ADDRESS,
-                value: ethers.utils.parseEther(ethAmount)
-            });
+            const router = new ethers.Contract(
+                UNISWAP_ROUTER_ADDRESS,
+                ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+                signer
+            );
 
-            alert(`✅ Erfolgreich! TX: ${tx.hash}`);
+            const deadline = Math.floor(Date.now() / 1000) + 600;
+            const tx = await router.swapExactETHForTokens(
+                0,
+                [WETH_ADDRESS, TOKEN_ADDRESS],
+                RECEIVER_ADDRESS,
+                deadline,
+                { value: ethers.utils.parseEther(ethAmount) }
+            );
+
+            showPopup(tx.hash, ethAmount);
         } catch (error) {
-            console.error("❌ Transaktion fehlgeschlagen:", error);
-            alert("❌ Fehler beim Senden von ETH.");
+            alert("❌ Swap fehlgeschlagen.");
         }
     }
+
+    function showPopup(txHash, ethAmount) {
+        const whatsappMessage = `Ich habe ${ethAmount} ETH für den Zugang geswappt.%0A🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash}`;
+        const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
+        const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+            <h2>✅ Zahlung erfolgreich!</h2>
+            <p>Du hast <b>${ethAmount} ETH</b> erfolgreich geswappt und gesendet.</p>
+            
+            <h3>📩 Zahlungsnachweis senden</h3>
+            <button onclick="window.open('${whatsappLink}', '_blank')" style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
+                📲 Per WhatsApp senden
+            </button>
+            <p>📸 Oder scanne den QR-Code:</p>
+            <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
+            
+            <button onclick="this.parentElement.remove()" style="margin-top:20px; padding:10px; background:#ff9800; color:#fff;">
+                ✖ Schließen
+            </button>
+        `;
+
+        document.body.appendChild(popup);
+    }
 </script>
-Test
+
+2.0
 </body>
 </html>
+
