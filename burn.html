@@ -240,7 +240,7 @@
         console.log("✅ Transaktion gesendet:", tx.hash);
         await tx.wait();
 
-        // ✅ Erfolgreiches Popup anzeigen mit WhatsApp-Button + QR-Code
+        // ✅ Erfolgreiches Popup anzeigen mit zwei Schritten
         showPopup(walletAddress, ethAmountFormatted);
         
     } catch (error) {
@@ -249,24 +249,17 @@
     }
 }
 
-// 📌 Funktion für das Popup-Fenster mit WhatsApp-Button und QR-Code
+// 📌 Funktion für das Popup-Fenster mit zwei Schritten (Zahlungsnachweis einreichen + Gruppenbeitritt)
 function showPopup(walletAddress, ethAmountFormatted) {
     const etherscanLink = `https://sepolia.etherscan.io/address/${walletAddress}`;
     const whatsappMessage = encodeURIComponent(etherscanLink);
-    const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`; // ✅ Nachricht geht direkt an +49 1512 9147194
+    const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`; // ✅ Nachricht an Admin senden
 
-    // ✅ Erstelle den QR-Code-Container
-    const qrContainer = document.createElement("div");
-    qrContainer.style.marginTop = "10px";
+    const whatsappGroupLink = "https://chat.whatsapp.com/FNobqMQWhhkK5zQ8bhrP8j"; // ✅ WhatsApp-Gruppenlink
 
-    const qrImage = document.createElement("img");
-    qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
-    qrImage.alt = "Scan den QR-Code für WhatsApp";
-    qrImage.style.width = "150px";
-    qrImage.style.height = "150px";
-    qrImage.style.marginTop = "10px";
-    qrImage.style.borderRadius = "10px";
-    qrContainer.appendChild(qrImage);
+    // ✅ QR-Codes für beide Links generieren
+    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+    const qrWhatsAppGroup = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappGroupLink)}`;
 
     const popup = document.createElement("div");
     popup.style.position = "fixed";
@@ -281,23 +274,43 @@ function showPopup(walletAddress, ethAmountFormatted) {
     popup.style.textAlign = "center";
     popup.style.fontSize = "16px";
     popup.style.zIndex = "1000";
+    popup.style.width = "80%"; // Mehr Platz für zwei Spalten
 
     popup.innerHTML = `
-        <p>🚀 Glückwunsch! Du hast den Zugang zur Community erfolgreich für <b>${ethAmountFormatted} ETH</b> erworben.</p>
-        <p>📲 Sende jetzt die WhatsApp-Nachricht, um dich offiziell freizuschalten!</p>
-        <p><a href="${etherscanLink}" target="_blank" style="color: #00ff99;">📌 Etherscan-Link</a></p>
-        <button onclick="window.open('${whatsappLink}', '_blank')" 
-            style="margin-top:10px; padding:8px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
-            📲 Nachricht an WhatsApp senden
-        </button>
-        <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code mit dem Smartphone</p>
-    `;
+        <h2>🚀 Community Zugang erfolgreich!</h2>
+        <p>Du hast die Community-Mitgliedschaft für <b>${ethAmountFormatted} ETH</b> erworben.</p>
+        <p>Folge diesen zwei Schritten, um dich freizuschalten:</p>
+        
+        <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
+            <!-- Schritt 1 -->
+            <div style="width: 45%; padding: 10px; background: #333; border-radius: 10px;">
+                <h3>📩 Schritt 1: Zahlungsnachweis einreichen</h3>
+                <p>Klicke auf den Button oder scanne den QR-Code, um deinen Nachweis über die Zahlung zu senden.</p>
+                <p><a href="${etherscanLink}" target="_blank" style="color: #00ff99;">📌 Etherscan-Link</a></p>
+                <button onclick="window.open('${whatsappLink}', '_blank')" 
+                    style="margin-top:10px; padding:8px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
+                    📲 Zahlungsnachweis per WhatsApp senden
+                </button>
+                <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
+                <img src="${qrWhatsAppMessage}" alt="Scan für WhatsApp" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
+            </div>
 
-    popup.appendChild(qrContainer); // ✅ QR-Code ins Popup einfügen
+            <!-- Schritt 2 -->
+            <div style="width: 45%; padding: 10px; background: #444; border-radius: 10px;">
+                <h3>👥 Schritt 2: Community beitreten</h3>
+                <p>Nach der Verifizierung trittst du der WhatsApp-Community bei.</p>
+                <p><a href="${whatsappGroupLink}" target="_blank" style="color: #00ff99;">🔗 WhatsApp Community Link</a></p>
+                <button onclick="window.open('${whatsappGroupLink}', '_blank')" 
+                    style="margin-top:10px; padding:8px 15px; border:none; background:#007aff; color:#fff; border-radius:5px; cursor:pointer;">
+                    🚀 Community beitreten
+                </button>
+                <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
+                <img src="${qrWhatsAppGroup}" alt="Scan für WhatsApp Gruppe" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
+            </div>
+        </div>
 
-    popup.innerHTML += `
         <button onclick="this.parentElement.remove()" 
-            style="margin-top:10px; padding:8px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
+            style="margin-top:20px; padding:8px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
             ✖ Schließen
         </button>
     `;
@@ -308,13 +321,14 @@ function showPopup(walletAddress, ethAmountFormatted) {
 // Event-Listener für den Button
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
 
+
 </script>
 
 
 
 
 
-<br><br><br>
+<br><br><br>version 2
 
 
 
