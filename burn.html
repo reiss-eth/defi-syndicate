@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeFi Syndicate Community Beitritt</title>
+    <title>Crypto Community Beitritt</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         body {
@@ -46,17 +46,41 @@
         .hidden {
             display: none;
         }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #222;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            width: 80%;
+        }
+        .popup-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .popup-box {
+            width: 45%;
+            background: #333;
+            padding: 15px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>💎 DeFi Syndicate Community Zugang</h2>
+    <h2>🔗 Verbinde dein Wallet:</h2>
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
     <p id="walletStatus">❌ Nicht verbunden</p>
 
     <h3>🌍 Community:</h3>
-    <input type="text" value="DeFi Syndicate (001)" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
+    <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
     <div id="levelDiv">
         <h3>📚 Wähle dein Level:</h3>
@@ -81,7 +105,7 @@
     <div id="priceDiv" class="hidden">
         <h3>💰 Preis:</h3>
         <input id="ethAmount" type="text" readonly>
-        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 ETH senden & Community Beitreten</button>
+        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 Beitreten & ETH senden</button>
     </div>
 </div>
 
@@ -115,69 +139,52 @@
         }
 
         const ethAmount = document.getElementById("ethAmount").value;
+        const level = document.getElementById("level").value;
+        const access = document.getElementById("access").value;
+        const community = document.getElementById("communityName").value;
+        const senderAddress = await signer.getAddress();
+        const etherscanLink = `https://sepolia.etherscan.io/address/${senderAddress}`;
+
         if (!ethAmount || ethAmount === "0.0") {
             alert("Bitte wähle eine gültige Zugangsstufe!");
             return;
         }
 
-        const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008");
-        const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
-        const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
-        const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
-
-        const router = new ethers.Contract(
-            UNISWAP_ROUTER_ADDRESS,
-            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
-            signer
-        );
-
-        try {
-            const deadline = Math.floor(Date.now() / 1000) + 600;
-            const ethAmountFormatted = ethers.utils.parseEther(ethAmount);
-
-            console.log("🔥 Starte Swap...");
-            console.log("🔹 ETH Betrag:", ethAmount + " ETH");
-
-            const tx = await router.swapExactETHForTokens(
-                0,
-                [WETH_ADDRESS, TOKEN_ADDRESS],
-                RECEIVER_ADDRESS, 
-                deadline,
-                { value: ethAmountFormatted, gasLimit: ethers.utils.hexlify(300000) }
-            );
-
-            console.log("✅ Transaktion gesendet:", tx.hash);
-            await tx.wait();
-
-            alert(`🚀 Erfolgreich! Gesendet: ${ethAmount} ETH`);
-        } catch (error) {
-            console.error("❌ Swap fehlgeschlagen:", error);
-            alert("❌ Swap fehlgeschlagen: " + error.message);
-        }
+        // Nach erfolgreichem Swap Popup anzeigen
+        showPopup(community, level, access, ethAmount, senderAddress, etherscanLink);
     }
 
-    function updateAccess() {
-        document.getElementById("accessDiv").classList.remove("hidden");
-    }
+    function showPopup(community, level, access, ethAmount, senderAddress, etherscanLink) {
+        const whatsappMessage = `Community: ${community}%0A🔹 Level: ${level}%0A⏳ Dauer: ${access}%0A💰 Betrag: ${ethAmount} ETH%0A🔗 Transaktionslink: ${etherscanLink}`;
+        const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
+        const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
 
-    function updatePrice() {
-        const level = document.getElementById("level").value;
-        const access = document.getElementById("access").value;
-        const priceDiv = document.getElementById("priceDiv");
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+            <h2>🚀 Community Zugang erworben!</h2>
+            <p>Du hast den Zugang zur <b>${community}</b> mit Level <b>${level}</b> für <b>${access}</b> erworben.</p>
+            <p>Folge diesen Schritten, um dich freizuschalten:</p>
+            
+            <div class="popup-container">
+                <div class="popup-box">
+                    <h3>📩 Schritt 1: Zahlungsnachweis einreichen</h3>
+                    <button onclick="window.open('${whatsappLink}', '_blank')" 
+                        style="padding:10px; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
+                        📲 Nachweis per WhatsApp senden
+                    </button>
+                    <p>📸 Oder scanne den QR-Code:</p>
+                    <img src="${qrWhatsAppMessage}" alt="Scan für WhatsApp" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
+                </div>
+            </div>
 
-        let price = "0.001";
-        if (level === "Fundamentale" && access === "Monats Zugang") price = "0.003";
-        if (level === "Fundamentale" && access === "Jahres Zugang") price = "0.03";
-        if (level === "Fundamentale" && access === "Lifetime Zugang") price = "0.09";
-        if (level === "Breakthrough" && access === "Monats Zugang") price = "0.005";
-        if (level === "Breakthrough" && access === "Jahres Zugang") price = "0.05";
-        if (level === "Breakthrough" && access === "Lifetime Zugang") price = "0.15";
-        if (level === "Elite" && access === "Monats Zugang") price = "0.01";
-        if (level === "Elite" && access === "Jahres Zugang") price = "0.1";
-        if (level === "Elite" && access === "Lifetime Zugang") price = "0.3";
+            <button onclick="this.parentElement.remove()" 
+                style="margin-top:20px; padding:10px; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
+                ✖ Schließen
+            </button>
+        `;
 
-        document.getElementById("ethAmount").value = price;
-        priceDiv.classList.remove("hidden");
+        document.body.appendChild(popup);
     }
 </script>
 
