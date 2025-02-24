@@ -55,14 +55,10 @@
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
     <p id="walletStatus">❌ Nicht verbunden</p>
 
-    <h3>🌍 Wähle deine Community:</h3>
-    <select id="community" onchange="updateSelection()">
-        <option value="">-- Community wählen --</option>
-        <option value="DeFi Syndicate (001)">DeFi Syndicate (001)</option>
-        <option value="NextLevel Mastery (002)">NextLevel Mastery (002)</option>
-    </select>
+    <h3>🌍 Community:</h3>
+    <input type="text" value="DeFi Syndicate (001)" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
-    <div id="levelDiv" class="hidden">
+    <div id="levelDiv">
         <h3>📚 Wähle dein Level:</h3>
         <select id="level" onchange="updateAccess()">
             <option value="">-- Level wählen --</option>
@@ -160,10 +156,6 @@
         }
     }
 
-    function updateSelection() {
-        document.getElementById("levelDiv").classList.remove("hidden");
-    }
-
     function updateAccess() {
         document.getElementById("accessDiv").classList.remove("hidden");
     }
@@ -191,4 +183,3 @@
 
 </body>
 </html>
-
