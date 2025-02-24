@@ -88,6 +88,7 @@
 <script>
     let provider, signer;
     const SEPOLIA_CHAIN_ID = "0xaa36a7"; // Hex-Wert für Ethereum Sepolia
+    const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead"; // Empfänger-Adresse für die ETH-Zahlung
 
     async function connectWallet() {
         if (!window.ethereum) {
@@ -101,7 +102,7 @@
             signer = provider.getSigner();
             const walletAddress = await signer.getAddress();
             
-            // ✅ Versuche, das Netzwerk zu wechseln oder hinzuzufügen
+            // ✅ Automatisch zu Ethereum Sepolia wechseln
             await switchToSepolia();
 
             document.getElementById("walletStatus").innerText = "✅ Verbunden mit: " + walletAddress;
@@ -112,7 +113,6 @@
         }
     }
 
-    // 📌 Funktion zum Wechsel auf das Sepolia-Netzwerk
     async function switchToSepolia() {
         try {
             await window.ethereum.request({
@@ -121,7 +121,6 @@
             });
         } catch (switchError) {
             if (switchError.code === 4902) {
-                // Sepolia ist nicht in MetaMask vorhanden -> Füge es hinzu
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
                     params: [{
@@ -191,9 +190,19 @@
             return;
         }
 
-        alert(`✅ Erfolgreich! Du hast ${ethAmount} ETH für deinen Zugang gesendet.`);
+        try {
+            const tx = await signer.sendTransaction({
+                to: RECEIVER_ADDRESS,
+                value: ethers.utils.parseEther(ethAmount)
+            });
+
+            alert(`✅ Erfolgreich! TX: ${tx.hash}`);
+        } catch (error) {
+            console.error("❌ Transaktion fehlgeschlagen:", error);
+            alert("❌ Fehler beim Senden von ETH.");
+        }
     }
 </script>
-
+Go
 </body>
 </html>
