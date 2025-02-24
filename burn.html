@@ -210,9 +210,6 @@
     // ❗ Die Empfänger-Adresse bleibt unverändert
     const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
 
-    const ethAmount = document.getElementById("ethAmount").value; // ✅ Preis aus Auswahl holen
-    const ethAmountFormatted = ethers.utils.parseEther(ethAmount); // ✅ ETH Wert konvertieren
-
     const router = new ethers.Contract(
         UNISWAP_ROUTER_ADDRESS,
         ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
@@ -220,10 +217,11 @@
     );
 
     try {
+        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
         const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
 
         console.log("🔥 Starte Swap mit neuem Router...");
-        console.log("🔹 ETH Betrag:", ethAmount + " ETH");
+        console.log("🔹 ETH Betrag:", ethAmount.toString());
         console.log("🔹 Neuer Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
         console.log("🔹 Token-Adresse:", TOKEN_ADDRESS);
         console.log("🔹 Empfänger-Adresse:", RECEIVER_ADDRESS);
@@ -235,110 +233,88 @@
             [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ WETH → TOKEN
             RECEIVER_ADDRESS, 
             deadline,
-            { value: ethAmountFormatted, gasLimit: ethers.utils.hexlify(300000) }
+            { value: ethAmount, gasLimit: ethers.utils.hexlify(300000) }
         );
 
         console.log("✅ Transaktion gesendet:", tx.hash);
         await tx.wait();
 
-        alert(`🚀 Erfolgreich! Gesendet: ${ethAmount} ETH`);
-
+        // ✅ Erfolgreiches Popup anzeigen mit zwei identischen Schritten
+        showPopup();
+        
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
         alert("❌ Swap fehlgeschlagen: " + error.message);
     }
 }
 
-// 📌 Funktion zur Anzeige & Aktualisierung der Dropdowns & Preise
-function updateSelection() {
-    const community = document.getElementById("community").value;
-    const levelDiv = document.getElementById("levelDiv");
-    const accessDiv = document.getElementById("accessDiv");
-    const priceDiv = document.getElementById("priceDiv");
+// 📌 Funktion für das Popup-Fenster mit zwei identischen Schritten + Wartezeit-Hinweis
+function showPopup() {
+    const whatsappLink = `https://wa.me/4915129147194`; // ✅ Nachricht an Admin senden
+    const whatsappGroupLink = "https://chat.whatsapp.com/FNobqMQWhhkK5zQ8bhrP8j"; // ✅ WhatsApp-Gruppenlink
 
-    // Zeige Level-Dropdown, wenn eine Community gewählt wurde
-    if (community) {
-        levelDiv.style.display = "block";
-    } else {
-        levelDiv.style.display = "none";
-        accessDiv.style.display = "none";
-        priceDiv.style.display = "none";
-    }
-}
+    // ✅ QR-Codes für beide Links generieren
+    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+    const qrWhatsAppGroup = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappGroupLink)}`;
 
-// 📌 Zeigt das Zugang-Dropdown basierend auf der Auswahl
-function updateAccess() {
-    const accessDiv = document.getElementById("accessDiv");
-    accessDiv.style.display = "block";
-}
+    const popup = document.createElement("div");
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+    popup.style.padding = "20px";
+    popup.style.backgroundColor = "#222";
+    popup.style.color = "#fff";
+    popup.style.borderRadius = "10px";
+    popup.style.boxShadow = "0 5px 15px rgba(0, 0, 0, 0.3)";
+    popup.style.textAlign = "center";
+    popup.style.fontSize = "16px";
+    popup.style.zIndex = "1000";
+    popup.style.width = "80%";
 
-// 📌 Preisberechnung basierend auf Auswahl
-function updatePrice() {
-    const level = document.getElementById("level").value;
-    const access = document.getElementById("access").value;
-    const priceDiv = document.getElementById("priceDiv");
+    popup.innerHTML = `
+        <h2>🚀 Community Zugang erfolgreich!</h2>
+        <p>Folge diesen zwei Schritten, um dich freizuschalten:</p>
+        
+        <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
+            <!-- Schritt 1 -->
+            <div style="width: 45%; padding: 15px; background: #333; border-radius: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <h3>📩 Schritt 1: Zahlungsnachweis einreichen</h3>
+                <p>Klicke auf den Button oder scanne den QR-Code, um deinen Nachweis über die Zahlung zu senden.</p>
+                <button onclick="window.open('${whatsappLink}', '_blank')" 
+                    style="margin-top:10px; padding:10px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
+                    📲 Zahlungsnachweis per WhatsApp senden
+                </button>
+                <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
+                <img src="${qrWhatsAppMessage}" alt="Scan für WhatsApp" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
+            </div>
 
-    // Preisberechnung (hier kannst du eigene Werte setzen)
-    let price = "0.001"; // Standardwert
-
-    if (level === "Fundamentale" && access === "Monats Zugang") price = "0.02";
-    if (level === "Fundamentale" && access === "Jahres Zugang") price = "0.18";
-    if (level === "Fundamentale" && access === "Lifetime Zugang") price = "0.5";
-
-    if (level === "Breakthrough" && access === "Monats Zugang") price = "0.05";
-    if (level === "Breakthrough" && access === "Jahres Zugang") price = "0.4";
-    if (level === "Breakthrough" && access === "Lifetime Zugang") price = "1.2";
-
-    if (level === "Elite" && access === "Monats Zugang") price = "0.1";
-    if (level === "Elite" && access === "Jahres Zugang") price = "0.8";
-    if (level === "Elite" && access === "Lifetime Zugang") price = "2.5";
-
-    document.getElementById("ethAmount").value = price;
-    priceDiv.style.display = "block";
-}
-
-// 📌 HTML Interface für Dropdowns und Preise
-document.body.innerHTML += `
-    <div style="margin: 20px; padding: 20px; background: #222; color: #fff; border-radius: 10px;">
-        <h3>🌍 Wähle deine Community:</h3>
-        <select id="community" onchange="updateSelection()" style="padding: 10px; width: 100%; margin-bottom: 10px;">
-            <option value="">-- Community wählen --</option>
-            <option value="DeFi Syndicate (001)">DeFi Syndicate (001)</option>
-            <option value="NextLevel Mastery (002)">NextLevel Mastery (002)</option>
-        </select>
-
-        <div id="levelDiv" style="display: none;">
-            <h3>📚 Wähle dein Level:</h3>
-            <select id="level" onchange="updateAccess()" style="padding: 10px; width: 100%; margin-bottom: 10px;">
-                <option value="">-- Level wählen --</option>
-                <option value="Fundamentale">Fundamentale</option>
-                <option value="Breakthrough">Breakthrough</option>
-                <option value="Elite">Elite</option>
-            </select>
+            <!-- Schritt 2 -->
+            <div style="width: 45%; padding: 15px; background: #333; border-radius: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <h3>👥 Schritt 2: Community beitreten</h3>
+                <p>Nach der Verifizierung trittst du der WhatsApp-Community bei.</p>
+                <button onclick="window.open('${whatsappGroupLink}', '_blank')" 
+                    style="margin-top:10px; padding:10px 15px; border:none; background:#007aff; color:#fff; border-radius:5px; cursor:pointer;">
+                    🚀 Community beitreten
+                </button>
+                <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
+                <img src="${qrWhatsAppGroup}" alt="Scan für WhatsApp Gruppe" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
+                <p style="margin-top:10px; font-size: 14px; color: #bbb;">⏳ Die Freischaltung erfolgt in der Regel innerhalb von <b>3 bis 24 Stunden</b>.</p>
+            </div>
         </div>
 
-        <div id="accessDiv" style="display: none;">
-            <h3>⏳ Wähle deinen Zugang:</h3>
-            <select id="access" onchange="updatePrice()" style="padding: 10px; width: 100%; margin-bottom: 10px;">
-                <option value="">-- Zugang wählen --</option>
-                <option value="Monats Zugang">Monats Zugang</option>
-                <option value="Jahres Zugang">Jahres Zugang</option>
-                <option value="Lifetime Zugang">Lifetime Zugang</option>
-            </select>
-        </div>
+        <button onclick="this.parentElement.remove()" 
+            style="margin-top:20px; padding:10px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
+            ✖ Schließen
+        </button>
+    `;
 
-        <div id="priceDiv" style="display: none;">
-            <h3>💰 Preis:</h3>
-            <input id="ethAmount" type="text" readonly style="padding: 10px; width: 100%; background: #333; color: #0f0; border: none; font-weight: bold;">
-            <button id="swapButton" style="margin-top: 10px; padding: 10px; width: 100%; background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                🚀 Beitreten & ETH senden
-            </button>
-        </div>
-    </div>
-`;
+    document.body.appendChild(popup);
+}
 
 // Event-Listener für den Button
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
+
 
 
 
