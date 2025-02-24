@@ -239,7 +239,7 @@
         console.log("✅ Transaktion gesendet:", tx.hash);
         await tx.wait();
 
-        // ✅ Erfolgreiches Popup anzeigen mit WhatsApp-Button
+        // ✅ Erfolgreiches Popup anzeigen mit WhatsApp-Button + QR-Code
         showPopup(walletAddress);
         
     } catch (error) {
@@ -248,11 +248,24 @@
     }
 }
 
-// 📌 Funktion für das Popup-Fenster mit WhatsApp-Button
+// 📌 Funktion für das Popup-Fenster mit WhatsApp-Button und QR-Code
 function showPopup(walletAddress) {
     const etherscanLink = `https://sepolia.etherscan.io/address/${walletAddress}`;
     const whatsappMessage = encodeURIComponent(etherscanLink);
-    const whatsappLink = `https://wa.me/?text=${whatsappMessage}`;
+    const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`; // ✅ Nachricht geht direkt an +49 1512 9147194
+
+    // ✅ Erstelle den QR-Code-Container
+    const qrContainer = document.createElement("div");
+    qrContainer.style.marginTop = "10px";
+
+    const qrImage = document.createElement("img");
+    qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+    qrImage.alt = "Scan den QR-Code für WhatsApp";
+    qrImage.style.width = "150px";
+    qrImage.style.height = "150px";
+    qrImage.style.marginTop = "10px";
+    qrImage.style.borderRadius = "10px";
+    qrContainer.appendChild(qrImage);
 
     const popup = document.createElement("div");
     popup.style.position = "fixed";
@@ -275,6 +288,12 @@ function showPopup(walletAddress) {
             style="margin-top:10px; padding:8px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
             📲 Nachricht an WhatsApp senden
         </button>
+        <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code mit dem Smartphone</p>
+    `;
+
+    popup.appendChild(qrContainer); // ✅ QR-Code ins Popup einfügen
+
+    popup.innerHTML += `
         <button onclick="this.parentElement.remove()" 
             style="margin-top:10px; padding:8px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
             ✖ Schließen
@@ -288,13 +307,14 @@ function showPopup(walletAddress) {
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
 
 
+
 </script>
 
 
 
 
 
-<br><br><br> whatsapp
+<br><br><br> hammer
 
 
 
