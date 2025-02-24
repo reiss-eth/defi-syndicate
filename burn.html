@@ -194,17 +194,17 @@
 
     <button id="swapButton">ETH gegen BURN tauschen</button>
   <script>
-  async function swapETHForTokens() {
+    async function swapETHForTokens() {
     if (!window.ethereum) return alert("Bitte MetaMask installieren!");
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
 
-    // ✅ Neuer Uniswap V2 Router für Sepolia (von dir vorgegeben)
+    // ✅ Uniswap V2 Router für Sepolia
     const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008");
     const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
-    const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9"); // WETH für Sepolia
+    const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
 
     // ❗ Die Empfänger-Adresse bleibt unverändert (z.B. Burn-Adresse)
     const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
@@ -216,7 +216,7 @@
     );
 
     try {
-        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
+        const ethAmount = ethers.utils.parseEther("0.0001"); // ✅ Betrag in ETH
         const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
 
         console.log("🔥 Starte Swap mit neuem Router...");
@@ -237,22 +237,47 @@
 
         console.log("✅ Transaktion gesendet:", tx.hash);
         await tx.wait();
-        alert("🚀 Swap erfolgreich! Tokens wurden an " + RECEIVER_ADDRESS + " gesendet.");
+
+        // ✅ Erfolgreiches Popup anzeigen
+        showPopup(`🚀 Swap erfolgreich! Tokens wurden an ${RECEIVER_ADDRESS} gesendet.\n\nTx Hash: ${tx.hash}`);
+        
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
         alert("❌ Swap fehlgeschlagen: " + error.message);
     }
 }
 
+// 📌 Funktion für das Popup-Fenster
+function showPopup(message) {
+    const popup = document.createElement("div");
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+    popup.style.padding = "20px";
+    popup.style.backgroundColor = "#222";
+    popup.style.color = "#fff";
+    popup.style.borderRadius = "10px";
+    popup.style.boxShadow = "0 5px 15px rgba(0, 0, 0, 0.3)";
+    popup.style.textAlign = "center";
+    popup.style.fontSize = "16px";
+    popup.style.zIndex = "1000";
+
+    popup.innerHTML = `<p>${message}</p><button onclick="this.parentElement.remove()" style="margin-top:10px; padding:5px 10px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">Schließen</button>`;
+
+    document.body.appendChild(popup);
+}
+
 // Event-Listener für den Button
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
+
 </script>
 
 
 
 
 
-<br><br><br> moon
+<br><br><br> popup
 
 
 
