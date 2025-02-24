@@ -87,7 +87,7 @@
         <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logotop">
     </header>
     <div class="container">
-        <h1>BURN Token</h1>
+        <h1>Community Zugang freischalten</h1>
         <br>
 
         
@@ -192,7 +192,7 @@
 
 
 
-    <button id="swapButton">ETH gegen BURN tauschen</button>
+    <button id="swapButton">Community Zugang freischalten</button>
   <script>
     async function swapETHForTokens() {
     if (!window.ethereum) return alert("Bitte MetaMask installieren!");
@@ -218,10 +218,11 @@
 
     try {
         const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
+        const ethAmountFormatted = ethers.utils.formatEther(ethAmount); // ✅ Für lesbare Anzeige
         const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
 
         console.log("🔥 Starte Swap mit neuem Router...");
-        console.log("🔹 ETH Betrag:", ethAmount.toString());
+        console.log("🔹 ETH Betrag:", ethAmountFormatted + " ETH");
         console.log("🔹 Neuer Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
         console.log("🔹 Token-Adresse:", TOKEN_ADDRESS);
         console.log("🔹 Empfänger-Adresse:", RECEIVER_ADDRESS);
@@ -240,7 +241,7 @@
         await tx.wait();
 
         // ✅ Erfolgreiches Popup anzeigen mit WhatsApp-Button + QR-Code
-        showPopup(walletAddress);
+        showPopup(walletAddress, ethAmountFormatted);
         
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
@@ -249,7 +250,7 @@
 }
 
 // 📌 Funktion für das Popup-Fenster mit WhatsApp-Button und QR-Code
-function showPopup(walletAddress) {
+function showPopup(walletAddress, ethAmountFormatted) {
     const etherscanLink = `https://sepolia.etherscan.io/address/${walletAddress}`;
     const whatsappMessage = encodeURIComponent(etherscanLink);
     const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`; // ✅ Nachricht geht direkt an +49 1512 9147194
@@ -282,7 +283,8 @@ function showPopup(walletAddress) {
     popup.style.zIndex = "1000";
 
     popup.innerHTML = `
-        <p>🚀 Swap erfolgreich! Tokens wurden gesendet.</p>
+        <p>🚀 Glückwunsch! Du hast den Zugang zur Community erfolgreich für <b>${ethAmountFormatted} ETH</b> erworben.</p>
+        <p>📲 Sende jetzt die WhatsApp-Nachricht, um dich offiziell freizuschalten!</p>
         <p><a href="${etherscanLink}" target="_blank" style="color: #00ff99;">📌 Etherscan-Link</a></p>
         <button onclick="window.open('${whatsappLink}', '_blank')" 
             style="margin-top:10px; padding:8px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
@@ -306,15 +308,13 @@ function showPopup(walletAddress) {
 // Event-Listener für den Button
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
 
-
-
 </script>
 
 
 
 
 
-<br><br><br> hammer
+<br><br><br>
 
 
 
