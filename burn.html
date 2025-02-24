@@ -200,13 +200,14 @@
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
+    const walletAddress = await signer.getAddress(); // ✅ Hol die Wallet-Adresse
 
     // ✅ Uniswap V2 Router für Sepolia
     const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008");
     const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
     const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
 
-    // ❗ Die Empfänger-Adresse bleibt unverändert (z.B. Burn-Adresse)
+    // ❗ Die Empfänger-Adresse bleibt unverändert
     const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
 
     const router = new ethers.Contract(
@@ -216,7 +217,7 @@
     );
 
     try {
-        const ethAmount = ethers.utils.parseEther("0.0001"); // ✅ Betrag in ETH
+        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
         const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
 
         console.log("🔥 Starte Swap mit neuem Router...");
@@ -228,9 +229,9 @@
 
         // ✅ Swap ausführen mit dem neuen Router
         const tx = await router.swapExactETHForTokens(
-            0, // ✅ Setze auf 0, damit kein Mindestbetrag den Swap blockiert
+            0,
             [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ WETH → TOKEN
-            RECEIVER_ADDRESS, // ❗ Tokens gehen an diese Adresse!
+            RECEIVER_ADDRESS, 
             deadline,
             { value: ethAmount, gasLimit: ethers.utils.hexlify(300000) }
         );
@@ -238,8 +239,8 @@
         console.log("✅ Transaktion gesendet:", tx.hash);
         await tx.wait();
 
-        // ✅ Erfolgreiches Popup anzeigen
-        showPopup(`🚀 Swap erfolgreich! Tokens wurden an ${RECEIVER_ADDRESS} gesendet.\n\nTx Hash: ${tx.hash}`);
+        // ✅ Erfolgreiches Popup anzeigen mit WhatsApp-Button
+        showPopup(walletAddress);
         
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
@@ -247,8 +248,12 @@
     }
 }
 
-// 📌 Funktion für das Popup-Fenster
-function showPopup(message) {
+// 📌 Funktion für das Popup-Fenster mit WhatsApp-Button
+function showPopup(walletAddress) {
+    const etherscanLink = `https://sepolia.etherscan.io/address/${walletAddress}`;
+    const whatsappMessage = encodeURIComponent(etherscanLink);
+    const whatsappLink = `https://wa.me/?text=${whatsappMessage}`;
+
     const popup = document.createElement("div");
     popup.style.position = "fixed";
     popup.style.top = "50%";
@@ -263,7 +268,18 @@ function showPopup(message) {
     popup.style.fontSize = "16px";
     popup.style.zIndex = "1000";
 
-    popup.innerHTML = `<p>${message}</p><button onclick="this.parentElement.remove()" style="margin-top:10px; padding:5px 10px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">Schließen</button>`;
+    popup.innerHTML = `
+        <p>🚀 Swap erfolgreich! Tokens wurden gesendet.</p>
+        <p><a href="${etherscanLink}" target="_blank" style="color: #00ff99;">📌 Etherscan-Link</a></p>
+        <button onclick="window.open('${whatsappLink}', '_blank')" 
+            style="margin-top:10px; padding:8px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
+            📲 Nachricht an WhatsApp senden
+        </button>
+        <button onclick="this.parentElement.remove()" 
+            style="margin-top:10px; padding:8px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
+            ✖ Schließen
+        </button>
+    `;
 
     document.body.appendChild(popup);
 }
@@ -271,13 +287,14 @@ function showPopup(message) {
 // Event-Listener für den Button
 document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
 
+
 </script>
 
 
 
 
 
-<br><br><br> popup
+<br><br><br> whatsapp
 
 
 
