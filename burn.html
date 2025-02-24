@@ -1,358 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DFS Token - DeFi Syndicate</title>
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>Crypto Community Beitritt</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Orbitron', sans-serif;
-        }
         body {
-            background-color: #121212;
-            color: #ffffff;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
             text-align: center;
-            padding: 40px;
-        }
-        header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .logotop {
-            max-width: 150px;
-            height: auto;
-        }
-        .logobottom {
-            max-width: 40px;
-            height: auto;
+            margin: 20px;
         }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
+            background: #222;
             padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: auto;
         }
-        h1, h2 {
-            margin-bottom: 15px;
-        }
-        p {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: #b0b0b0;
-        }
-        .button {
-            display: inline-block;
-            width: 200px;
-            padding: 12px 24px;
-            background: #ff3b3b;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
+        select, button, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
             border-radius: 5px;
-            transition: background 0.3s ease;
-            margin: 10px auto;
-            text-align: center;
+            border: none;
         }
-        .button:hover {
-            background: #e63232;
+        select, input {
+            background: #333;
+            color: #fff;
         }
-        .button-back {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #ff3b3b;
+        button {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .connect-btn {
+            background: #0f0;
+            color: #000;
+        }
+        .swap-btn {
+            background: #ff9800;
             color: white;
-            text-decoration: none;
-            font-size: 16px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-            margin: 10px auto;
-            text-align: center;
         }
-        footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #777;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <img src="DFS-Logo-transparent.png" alt="DeFi Syndicate Logo" class="logotop">
-    </header>
-    <div class="container">
-        <h1>Community Zugang freischalten</h1>
-        <br>
 
-        
+<div class="container">
+    <h2>🔗 Verbinde dein Wallet:</h2>
+    <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
+    <p id="walletStatus">❌ Nicht verbunden</p>
 
+    <h3>🌍 Wähle deine Community:</h3>
+    <select id="community" onchange="updateSelection()">
+        <option value="">-- Community wählen --</option>
+        <option value="DeFi Syndicate (001)">DeFi Syndicate (001)</option>
+        <option value="NextLevel Mastery (002)">NextLevel Mastery (002)</option>
+    </select>
 
+    <div id="levelDiv" class="hidden">
+        <h3>📚 Wähle dein Level:</h3>
+        <select id="level" onchange="updateAccess()">
+            <option value="">-- Level wählen --</option>
+            <option value="Fundamentale">Fundamentale</option>
+            <option value="Breakthrough">Breakthrough</option>
+            <option value="Elite">Elite</option>
+        </select>
+    </div>
 
+    <div id="accessDiv" class="hidden">
+        <h3>⏳ Wähle deinen Zugang:</h3>
+        <select id="access" onchange="updatePrice()">
+            <option value="">-- Zugang wählen --</option>
+            <option value="Monats Zugang">Monats Zugang</option>
+            <option value="Jahres Zugang">Jahres Zugang</option>
+            <option value="Lifetime Zugang">Lifetime Zugang</option>
+        </select>
+    </div>
 
+    <div id="priceDiv" class="hidden">
+        <h3>💰 Preis:</h3>
+        <input id="ethAmount" type="text" readonly>
+        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 Beitreten & ETH senden</button>
+    </div>
+</div>
 
+<script>
+    let provider, signer;
 
-
-
-
-
- <button id="connectWallet">Wallet verbinden</button>
-    <p id="walletStatus">Nicht verbunden</p>
-    
-   <script>
     async function connectWallet() {
         if (!window.ethereum) {
-            alert("Bitte installiere MetaMask oder eine kompatible Wallet!");
+            alert("Bitte MetaMask installieren!");
             return;
         }
 
         try {
-            // Verbinde mit dem Ethereum-Provider (MetaMask/Rabby)
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            
-            // Fordere den Benutzer auf, seine Wallet zu verbinden
+            provider = new ethers.providers.Web3Provider(window.ethereum);
             await provider.send("eth_requestAccounts", []);
-
-            // Hole den aktuellen Netzwerk-Status
-            const network = await provider.getNetwork();
-            const sepoliaChainId = 11155111; // Chain ID für Sepolia
-
-            // Falls der Benutzer nicht auf Sepolia ist, auffordern zu wechseln
-            if (network.chainId !== sepoliaChainId) {
-                try {
-                    await window.ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: "0xaa36a7" }] // Hex-Format für Sepolia (11155111 = 0xaa36a7)
-                    });
-                } catch (switchError) {
-                    // Falls Sepolia nicht hinzugefügt wurde, den Benutzer bitten, es hinzuzufügen
-                    if (switchError.code === 4902) {
-                        try {
-                            await window.ethereum.request({
-                                method: "wallet_addEthereumChain",
-                                params: [{
-                                    chainId: "0xaa36a7",
-                                    chainName: "Ethereum Sepolia",
-                                    rpcUrls: ["https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID"], // Ersetze mit deinem Infura-Projekt
-                                    nativeCurrency: {
-                                        name: "SepoliaETH",
-                                        symbol: "ETH",
-                                        decimals: 18
-                                    },
-                                    blockExplorerUrls: ["https://sepolia.etherscan.io/"]
-                                }]
-                            });
-                        } catch (addError) {
-                            console.error("Fehler beim Hinzufügen von Sepolia:", addError);
-                            alert("Fehler beim Hinzufügen des Sepolia Netzwerks. Bitte manuell wechseln.");
-                            return;
-                        }
-                    } else {
-                        console.error("Netzwerkwechsel fehlgeschlagen:", switchError);
-                        alert("Bitte wechsle manuell zum Sepolia Netzwerk.");
-                        return;
-                    }
-                }
-            }
-
-            // Hole den Signer (verbundene Wallet)
-            const signer = provider.getSigner();
-            const address = await signer.getAddress();
-
-            // Zeige die Wallet-Adresse an
-            document.getElementById("walletStatus").innerText = "Verbunden mit: " + address;
+            signer = provider.getSigner();
+            const walletAddress = await signer.getAddress();
+            
+            document.getElementById("walletStatus").innerText = "✅ Verbunden mit: " + walletAddress;
+            document.getElementById("swapButton").disabled = false;
         } catch (error) {
-            console.error("Wallet Verbindung fehlgeschlagen:", error);
-            alert("Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
+            console.error("❌ Wallet Verbindung fehlgeschlagen:", error);
+            alert("❌ Wallet Verbindung fehlgeschlagen. Bitte erneut versuchen.");
         }
     }
 
-    // Event Listener für den Button
-    document.getElementById("connectWallet").addEventListener("click", connectWallet);
-</script>
-
-
-
-
-
-	<br><br>
-
-
-
-
-
-
-
-
-
-
-
-    <button id="swapButton">Community Zugang freischalten</button>
-  <script>
     async function swapETHForTokens() {
-    if (!window.ethereum) return alert("Bitte MetaMask installieren!");
+        if (!signer) {
+            alert("Bitte verbinde zuerst dein Wallet!");
+            return;
+        }
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner();
-    const walletAddress = await signer.getAddress(); // ✅ Hol die Wallet-Adresse
+        const ethAmount = document.getElementById("ethAmount").value;
+        if (!ethAmount || ethAmount === "0.0") {
+            alert("Bitte wähle eine gültige Zugangsstufe!");
+            return;
+        }
 
-    // ✅ Uniswap V2 Router für Sepolia
-    const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008");
-    const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
-    const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
+        const UNISWAP_ROUTER_ADDRESS = ethers.utils.getAddress("0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008");
+        const TOKEN_ADDRESS = ethers.utils.getAddress("0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1");
+        const WETH_ADDRESS = ethers.utils.getAddress("0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9");
+        const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
 
-    // ❗ Die Empfänger-Adresse bleibt unverändert
-    const RECEIVER_ADDRESS = ethers.utils.getAddress("0x1dead0000000000000000000000000000000dead");
-
-    const router = new ethers.Contract(
-        UNISWAP_ROUTER_ADDRESS,
-        ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
-        signer
-    );
-
-    try {
-        const ethAmount = ethers.utils.parseEther("0.001"); // ✅ Betrag in ETH
-        const deadline = Math.floor(Date.now() / 1000) + 600; // ✅ 10 Minuten gültig
-
-        console.log("🔥 Starte Swap mit neuem Router...");
-        console.log("🔹 ETH Betrag:", ethAmount.toString());
-        console.log("🔹 Neuer Router-Adresse:", UNISWAP_ROUTER_ADDRESS);
-        console.log("🔹 Token-Adresse:", TOKEN_ADDRESS);
-        console.log("🔹 Empfänger-Adresse:", RECEIVER_ADDRESS);
-        console.log("🔹 WETH-Adresse:", WETH_ADDRESS);
-
-        // ✅ Swap ausführen mit dem neuen Router
-        const tx = await router.swapExactETHForTokens(
-            0,
-            [WETH_ADDRESS, TOKEN_ADDRESS], // ✅ WETH → TOKEN
-            RECEIVER_ADDRESS, 
-            deadline,
-            { value: ethAmount, gasLimit: ethers.utils.hexlify(300000) }
+        const router = new ethers.Contract(
+            UNISWAP_ROUTER_ADDRESS,
+            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+            signer
         );
 
-        console.log("✅ Transaktion gesendet:", tx.hash);
-        await tx.wait();
+        try {
+            const deadline = Math.floor(Date.now() / 1000) + 600;
+            const ethAmountFormatted = ethers.utils.parseEther(ethAmount);
 
-        // ✅ Erfolgreiches Popup anzeigen mit zwei identischen Schritten
-        showPopup();
-        
-    } catch (error) {
-        console.error("❌ Swap fehlgeschlagen:", error);
-        alert("❌ Swap fehlgeschlagen: " + error.message);
+            console.log("🔥 Starte Swap...");
+            console.log("🔹 ETH Betrag:", ethAmount + " ETH");
+
+            const tx = await router.swapExactETHForTokens(
+                0,
+                [WETH_ADDRESS, TOKEN_ADDRESS],
+                RECEIVER_ADDRESS, 
+                deadline,
+                { value: ethAmountFormatted, gasLimit: ethers.utils.hexlify(300000) }
+            );
+
+            console.log("✅ Transaktion gesendet:", tx.hash);
+            await tx.wait();
+
+            alert(`🚀 Erfolgreich! Gesendet: ${ethAmount} ETH`);
+        } catch (error) {
+            console.error("❌ Swap fehlgeschlagen:", error);
+            alert("❌ Swap fehlgeschlagen: " + error.message);
+        }
     }
-}
 
-// 📌 Funktion für das Popup-Fenster mit zwei identischen Schritten + Wartezeit-Hinweis
-function showPopup() {
-    const whatsappLink = `https://wa.me/4915129147194`; // ✅ Nachricht an Admin senden
-    const whatsappGroupLink = "https://chat.whatsapp.com/FNobqMQWhhkK5zQ8bhrP8j"; // ✅ WhatsApp-Gruppenlink
+    function updateSelection() {
+        document.getElementById("levelDiv").classList.remove("hidden");
+    }
 
-    // ✅ QR-Codes für beide Links generieren
-    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
-    const qrWhatsAppGroup = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappGroupLink)}`;
+    function updateAccess() {
+        document.getElementById("accessDiv").classList.remove("hidden");
+    }
 
-    const popup = document.createElement("div");
-    popup.style.position = "fixed";
-    popup.style.top = "50%";
-    popup.style.left = "50%";
-    popup.style.transform = "translate(-50%, -50%)";
-    popup.style.padding = "20px";
-    popup.style.backgroundColor = "#222";
-    popup.style.color = "#fff";
-    popup.style.borderRadius = "10px";
-    popup.style.boxShadow = "0 5px 15px rgba(0, 0, 0, 0.3)";
-    popup.style.textAlign = "center";
-    popup.style.fontSize = "16px";
-    popup.style.zIndex = "1000";
-    popup.style.width = "80%";
+    function updatePrice() {
+        const level = document.getElementById("level").value;
+        const access = document.getElementById("access").value;
+        const priceDiv = document.getElementById("priceDiv");
 
-    popup.innerHTML = `
-        <h2>🚀 Community Zugang erfolgreich!</h2>
-        <p>Folge diesen zwei Schritten, um dich freizuschalten:</p>
-        
-        <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
-            <!-- Schritt 1 -->
-            <div style="width: 45%; padding: 15px; background: #333; border-radius: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
-                <h3>📩 Schritt 1: Zahlungsnachweis einreichen</h3>
-                <p>Klicke auf den Button oder scanne den QR-Code, um deinen Nachweis über die Zahlung zu senden.</p>
-                <button onclick="window.open('${whatsappLink}', '_blank')" 
-                    style="margin-top:10px; padding:10px 15px; border:none; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
-                    📲 Zahlungsnachweis per WhatsApp senden
-                </button>
-                <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
-                <img src="${qrWhatsAppMessage}" alt="Scan für WhatsApp" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
-            </div>
+        let price = "0.001";
+        if (level === "Fundamentale" && access === "Monats Zugang") price = "0.02";
+        if (level === "Fundamentale" && access === "Jahres Zugang") price = "0.18";
+        if (level === "Fundamentale" && access === "Lifetime Zugang") price = "0.5";
+        if (level === "Breakthrough" && access === "Monats Zugang") price = "0.05";
+        if (level === "Breakthrough" && access === "Jahres Zugang") price = "0.4";
+        if (level === "Breakthrough" && access === "Lifetime Zugang") price = "1.2";
+        if (level === "Elite" && access === "Monats Zugang") price = "0.1";
+        if (level === "Elite" && access === "Jahres Zugang") price = "0.8";
+        if (level === "Elite" && access === "Lifetime Zugang") price = "2.5";
 
-            <!-- Schritt 2 -->
-            <div style="width: 45%; padding: 15px; background: #333; border-radius: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
-                <h3>👥 Schritt 2: Community beitreten</h3>
-                <p>Nach der Verifizierung trittst du der WhatsApp-Community bei.</p>
-                <button onclick="window.open('${whatsappGroupLink}', '_blank')" 
-                    style="margin-top:10px; padding:10px 15px; border:none; background:#007aff; color:#fff; border-radius:5px; cursor:pointer;">
-                    🚀 Community beitreten
-                </button>
-                <p style="margin-top:10px;">📸 Alternativ: Scanne den QR-Code</p>
-                <img src="${qrWhatsAppGroup}" alt="Scan für WhatsApp Gruppe" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
-                <p style="margin-top:10px; font-size: 14px; color: #bbb;">⏳ Die Freischaltung erfolgt in der Regel innerhalb von <b>3 bis 24 Stunden</b>.</p>
-            </div>
-        </div>
-
-        <button onclick="this.parentElement.remove()" 
-            style="margin-top:20px; padding:10px 15px; border:none; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
-            ✖ Schließen
-        </button>
-    `;
-
-    document.body.appendChild(popup);
-}
-
-// Event-Listener für den Button
-document.getElementById("swapButton").addEventListener("click", swapETHForTokens);
-
-
-
-
+        document.getElementById("ethAmount").value = price;
+        priceDiv.classList.remove("hidden");
+    }
 </script>
 
-
-
-
-
-<br><br><br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <a href="index.html" class="button-back">Zurück zur Startseite</a>
-    </div>
-    <footer>
-        <img src="logo.png" alt="DeFi Syndicate Logo" class="logobottom">
-        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
-    </footer>
 </body>
 </html>
+
