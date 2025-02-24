@@ -109,34 +109,63 @@
     const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
 
     async function connectWallet() {
-        if (!window.ethereum) {
-            alert("Bitte MetaMask installieren!");
-            return;
-        }
-
-        try {
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
-            signer = provider.getSigner();
-            await switchToSepolia();
-
-            document.getElementById("walletStatus").innerText = "✅ Wallet verbunden";
-            document.getElementById("swapButton").disabled = false;
-        } catch (error) {
-            alert("❌ Wallet Verbindung fehlgeschlagen.");
-        }
+    if (!window.ethereum) {
+        alert("Bitte MetaMask installieren!");
+        return;
     }
 
-    async function switchToSepolia() {
-        try {
-            await window.ethereum.request({
-                method: "wallet_switchEthereumChain",
-                params: [{ chainId: SEPOLIA_CHAIN_ID }],
-            });
-        } catch (switchError) {
+    try {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+
+        const network = await provider.getNetwork();
+        const currentChainId = network.chainId.toString(16);
+
+        if (currentChainId !== SEPOLIA_CHAIN_ID) {
+            await switchToSepolia();
+        }
+
+        document.getElementById("walletStatus").innerText = "✅ Wallet verbunden";
+        document.getElementById("swapButton").disabled = false;
+    } catch (error) {
+        alert("❌ Wallet Verbindung fehlgeschlagen.");
+    }
+}
+
+async function switchToSepolia() {
+    try {
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: SEPOLIA_CHAIN_ID }],
+        });
+    } catch (switchError) {
+        // Falls das Netzwerk nicht existiert, hinzufügen
+        if (switchError.code === 4902) {
+            try {
+                await window.ethereum.request({
+                    method: "wallet_addEthereumChain",
+                    params: [{
+                        chainId: SEPOLIA_CHAIN_ID,
+                        chainName: "Ethereum Sepolia Testnet",
+                        nativeCurrency: {
+                            name: "SepoliaETH",
+                            symbol: "ETH",
+                            decimals: 18
+                        },
+                        rpcUrls: ["https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID"],
+                        blockExplorerUrls: ["https://sepolia.etherscan.io"]
+                    }],
+                });
+            } catch (addError) {
+                alert("❌ Netzwerk konnte nicht hinzugefügt werden. Bitte manuell wechseln.");
+            }
+        } else {
             alert("❌ Bitte wechsle manuell auf das Ethereum Sepolia Netzwerk!");
         }
     }
+}
+
 
 
 
