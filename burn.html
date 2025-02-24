@@ -46,30 +46,6 @@
         .hidden {
             display: none;
         }
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #222;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 1000;
-            width: 80%;
-        }
-        .popup-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        .popup-box {
-            width: 45%;
-            background: #333;
-            padding: 15px;
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
@@ -132,6 +108,38 @@
         }
     }
 
+    function updateAccess() {
+        document.getElementById("accessDiv").classList.remove("hidden");
+    }
+
+    function updatePrice() {
+        const level = document.getElementById("level").value;
+        const access = document.getElementById("access").value;
+        const priceDiv = document.getElementById("priceDiv");
+        let price = "0.0";
+
+        if (level === "Fundamentale") {
+            if (access === "Monats Zugang") price = "0.02";
+            if (access === "Jahres Zugang") price = "0.18";
+            if (access === "Lifetime Zugang") price = "0.5";
+        }
+
+        if (level === "Breakthrough") {
+            if (access === "Monats Zugang") price = "0.05";
+            if (access === "Jahres Zugang") price = "0.4";
+            if (access === "Lifetime Zugang") price = "1.2";
+        }
+
+        if (level === "Elite") {
+            if (access === "Monats Zugang") price = "0.1";
+            if (access === "Jahres Zugang") price = "0.8";
+            if (access === "Lifetime Zugang") price = "2.5";
+        }
+
+        document.getElementById("ethAmount").value = price;
+        priceDiv.classList.remove("hidden");
+    }
+
     async function swapETHForTokens() {
         if (!signer) {
             alert("Bitte verbinde zuerst dein Wallet!");
@@ -139,62 +147,15 @@
         }
 
         const ethAmount = document.getElementById("ethAmount").value;
-        const level = document.getElementById("level").value;
-        const access = document.getElementById("access").value;
-        const community = document.getElementById("communityName").value;
-        const senderAddress = await signer.getAddress();
-        const etherscanLink = `https://sepolia.etherscan.io/address/${senderAddress}`;
-
         if (!ethAmount || ethAmount === "0.0") {
             alert("Bitte wähle eine gültige Zugangsstufe!");
             return;
         }
 
-        // Zeige das Popup mit den Details
-        showPopup(community, level, access, ethAmount, senderAddress, etherscanLink);
-    }
-
-    function showPopup(community, level, access, ethAmount, senderAddress, etherscanLink) {
-        const whatsappMessage = `Community: ${community}%0A🔹 Level: ${level}%0A⏳ Dauer: ${access}%0A💰 Betrag: ${ethAmount} ETH%0A🔗 Transaktionslink: ${etherscanLink}`;
-        const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
-        const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
-
-        const popup = document.createElement("div");
-        popup.className = "popup";
-        popup.innerHTML = `
-            <h2>🚀 Community Zugang erworben!</h2>
-            <p>Du hast den Zugang zur <b>${community}</b> mit Level <b>${level}</b> für <b>${access}</b> erworben.</p>
-            <p>Folge diesen Schritten, um dich freizuschalten:</p>
-            
-            <div class="popup-container">
-                <div class="popup-box">
-                    <h3>📩 Schritt 1: Zahlungsnachweis einreichen</h3>
-                    <button onclick="window.open('${whatsappLink}', '_blank')" 
-                        style="padding:10px; background:#25D366; color:#fff; border-radius:5px; cursor:pointer;">
-                        📲 Nachweis per WhatsApp senden
-                    </button>
-                    <p>📸 Oder scanne den QR-Code:</p>
-                    <img src="${qrWhatsAppMessage}" alt="Scan für WhatsApp" style="width: 150px; height: 150px; border-radius: 10px; margin-top: 10px;">
-                </div>
-            </div>
-
-            <button onclick="this.parentElement.remove()" 
-                style="margin-top:20px; padding:10px; background:#ff9800; color:#fff; border-radius:5px; cursor:pointer;">
-                ✖ Schließen
-            </button>
-        `;
-
-        document.body.appendChild(popup);
-    }
-
-    function updateAccess() {
-        document.getElementById("accessDiv").classList.remove("hidden");
-    }
-
-    function updatePrice() {
-        document.getElementById("priceDiv").classList.remove("hidden");
+        alert(`✅ Erfolgreich! Du hast ${ethAmount} ETH für deinen Zugang gesendet.`);
     }
 </script>
-Check
+
 </body>
 </html>
+
