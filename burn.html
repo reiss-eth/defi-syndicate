@@ -80,27 +80,28 @@
     color: #fff !important;
 }
 
-/* Stellt sicher, dass der ausgewählte Text wirklich mittig ist */
+/* Sicherstellen, dass der gerenderte Text innerhalb von Select2 mittig ausgerichtet ist */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
+    width: 100% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
-    width: 100% !important;
     color: #fff !important;
+    padding-left: 0px !important; /* Entfernt unnötige Padding */
 }
 
-/* Der eigentliche Text in Select2 wird als Span gerendert - dieser muss zentriert werden */
+/* Speziell für den INNEREN Text-Span innerhalb von Select2 */
 .select2-selection__rendered span {
+    display: block !important;
     width: 100% !important;
     text-align: center !important;
-    display: inline-block !important;
 }
 
-/* Pfeil-Icon nach rechts verschieben */
+/* Pfeil-Icon bleibt auf der rechten Seite */
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    right: 10px !important;
     position: absolute !important;
+    right: 10px !important;
 }
 
 
@@ -120,7 +121,7 @@
     });
 
     // Setzt den Text in Select2 richtig zentriert
-    setTimeout(() => {
+    function fixSelect2Alignment() {
         $(".select2-selection__rendered").each(function() {
             $(this).css({
               "display": "flex",
@@ -133,12 +134,19 @@
             $(this).find("span").css({
               "width": "100%",
               "text-align": "center",
-              "display": "inline-block"
+              "display": "block"
             });
         });
-    }, 300);
+    }
+
+    // Nach dem Laden anwenden
+    setTimeout(fixSelect2Alignment, 300);
+
+    // Auch nach Auswahl fixieren
+    $("#level, #access").on("select2:select", fixSelect2Alignment);
   });
 </script>
+
 
 
 
@@ -394,7 +402,7 @@ function updatePrice() {
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
-Test
+Dao
 </body>
 </html>
 
