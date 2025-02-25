@@ -7,10 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 
 
-	<!-- Select2 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
-
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,86 +64,10 @@
             max-width: 400px;
         }
 
-.select2-container .select2-selection--single {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 40px !important;
-    background: #333 !important;
-    border: none !important;
-    border-radius: 5px !important;
-    color: #fff !important;
-    text-align: center !important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    display: block !important;
-    text-align: center !important;
-    width: 100% !important;
-    padding-left: 0px !important;
-    color: #fff !important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered span {
-    display: block !important;
-    width: 100% !important;
-    text-align: center !important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    position: absolute !important;
-    right: 10px !important;
-}
-
-
-
 
     </style>
 </head>
 <body>
-
-
-<script>
-  $(document).ready(function() {
-    // Select2 für Level & Access Dropdowns aktivieren
-    $("#level, #access").select2({
-      minimumResultsForSearch: Infinity, // Suchfeld entfernen
-      placeholder: "-- Bitte wählen --",
-      width: "100%" // Volle Breite setzen
-    });
-
-    // Funktion zur Korrektur der Textausrichtung
-    function fixSelect2Alignment() {
-        $(".select2-selection__rendered").each(function() {
-            $(this).css({
-              "display": "block",
-              "text-align": "center"
-            });
-
-            // Inneren Text-Span richtig zentrieren
-            $(this).find("span").css({
-              "width": "100%",
-              "text-align": "center",
-              "display": "block"
-            });
-        });
-    }
-
-    // Nach dem Laden anwenden
-    setTimeout(fixSelect2Alignment, 100);
-
-    // Auch nach Auswahl fixieren
-    $("#level, #access").on("select2:select", fixSelect2Alignment);
-  });
-</script>
-
-
-
-
-
-
-
-
 
 
 <div class="container">
@@ -390,14 +310,7 @@ function updatePrice() {
 
 </script>
 
-
-
-
-<!-- jQuery und Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
-Burn
+Test Script
 </body>
 </html>
 
