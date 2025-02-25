@@ -178,34 +178,34 @@
 
 <script>
     let provider, signer;
-    const SEPOLIA_CHAIN_ID = "0xaa36a7";
-    const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";
-    const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
-    const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";
-    const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
+const SEPOLIA_CHAIN_ID = 11155111;
+const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";
+const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
+const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";
+const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
 
-    async function connectWallet() {
+async function connectWallet() {
     if (!window.ethereum) {
         alert("Bitte MetaMask installieren!");
         return;
     }
 
     try {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
+        provider = new ethers.providers.Web3Provider(window.ethereum, "any");
         await provider.send("eth_requestAccounts", []);
         signer = provider.getSigner();
 
         const network = await provider.getNetwork();
-        const currentChainId = network.chainId.toString(16);
 
-        if (currentChainId !== SEPOLIA_CHAIN_ID) {
+        if (network.chainId !== SEPOLIA_CHAIN_ID) {
             await switchToSepolia();
         }
 
         document.getElementById("walletStatus").innerText = "🔗 Wallet verbunden ✅";
         document.getElementById("swapButton").disabled = false;
     } catch (error) {
-        alert("⛓️‍💥 Wallet Verbindung fehlgeschlagen.❌");
+        console.error("Wallet-Verbindung fehlgeschlagen:", error);
+        alert("⛓️‍💥 Wallet Verbindung fehlgeschlagen.❌ Überprüfe die Konsole für Details.");
     }
 }
 
@@ -315,9 +315,12 @@ function updatePrice() {
             );
 
             showPopup(tx.hash, ethAmount);
-        } catch (error) {
-            alert("❌ Swap fehlgeschlagen.");
         }
+	    catch (error) {
+    console.error("Swap fehlgeschlagen:", error);
+    alert("❌ Swap fehlgeschlagen. Sieh dir die Konsole für mehr Details an.");
+}
+
     }
 
     function showPopup(txHash, ethAmount) {
@@ -482,7 +485,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+Test
 
 </body>
 </html>
