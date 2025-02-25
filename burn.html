@@ -64,6 +64,53 @@
             max-width: 400px;
         }
 
+/* Stil für das benutzerdefinierte Dropdown */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-button {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #444;
+    border-radius: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 100;
+}
+
+.dropdown-list li {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+}
+
+.dropdown-list li:hover {
+    background: #666;
+}
+
+
+
+
+
+
+
+
 
     </style>
 </head>
@@ -78,15 +125,16 @@
     <h4>🌍 Community:</h4>
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
-    <div id="levelDiv">
-        <h4>📚 Wähle dein Level:</h4>
-        <select id="level" onchange="updatePrice()">
-            <option value="">-- Level wählen --</option>
-            <option value="Fundamentale">Fundamentale</option>
-            <option value="Breakthrough">Breakthrough</option>
-            <option value="Elite">Elite</option>
-        </select>
-    </div>
+   <div class="custom-dropdown">
+    <button class="dropdown-button" id="levelButton">-- Level wählen --</button>
+    <ul class="dropdown-list" id="levelList">
+        <li data-value="Fundamentale">Fundamentale</li>
+        <li data-value="Breakthrough">Breakthrough</li>
+        <li data-value="Elite">Elite</li>
+    </ul>
+    <input type="hidden" id="level">
+</div>
+
 
     <div id="accessDiv" class="hidden">
         <h4>⏳ Wähle deinen Zugang:</h4>
@@ -310,7 +358,50 @@ function updatePrice() {
 
 </script>
 
-Test Script
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const levelButton = document.getElementById("levelButton");
+    const levelList = document.getElementById("levelList");
+    const levelInput = document.getElementById("level");
+
+    // Öffnet und schließt das Dropdown
+    levelButton.addEventListener("click", function() {
+        levelList.style.display = levelList.style.display === "block" ? "none" : "block";
+    });
+
+    // Setzt den Wert und schließt das Dropdown
+    levelList.querySelectorAll("li").forEach(item => {
+        item.addEventListener("click", function() {
+            levelButton.innerText = this.innerText;
+            levelInput.value = this.dataset.value;
+            levelList.style.display = "none";
+        });
+    });
+
+    // Schließt das Dropdown, wenn man außerhalb klickt
+    document.addEventListener("click", function(e) {
+        if (!levelButton.contains(e.target) && !levelList.contains(e.target)) {
+            levelList.style.display = "none";
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+Burn
 </body>
 </html>
 
