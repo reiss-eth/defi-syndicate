@@ -64,10 +64,15 @@
             max-width: 400px;
         }
 
+
+
+
+
 /* Stil für das benutzerdefinierte Dropdown */
 .custom-dropdown {
     position: relative;
     width: 100%;
+    margin-bottom: 10px;
 }
 
 .dropdown-button {
@@ -105,6 +110,10 @@
     background: #666;
 }
 
+.hidden {
+    display: none;
+}
+
 
 
 
@@ -127,7 +136,8 @@
     <h4>🌍 Community:</h4>
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
-   <div class="custom-dropdown">
+  <div class="custom-dropdown">
+    <h4>📚 Wähle dein Level:</h4>
     <button class="dropdown-button" id="levelButton">-- Level wählen --</button>
     <ul class="dropdown-list" id="levelList">
         <li data-value="Fundamentale">Fundamentale</li>
@@ -137,22 +147,23 @@
     <input type="hidden" id="level">
 </div>
 
+<div class="custom-dropdown hidden" id="accessDiv">
+    <h4>⏳ Wähle deinen Zugang:</h4>
+    <button class="dropdown-button" id="accessButton">-- Zugangs Dauer wählen --</button>
+    <ul class="dropdown-list" id="accessList">
+        <li data-value="Monats Zugang">Monats Zugang</li>
+        <li data-value="Jahres Zugang">Jahres Zugang</li>
+        <li data-value="Lifetime Zugang">Lifetime Zugang</li>
+    </ul>
+    <input type="hidden" id="access">
+</div>
 
-    <div id="accessDiv" class="hidden">
-        <h4>⏳ Wähle deinen Zugang:</h4>
-        <select id="access" onchange="updatePrice()">
-            <option value="">-- Zugangs Dauer wählen --</option>
-            <option value="Monats Zugang">Monats Zugang</option>
-            <option value="Jahres Zugang">Jahres Zugang</option>
-            <option value="Lifetime Zugang">Lifetime Zugang</option>
-        </select>
-    </div>
+<div id="priceDiv" class="hidden">
+    <h4>💰 Preis:</h4>
+    <input id="ethAmount" type="text" readonly>
+    <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 ETH senden & Community beitreten</button>
+</div>
 
-    <div id="priceDiv" class="hidden">
-        <h4>💰 Preis:</h4>
-        <input id="ethAmount" type="text" readonly>
-        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 ETH senden & Community beitreten</button>
-    </div>
 </div>
 
 <script>
@@ -368,39 +379,91 @@ function updatePrice() {
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    // Elemente für Level & Zugang abrufen
     const levelButton = document.getElementById("levelButton");
     const levelList = document.getElementById("levelList");
     const levelInput = document.getElementById("level");
 
-    // Öffnet und schließt das Dropdown-Menü
-    levelButton.addEventListener("click", function(event) {
-        event.stopPropagation(); // Verhindert sofortiges Schließen
-        levelList.style.display = (levelList.style.display === "block") ? "none" : "block";
-    });
+    const accessButton = document.getElementById("accessButton");
+    const accessList = document.getElementById("accessList");
+    const accessInput = document.getElementById("access");
 
-    // Setzt den Wert aus der Liste und schließt das Menü
-    levelList.querySelectorAll("li").forEach(item => {
-        item.addEventListener("click", function(event) {
-            event.stopPropagation(); // Verhindert Schließen durch Click-Event
-            levelButton.innerText = this.innerText; // Setzt den Text auf den gewählten Wert
-            levelInput.value = this.dataset.value; // Speichert den Wert für das Formular
-            levelList.style.display = "none"; // Schließt das Menü nach Auswahl
+    const accessDiv = document.getElementById("accessDiv");
+    const priceDiv = document.getElementById("priceDiv");
+
+    // Dropdown-Menüs öffnen/schließen
+    function setupDropdown(button, list, input, onSelect) {
+        button.addEventListener("click", function(event) {
+            event.stopPropagation(); // Verhindert sofortiges Schließen
+            list.style.display = (list.style.display === "block") ? "none" : "block";
         });
-    });
 
-    // Schließt das Dropdown, wenn man außerhalb klickt
-    document.addEventListener("click", function(event) {
-        if (!levelButton.contains(event.target) && !levelList.contains(event.target)) {
-            levelList.style.display = "none";
-        }
-    });
+        list.querySelectorAll("li").forEach(item => {
+            item.addEventListener("click", function(event) {
+                event.stopPropagation();
+                button.innerText = this.innerText;
+                input.value = this.dataset.value;
+                list.style.display = "none";
+                if (onSelect) onSelect();
+            });
+        });
 
-    // Schließt das Dropdown bei Escape-Taste
-    document.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") {
-            levelList.style.display = "none";
+        document.addEventListener("click", function(event) {
+            if (!button.contains(event.target) && !list.contains(event.target)) {
+                list.style.display = "none";
+            }
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                list.style.display = "none";
+            }
+        });
+    }
+
+    // Funktion für Preisberechnung
+    function updatePrice() {
+        const level = levelInput.value;
+        const access = accessInput.value;
+        let price = "0.0";
+
+        if (!level) {
+            accessDiv.classList.add("hidden");
+            priceDiv.classList.add("hidden");
+            return;
         }
-    });
+
+        accessDiv.classList.remove("hidden");
+
+        if (level && access) {
+            if (level === "Fundamentale") {
+                if (access === "Monats Zugang") price = "0.00003";
+                if (access === "Jahres Zugang") price = "0.0003";
+                if (access === "Lifetime Zugang") price = "0.0009";
+            }
+            if (level === "Breakthrough") {
+                if (access === "Monats Zugang") price = "0.00005";
+                if (access === "Jahres Zugang") price = "0.0005";
+                if (access === "Lifetime Zugang") price = "0.0015";
+            }
+            if (level === "Elite") {
+                if (access === "Monats Zugang") price = "0.0001";
+                if (access === "Jahres Zugang") price = "0.001";
+                if (access === "Lifetime Zugang") price = "0.003";
+            }
+
+            document.getElementById("ethAmount").value = price;
+            priceDiv.classList.remove("hidden");
+            document.getElementById("swapButton").disabled = false;
+        } else {
+            priceDiv.classList.add("hidden");
+            document.getElementById("swapButton").disabled = true;
+        }
+    }
+
+    // Setup für beide Dropdowns
+    setupDropdown(levelButton, levelList, levelInput, updatePrice);
+    setupDropdown(accessButton, accessList, accessInput, updatePrice);
 });
 </script>
 
@@ -413,7 +476,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-List fix
+
+Test 2
 </body>
 </html>
 
