@@ -68,41 +68,37 @@
             max-width: 400px;
         }
 
-/* Hauptcontainer des Select2-Dropdowns */
 .select2-container .select2-selection--single {
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important; /* Zentriert den Text horizontal */
+    justify-content: center !important;
     height: 40px !important;
     background: #333 !important;
     border: none !important;
     border-radius: 5px !important;
     color: #fff !important;
-}
-
-/* Sicherstellen, dass der gerenderte Text innerhalb von Select2 mittig ausgerichtet ist */
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
     text-align: center !important;
-    color: #fff !important;
-    padding-left: 0px !important; /* Entfernt unnötige Padding */
 }
 
-/* Speziell für den INNEREN Text-Span innerhalb von Select2 */
-.select2-selection__rendered span {
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    display: block !important;
+    text-align: center !important;
+    width: 100% !important;
+    padding-left: 0px !important;
+    color: #fff !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered span {
     display: block !important;
     width: 100% !important;
     text-align: center !important;
 }
 
-/* Pfeil-Icon bleibt auf der rechten Seite */
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     position: absolute !important;
     right: 10px !important;
 }
+
 
 
 
@@ -120,17 +116,15 @@
       width: "100%" // Volle Breite setzen
     });
 
-    // Setzt den Text in Select2 richtig zentriert
+    // Funktion zur Korrektur der Textausrichtung
     function fixSelect2Alignment() {
         $(".select2-selection__rendered").each(function() {
             $(this).css({
-              "display": "flex",
-              "align-items": "center",
-              "justify-content": "center",
+              "display": "block",
               "text-align": "center"
             });
 
-            // Inneren Text-Span zentrieren
+            // Inneren Text-Span richtig zentrieren
             $(this).find("span").css({
               "width": "100%",
               "text-align": "center",
@@ -140,12 +134,13 @@
     }
 
     // Nach dem Laden anwenden
-    setTimeout(fixSelect2Alignment, 300);
+    setTimeout(fixSelect2Alignment, 100);
 
     // Auch nach Auswahl fixieren
     $("#level, #access").on("select2:select", fixSelect2Alignment);
   });
 </script>
+
 
 
 
@@ -402,7 +397,7 @@ function updatePrice() {
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
-Dao
+Burn
 </body>
 </html>
 
