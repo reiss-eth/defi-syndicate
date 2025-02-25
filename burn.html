@@ -140,8 +140,8 @@
 
 <div class="container">
     <h3>DeFi Syndicate Community Zugang:</h3>
-    <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
-    <p id="walletStatus">❌ Nicht verbunden</p>
+    <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🔗 Wallet verbinden</button>
+    <p id="walletStatus">⛓️‍💥 Nicht verbunden ❌</p>
 
     <br><h4>🌍 Community:</h4>
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
@@ -171,7 +171,7 @@
 <div id="priceDiv" class="hidden">
     <br><h4>💰 Preis:</h4>
     <input id="ethAmount" type="text" readonly>
-    <br><button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 ETH senden & Community beitreten</button>
+    <br><button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🔥 ETH senden & Community beitreten</button>
 </div>
 
 </div>
@@ -202,10 +202,10 @@
             await switchToSepolia();
         }
 
-        document.getElementById("walletStatus").innerText = "✅ Wallet verbunden";
+        document.getElementById("walletStatus").innerText = "🔗 Wallet verbunden ✅";
         document.getElementById("swapButton").disabled = false;
     } catch (error) {
-        alert("❌ Wallet Verbindung fehlgeschlagen.");
+        alert("⛓️‍💥 Wallet Verbindung fehlgeschlagen.❌");
     }
 }
 
