@@ -67,6 +67,35 @@
             width: 80%;
             max-width: 400px;
         }
+
+/* Hauptcontainer des Select2-Dropdowns */
+.select2-container .select2-selection--single {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Zentriert den Text horizontal */
+    height: 40px;
+    background: #333;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+}
+
+/* Stellt sicher, dass der ausgewählte Text wirklich mittig ist */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    color: #fff;
+}
+
+/* Pfeil-Icon nach rechts verschieben */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    right: 10px;
+    position: absolute;
+}
+
     </style>
 </head>
 <body>
@@ -81,17 +110,18 @@
       width: "100%" // Volle Breite setzen
     });
 
-    // Zentrierung des Textes in Select2
-    $(".select2-selection").css({
-      "text-align": "center",
-      "font-weight": "bold"
-    });
-
-    $(".select2-selection__rendered").css({
-      "text-align": "center"
-    });
+    // Setzt den Text zentriert nach einer kurzen Verzögerung
+    setTimeout(() => {
+        $(".select2-selection__rendered").css({
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "text-align": "center"
+        });
+    }, 100);
   });
 </script>
+
 
 
 
@@ -345,7 +375,7 @@ function updatePrice() {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
 
-DropDown Optimierung
+Start 2.0
 </body>
 </html>
 
