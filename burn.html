@@ -89,8 +89,9 @@
     border-radius: 5px;
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 5px 0 0 0;
     z-index: 100;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .dropdown-list li {
@@ -103,6 +104,7 @@
 .dropdown-list li:hover {
     background: #666;
 }
+
 
 
 
@@ -370,23 +372,32 @@ document.addEventListener("DOMContentLoaded", function() {
     const levelList = document.getElementById("levelList");
     const levelInput = document.getElementById("level");
 
-    // Öffnet und schließt das Dropdown
-    levelButton.addEventListener("click", function() {
-        levelList.style.display = levelList.style.display === "block" ? "none" : "block";
+    // Öffnet und schließt das Dropdown-Menü
+    levelButton.addEventListener("click", function(event) {
+        event.stopPropagation(); // Verhindert sofortiges Schließen
+        levelList.style.display = (levelList.style.display === "block") ? "none" : "block";
     });
 
-    // Setzt den Wert und schließt das Dropdown
+    // Setzt den Wert aus der Liste und schließt das Menü
     levelList.querySelectorAll("li").forEach(item => {
-        item.addEventListener("click", function() {
-            levelButton.innerText = this.innerText;
-            levelInput.value = this.dataset.value;
-            levelList.style.display = "none";
+        item.addEventListener("click", function(event) {
+            event.stopPropagation(); // Verhindert Schließen durch Click-Event
+            levelButton.innerText = this.innerText; // Setzt den Text auf den gewählten Wert
+            levelInput.value = this.dataset.value; // Speichert den Wert für das Formular
+            levelList.style.display = "none"; // Schließt das Menü nach Auswahl
         });
     });
 
     // Schließt das Dropdown, wenn man außerhalb klickt
-    document.addEventListener("click", function(e) {
-        if (!levelButton.contains(e.target) && !levelList.contains(e.target)) {
+    document.addEventListener("click", function(event) {
+        if (!levelButton.contains(event.target) && !levelList.contains(event.target)) {
+            levelList.style.display = "none";
+        }
+    });
+
+    // Schließt das Dropdown bei Escape-Taste
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
             levelList.style.display = "none";
         }
     });
@@ -401,7 +412,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-Burn
+
+List fix
 </body>
 </html>
 
