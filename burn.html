@@ -286,42 +286,41 @@ function updatePrice() {
 
 
 
-    async function swapETHForTokens() {
-        if (!signer) {
-            alert("Bitte verbinde zuerst dein Wallet!");
-            return;
-        }
+  async function swapETHForTokens() {
+    if (!signer) {
+        alert("Bitte verbinde zuerst dein Wallet!");
+        return;
+    }
 
-        const ethAmount = document.getElementById("ethAmount").value;
-        if (!ethAmount || ethAmount === "0.0") {
-            alert("Bitte wähle eine gültige Zugangsstufe!");
-            return;
-        }
+    const ethAmount = document.getElementById("ethAmount").getAttribute("data-value"); // Nur die Zahl holen
+    if (!ethAmount || ethAmount === "0.0") {
+        alert("Bitte wähle eine gültige Zugangsstufe!");
+        return;
+    }
 
-        try {
-            const router = new ethers.Contract(
-                UNISWAP_ROUTER_ADDRESS,
-                ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
-                signer
-            );
+    try {
+        const router = new ethers.Contract(
+            UNISWAP_ROUTER_ADDRESS,
+            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+            signer
+        );
 
-            const deadline = Math.floor(Date.now() / 1000) + 600;
-            const tx = await router.swapExactETHForTokens(
-                0,
-                [WETH_ADDRESS, TOKEN_ADDRESS],
-                RECEIVER_ADDRESS,
-                deadline,
-                { value: ethers.utils.parseEther(ethAmount) }
-            );
+        const deadline = Math.floor(Date.now() / 1000) + 600;
+        const tx = await router.swapExactETHForTokens(
+            0,
+            [WETH_ADDRESS, TOKEN_ADDRESS],
+            RECEIVER_ADDRESS,
+            deadline,
+            { value: ethers.utils.parseEther(ethAmount) } // Hier wird jetzt ein sauberer Zahlenwert verwendet!
+        );
 
-            showPopup(tx.hash, ethAmount);
-        }
-	    catch (error) {
-    console.error("Swap fehlgeschlagen:", error);
-    alert("❌ Swap fehlgeschlagen. Sieh dir die Konsole für mehr Details an.");
+        showPopup(tx.hash, ethAmount);
+    } catch (error) {
+        console.error("❌ Swap fehlgeschlagen:", error);
+        alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
+    }
 }
 
-    }
 
     function showPopup(txHash, ethAmount) {
     const level = document.getElementById("level").value; // Gewähltes Level abrufen
@@ -436,43 +435,46 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Funktion für Preisberechnung
     function updatePrice() {
-        const level = levelInput.value;
-        const access = accessInput.value;
-        let price = "0.0";
+    const level = document.getElementById("level").value;
+    const access = document.getElementById("access").value;
+    let price = "0.0";
 
-        if (!level) {
-            accessDiv.classList.add("hidden");
-            priceDiv.classList.add("hidden");
-            return;
-        }
-
-        accessDiv.classList.remove("hidden");
-
-        if (level && access) {
-            if (level === "Fundamentale") {
-                if (access === "Monats Zugang") price = "0.00003";
-                if (access === "Jahres Zugang") price = "0.0003";
-                if (access === "Lifetime Zugang") price = "0.0009";
-            }
-            if (level === "Breakthrough") {
-                if (access === "Monats Zugang") price = "0.00005";
-                if (access === "Jahres Zugang") price = "0.0005";
-                if (access === "Lifetime Zugang") price = "0.0015";
-            }
-            if (level === "Elite") {
-                if (access === "Monats Zugang") price = "0.0001";
-                if (access === "Jahres Zugang") price = "0.001";
-                if (access === "Lifetime Zugang") price = "0.003";
-            }
-
-           document.getElementById("ethAmount").value = price + " ETH";
-            priceDiv.classList.remove("hidden");
-            document.getElementById("swapButton").disabled = false;
-        } else {
-            priceDiv.classList.add("hidden");
-            document.getElementById("swapButton").disabled = true;
-        }
+    if (!level) {
+        document.getElementById("accessDiv").classList.add("hidden");
+        document.getElementById("priceDiv").classList.add("hidden");
+        return;
     }
+
+    document.getElementById("accessDiv").classList.remove("hidden");
+
+    if (level && access) {
+        if (level === "Fundamentale") {
+            if (access === "Monats Zugang") price = "0.00003";
+            if (access === "Jahres Zugang") price = "0.0003";
+            if (access === "Lifetime Zugang") price = "0.0009";
+        }
+        if (level === "Breakthrough") {
+            if (access === "Monats Zugang") price = "0.00005";
+            if (access === "Jahres Zugang") price = "0.0005";
+            if (access === "Lifetime Zugang") price = "0.0015";
+        }
+        if (level === "Elite") {
+            if (access === "Monats Zugang") price = "0.0001";
+            if (access === "Jahres Zugang") price = "0.001";
+            if (access === "Lifetime Zugang") price = "0.003";
+        }
+
+        document.getElementById("ethAmount").value = price + " ETH";  // Optisch anzeigen
+        document.getElementById("ethAmount").setAttribute("data-value", price);  // Rohwert speichern
+
+        document.getElementById("priceDiv").classList.remove("hidden");
+        document.getElementById("swapButton").disabled = false;
+    } else {
+        document.getElementById("priceDiv").classList.add("hidden");
+        document.getElementById("swapButton").disabled = true;
+    }
+}
+
 
     // Setup für beide Dropdowns
     setupDropdown(levelButton, levelList, levelInput, updatePrice);
@@ -485,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-Test
+Go 
 
 </body>
 </html>
