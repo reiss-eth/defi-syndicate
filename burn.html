@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeFi Syndicate Community Beitritt</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+
+
+	<!-- Select2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
+
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,12 +71,38 @@
 </head>
 <body>
 
+
+<script>
+  $(document).ready(function() {
+    // Select2 für Level & Access Dropdowns aktivieren
+    $("#level, #access").select2({
+      minimumResultsForSearch: Infinity, // Suchfeld entfernen
+      placeholder: "-- Bitte wählen --",
+      width: "100%" // Volle Breite setzen
+    });
+
+    // Zentrierung des Textes in Select2
+    $(".select2-selection").css({
+      "text-align": "center",
+      "font-weight": "bold"
+    });
+
+    $(".select2-selection__rendered").css({
+      "text-align": "center"
+    });
+  });
+</script>
+
+
+
+
+
 <div class="container">
     <h3>DeFi Syndicate Community Zugang:</h3>
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🚀 Wallet verbinden</button>
     <p id="walletStatus">❌ Nicht verbunden</p>
 
-    <h3>🌍 Community:</h3>
+    <h4>🌍 Community:</h4>
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
     <div id="levelDiv">
@@ -86,7 +118,7 @@
     <div id="accessDiv" class="hidden">
         <h4>⏳ Wähle deinen Zugang:</h4>
         <select id="access" onchange="updatePrice()">
-            <option value="">-- Zugang wählen --</option>
+            <option value="">-- Zugangs Dauer wählen --</option>
             <option value="Monats Zugang">Monats Zugang</option>
             <option value="Jahres Zugang">Jahres Zugang</option>
             <option value="Lifetime Zugang">Lifetime Zugang</option>
@@ -96,7 +128,7 @@
     <div id="priceDiv" class="hidden">
         <h4>💰 Preis:</h4>
         <input id="ethAmount" type="text" readonly>
-        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 Beitreten & ETH senden</button>
+        <button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🚀 ETH senden & Community beitreten</button>
     </div>
 </div>
 
@@ -184,19 +216,19 @@ function updatePrice() {
 
     if (level && access) {
         if (level === "Fundamentale") {
-            if (access === "Monats Zugang") price = "0.0003";
-            if (access === "Jahres Zugang") price = "0.003";
-            if (access === "Lifetime Zugang") price = "0.009";
+            if (access === "Monats Zugang") price = "0.00003";
+            if (access === "Jahres Zugang") price = "0.0003";
+            if (access === "Lifetime Zugang") price = "0.0009";
         }
         if (level === "Breakthrough") {
-            if (access === "Monats Zugang") price = "0.0005";
-            if (access === "Jahres Zugang") price = "0.005";
-            if (access === "Lifetime Zugang") price = "0.015";
+            if (access === "Monats Zugang") price = "0.00005";
+            if (access === "Jahres Zugang") price = "0.0005";
+            if (access === "Lifetime Zugang") price = "0.0015";
         }
         if (level === "Elite") {
-            if (access === "Monats Zugang") price = "0.001";
-            if (access === "Jahres Zugang") price = "0.01";
-            if (access === "Lifetime Zugang") price = "0.03";
+            if (access === "Monats Zugang") price = "0.0001";
+            if (access === "Jahres Zugang") price = "0.001";
+            if (access === "Lifetime Zugang") price = "0.003";
         }
 
         document.getElementById("ethAmount").value = price;
@@ -305,6 +337,15 @@ function updatePrice() {
 
 </script>
 
+
+
+
+<!-- jQuery und Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+
+DropDown Optimierung
 </body>
 </html>
 
