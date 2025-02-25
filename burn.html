@@ -72,7 +72,7 @@
 .select2-container .select2-selection--single {
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important; /* Erzwingt horizontale Zentrierung */
+    justify-content: center !important; /* Zentriert den Text horizontal */
     height: 40px !important;
     background: #333 !important;
     border: none !important;
@@ -90,11 +90,19 @@
     color: #fff !important;
 }
 
+/* Der eigentliche Text in Select2 wird als Span gerendert - dieser muss zentriert werden */
+.select2-selection__rendered span {
+    width: 100% !important;
+    text-align: center !important;
+    display: inline-block !important;
+}
+
 /* Pfeil-Icon nach rechts verschieben */
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     right: 10px !important;
     position: absolute !important;
 }
+
 
 
     </style>
@@ -111,7 +119,7 @@
       width: "100%" // Volle Breite setzen
     });
 
-    // Setzt den Text zentriert nach einer kurzen Verzögerung
+    // Setzt den Text in Select2 richtig zentriert
     setTimeout(() => {
         $(".select2-selection__rendered").each(function() {
             $(this).css({
@@ -120,10 +128,18 @@
               "justify-content": "center",
               "text-align": "center"
             });
+
+            // Inneren Text-Span zentrieren
+            $(this).find("span").css({
+              "width": "100%",
+              "text-align": "center",
+              "display": "inline-block"
+            });
         });
     }, 300);
   });
 </script>
+
 
 
 
@@ -378,7 +394,7 @@ function updatePrice() {
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
-
+Test
 </body>
 </html>
 
