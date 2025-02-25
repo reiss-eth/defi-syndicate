@@ -70,31 +70,32 @@
 
 /* Hauptcontainer des Select2-Dropdowns */
 .select2-container .select2-selection--single {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Zentriert den Text horizontal */
-    height: 40px;
-    background: #333;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important; /* Erzwingt horizontale Zentrierung */
+    height: 40px !important;
+    background: #333 !important;
+    border: none !important;
+    border-radius: 5px !important;
+    color: #fff !important;
 }
 
 /* Stellt sicher, dass der ausgewählte Text wirklich mittig ist */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    color: #fff;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    color: #fff !important;
 }
 
 /* Pfeil-Icon nach rechts verschieben */
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    right: 10px;
-    position: absolute;
+    right: 10px !important;
+    position: absolute !important;
 }
+
 
     </style>
 </head>
@@ -112,15 +113,18 @@
 
     // Setzt den Text zentriert nach einer kurzen Verzögerung
     setTimeout(() => {
-        $(".select2-selection__rendered").css({
-          "display": "flex",
-          "align-items": "center",
-          "justify-content": "center",
-          "text-align": "center"
+        $(".select2-selection__rendered").each(function() {
+            $(this).css({
+              "display": "flex",
+              "align-items": "center",
+              "justify-content": "center",
+              "text-align": "center"
+            });
         });
-    }, 100);
+    }, 300);
   });
 </script>
+
 
 
 
@@ -375,7 +379,6 @@ function updatePrice() {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
 
-Start 2.0
 </body>
 </html>
 
