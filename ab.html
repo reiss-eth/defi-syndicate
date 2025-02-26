@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zahlung Erfolgreich</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: auto;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            background: #25D366;
+            color: white;
+        }
+        img {
+            margin-top: 10px;
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>✅ Deine Zahlung wurde erfolgreich verarbeitet!</h2>
+        <h3>Du kannst den Browser jetzt schließen.</h3><br>
+	<p>Falls du Unterstützung benötigst oder es ein Problem mit dem Zahlungsnachweis gibt, kontaktiere uns hier:</p>
+        
+        <button id="whatsappButton">📲 WhatsApp Support</button>
+        <br>
+        <img id="qrCode" src="" alt="WhatsApp QR Code">
+    </div>
+
+    <script>
+        const walletAddress = "DEINE_ETHEREUM_WALLET_ADRESSE_HIER";
+        const whatsappNumber = "4915129147194";
+        const message = `Hallo, meine Zahlung wurde gesendet, aber ich habe Probleme mit dem Zahlungsnachweis. Meine Wallet-Adresse: ${walletAddress}`;
+        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        
+        document.getElementById("whatsappButton").onclick = function() {
+            window.open(whatsappLink, "_blank");
+        };
+        
+        document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+    </script>
+</body>
+</html>
