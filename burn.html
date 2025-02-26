@@ -220,16 +220,15 @@ async function switchToSepolia() {
     try {
         await window.ethereum.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: SEPOLIA_CHAIN_ID }],
+            params: [{ chainId: "0x" + SEPOLIA_CHAIN_ID.toString(16) }],
         });
     } catch (switchError) {
-        // Falls das Netzwerk nicht existiert, hinzufügen
         if (switchError.code === 4902) {
             try {
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
                     params: [{
-                        chainId: SEPOLIA_CHAIN_ID,
+                        chainId: "0x" + SEPOLIA_CHAIN_ID.toString(16),
                         chainName: "Ethereum Sepolia Testnet",
                         nativeCurrency: {
                             name: "SepoliaETH",
@@ -241,13 +240,16 @@ async function switchToSepolia() {
                     }],
                 });
             } catch (addError) {
+                console.error("Netzwerk konnte nicht hinzugefügt werden:", addError);
                 alert("❌ Netzwerk konnte nicht hinzugefügt werden. Bitte manuell wechseln.");
             }
         } else {
+            console.error("Netzwerkwechsel fehlgeschlagen:", switchError);
             alert("❌ Bitte wechsle manuell auf das Ethereum Sepolia Netzwerk!");
         }
     }
 }
+
 
 
 
@@ -513,7 +515,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+(Auto connect test version)
 </body>
 </html>
 
