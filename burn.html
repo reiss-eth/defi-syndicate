@@ -201,10 +201,15 @@ async function connectWallet() {
         signer = provider.getSigner();
 
         const network = await provider.getNetwork();
+console.log("🔍 Aktuelles Netzwerk:", network.chainId);
 
-        if (network.chainId !== SEPOLIA_CHAIN_ID) {
-            await switchToSepolia();
-        }
+if (network.chainId !== SEPOLIA_CHAIN_ID) {
+    console.log("🔄 Wechsel zu Sepolia erforderlich...");
+    await switchToSepolia();
+} else {
+    console.log("✅ Wallet ist bereits auf Sepolia.");
+}
+
 
         walletAddress = await signer.getAddress(); // Wallet-Adresse abrufen und speichern
        document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
@@ -218,12 +223,17 @@ async function connectWallet() {
 
 async function switchToSepolia() {
     try {
+        console.log("🔄 Versuche, zur Sepolia Chain zu wechseln...");
         await window.ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: "0x" + SEPOLIA_CHAIN_ID.toString(16) }],
         });
+        console.log("✅ Erfolgreich auf Sepolia gewechselt!");
     } catch (switchError) {
-        if (switchError.code === 4902) {
+        console.error("❌ Netzwerkwechsel fehlgeschlagen:", switchError);
+
+        if (switchError.code === 4902) { // Sepolia ist noch nicht in MetaMask
+            console.log("➕ Sepolia-Netzwerk ist nicht hinzugefügt. Versuche, es hinzuzufügen...");
             try {
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
@@ -239,16 +249,18 @@ async function switchToSepolia() {
                         blockExplorerUrls: ["https://sepolia.etherscan.io"]
                     }],
                 });
+                console.log("✅ Sepolia wurde erfolgreich hinzugefügt!");
             } catch (addError) {
-                console.error("Netzwerk konnte nicht hinzugefügt werden:", addError);
-                alert("❌ Netzwerk konnte nicht hinzugefügt werden. Bitte manuell wechseln.");
+                console.error("❌ Fehler beim Hinzufügen von Sepolia:", addError);
+                alert("⚠️ Dein Wallet erlaubt das automatische Hinzufügen von Sepolia nicht. Bitte wechsle das Netzwerk manuell in MetaMask.");
             }
         } else {
-            console.error("Netzwerkwechsel fehlgeschlagen:", switchError);
-            alert("❌ Bitte wechsle manuell auf das Ethereum Sepolia Netzwerk!");
+            alert("⚠️ Deine Wallet erlaubt den automatischen Netzwerkwechsel nicht. Bitte öffne MetaMask und wechsle manuell zu Ethereum Sepolia.");
         }
     }
 }
+
+
 
 
 
@@ -515,7 +527,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-(Auto connect test version)
+(Auto connect test version 2.0)
 </body>
 </html>
 
