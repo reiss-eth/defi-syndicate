@@ -61,7 +61,7 @@
         /* Popup Styling */
         .popup {
     position: fixed;
-    top: 50%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #222;
@@ -349,11 +349,10 @@ function updatePrice() {
         communityLink = "https://chat.whatsapp.com/Elite";
     }
 
-    const whatsappMessage = `Ich habe für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.%0A %0A Meine Wallet Adresse ist:%0A ${walletAddress} %0A %0A🔗 Transaktionslink: %0A https://sepolia.etherscan.io/tx/${txHash}`;
-    const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
-    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
-
-    const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
+   const whatsappMessage = `Ich habe für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.%0A%0A🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash}%0A%0A📩 Meine Wallet Adresse: ${walletAddress}`;
+   const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(whatsappMessage)}`;
+    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(whatsappLink)}`;
+    const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(communityLink)}`;
 
     const popup = document.createElement("div");
     popup.className = "popup";
@@ -371,7 +370,7 @@ function updatePrice() {
                     📲 Per WhatsApp senden
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
-                <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
+                <img src="${qrWhatsAppMessage}" style="width: 100px; height: 100px;">
             </div>
 
             <!-- Link zur Community beitreten -->
@@ -383,7 +382,7 @@ function updatePrice() {
                     🚀 WhatsApp Community beitreten
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
-                <img src="${qrCommunityLink}" style="width: 150px; height: 150px;">
+                <img src="${qrCommunityLink}" style="width: 100px; height: 100px;">
                 <p style="font-size: 12px; color: #ccc;">Freischaltung erfolgt innerhalb von 3 bis 24 Stunden.</p>
             </div>
         </div>
@@ -509,7 +508,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🚩
+
 </body>
 </html>
 
