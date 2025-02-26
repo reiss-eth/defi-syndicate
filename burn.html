@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -329,8 +328,16 @@ function updatePrice() {
 
     function showPopup(txHash, ethAmount) {
     const level = document.getElementById("level").value; // Gewähltes Level abrufen
+    const access = document.getElementById("access").value; // Zugangs-Dauer abrufen
+
+    if (!access) {
+        console.error("Fehler: access ist leer oder undefined.");
+        alert("Es scheint ein Fehler bei der Auswahl der Zugangsdauer vorzuliegen.");
+        return;
+    }
+
+
     let communityLink = "";
-    
     // WhatsApp-Community-Link abhängig vom gewählten Level setzen
     if (level === "Fundamentale") {
         communityLink = "https://chat.whatsapp.com/fundamental";
@@ -340,7 +347,7 @@ function updatePrice() {
         communityLink = "https://chat.whatsapp.com/Elite";
     }
 
-    const whatsappMessage = `Ich habe für <b>${ethAmount} ETH</b> einen <b>${access}</b> für DeFi Syndicate im <b>${level}</b> Level erworben.%0 %0AMeine Wallet Adresse ist:%0${walletAddress}%0A %0A🔗 Transaktionslink: %0Ahttps://sepolia.etherscan.io/tx/${txHash}`;
+    const whatsappMessage = `Ich habe für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.%0A %0A Meine Wallet Adresse ist:%0A ${walletAddress} %0A %0A🔗 Transaktionslink: %0A https://sepolia.etherscan.io/tx/${txHash}`;
     const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
     const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
 
@@ -351,30 +358,30 @@ function updatePrice() {
     popup.innerHTML = `
         <h2>✅ Zahlung erfolgreich!</h2>
         <p>Du hast für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.</p>
-	⬇️ Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen Community beizutreten. ⬇️
+	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️
         <div style="display: block; text-align: center;">
             <!-- Link zum Zahlungsnachweis senden -->
            <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
            <h3>Schritt 1:</h3>
-           <h4>📩 Zahlungsnachweis einreichen</h4>
+           <h6>📩 Zahlungsnachweis einreichen</h6>
                 <button onclick="window.open('${whatsappLink}', '_blank')" 
                     style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
                     📲 Per WhatsApp senden
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
-                <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
+                <img src="${qrWhatsAppMessage}" style="width: 100px; height: 100px;">
             </div>
 
             <!-- Link zur Community beitreten -->
             <div style="background: #333; padding: 15px; border-radius: 10px;">
             <h3>Schritt 2:</h3>
-	    <h4>DeFi Syndicate - ${level} beitreten</h4>
+	    <h6>DeFi Syndicate - ${level} beitreten</h6>
                 <button onclick="window.open('${communityLink}', '_blank')" 
                     style="padding:10px; background:#0084FF; color:#fff; border-radius:5px;">
                     🚀 WhatsApp Community beitreten
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
-                <img src="${qrCommunityLink}" style="width: 150px; height: 150px;">
+                <img src="${qrCommunityLink}" style="width: 100px; height: 100px;">
                 <p style="font-size: 12px; color: #ccc;">Freischaltung erfolgt innerhalb von 3 bis 24 Stunden.</p>
             </div>
         </div>
@@ -500,7 +507,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🎖️
+🏁
 </body>
 </html>
 
