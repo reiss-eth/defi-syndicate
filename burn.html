@@ -61,19 +61,20 @@
         /* Popup Styling */
         .popup {
     position: fixed;
-    top: 40%;
+    top: 0; /* Setzt das Popup ganz oben */
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%); /* Nur horizontal zentrieren */
     background: #222;
     color: white;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     z-index: 1000;
-    width: 80%;
-    max-width: 400px;
-    max-height: 100vh; /* Maximale Höhe auf 80% des Viewports begrenzen */
-    overflow-y: auto; /* Falls zu groß, wird das Popup scrollbar */
+    width: 100%; /* Volle Breite */
+    max-width: 400px; /* Maximale Breite */
+    height: 100vh; /* Volle Höhe */
+    max-height: 100vh; /* Sicherstellen, dass es nicht größer als die Höhe ist */
+    overflow-y: auto; /* Falls nötig, scrollen */
 }
 
 
@@ -349,7 +350,7 @@ function updatePrice() {
         communityLink = "https://chat.whatsapp.com/Elite";
     }
 
-   const whatsappMessage = `Ich habe für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.%0A%0A🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash}%0A%0A📩 Meine Wallet Adresse: ${walletAddress}`;
+   const whatsappMessage = `Ich habe für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben. %0A 🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash} %0A 📩 Meine Wallet Adresse: ${walletAddress}`;
    const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(whatsappMessage)}`;
     const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
     const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
@@ -508,7 +509,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-💎
+🔥
 </body>
 </html>
 
