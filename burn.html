@@ -353,7 +353,7 @@ function updatePrice() {
    const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
     + `Du hast für *${ethAmount} ETH* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
     + `🔗 *Transaktionslink:* %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
-    + `📩 *Meine Wallet-Adresse:* %0A `${walletAddress}``;
+    + `📩 *Meine Wallet-Adresse:* %0A `${walletAddress}` `;
 
     const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(decodeURIComponent(whatsappMessage))}`;
     const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-Go
+Test
 </body>
 </html>
 
