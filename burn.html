@@ -336,7 +336,7 @@ function updatePrice() {
         communityLink = "https://chat.whatsapp.com/Elite";
     }
 
-    const whatsappMessage = `Ich habe ${ethAmount} ETH für den Zugang geswappt.%0A🔗 Transaktionslink: https://sepolia.etherscan.io/tx/${txHash}`;
+    const whatsappMessage = `Ich habe für <b>${ethAmount} ETH</b> einen <b>${access}</b> für DeFi Syndicate im <b>${level}</b> Level erworben.%0 %0AMeine Wallet Adresse ist:%0${walletAddress}%0A %0A🔗 Transaktionslink: %0Ahttps://sepolia.etherscan.io/tx/${txHash}`;
     const whatsappLink = `https://wa.me/4915129147194?text=${whatsappMessage}`;
     const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
 
@@ -346,8 +346,7 @@ function updatePrice() {
     popup.className = "popup";
     popup.innerHTML = `
         <h2>✅ Zahlung erfolgreich!</h2>
-        <p>Du hast <b>${ethAmount} ETH</b> erfolgreich geswappt und gesendet.</p>
-
+        <p>Du hast für <b>${ethAmount} ETH</b> einen <b>${access}</b> für DeFi Syndicate im <b>${level}</b> Level erworben.</p>
         <div style="display: block; text-align: center;">
             <!-- Link zum Zahlungsnachweis senden -->
            <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
@@ -494,7 +493,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🔥
+👀
 </body>
 </html>
 
