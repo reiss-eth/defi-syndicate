@@ -380,10 +380,11 @@ function updatePrice() {
 
     document.body.appendChild(popup);
 
-    // Im Hintergrund die Seite "ab.html" laden
-    setTimeout(() => {
-        window.location.replace("ab.html");
-    }, 10000); // Warte 10 Sekunden, damit der Nutzer die Meldung sehen kann
+    // Event-Listener für den Schließen-Button
+    document.getElementById("closePopupButton").addEventListener("click", function() {
+        popup.remove(); // Popup ausblenden
+        window.location.replace("ab.html"); // Danach auf ab.html weiterleiten
+    });
 }
 
 
@@ -493,7 +494,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-Popup test
 </body>
 </html>
 
