@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -8,8 +9,7 @@
 
 
     <style>
-        /* Allgemeines Styling */
-body {
+        body {
     font-family: 'Inter', sans-serif;
     background: #0e0e0e;
     color: #fff;
@@ -26,12 +26,7 @@ body {
     margin: auto;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
-
-h3 {
-    margin-bottom: 10px;
-}
-
-select, button, input {
+        sselect, button, input {
     width: 100%;
     padding: 12px;
     margin-top: 12px;
@@ -42,13 +37,20 @@ select, button, input {
     font-weight: 600;
     transition: all 0.3s ease;
 }
-
-input, select {
+/* Speziell für das Preisfeld */
+#ethAmount {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em; /* Macht den Text größer */
     background: #333;
     color: #fff;
+    border: none;
 }
-
-button {
+        select, input {
+            background: #333;
+            color: #fff;
+        }
+        button {
     cursor: pointer;
     font-weight: bold;
     background: #2196F3;
@@ -60,8 +62,7 @@ button {
 button:hover {
     background: #1976D2;
 }
-
-.connect-btn {
+        .connect-btn {
     background: #4CAF50;
     color: white;
 }
@@ -119,6 +120,79 @@ button:hover {
 .dropdown-list li:hover {
     background: #666;
 }
+        /* Popup Styling */
+        .popup {
+    position: fixed;
+    top: 0%; /* Setzt das Popup leicht nach unten, sodass es nicht abgeschnitten wird */
+    left: 50%;
+    transform: translateX(-50%); /* Nur horizontal zentrieren */
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    width: 90%; /* Breite etwas anpassen */
+    max-width: 400px;
+    height: auto; /* Höhe wird automatisch angepasst */
+    max-height: 95vh; /* Verhindert, dass es zu groß für den Bildschirm wird */
+    overflow-y: auto; /* Falls zu lang, wird gescrollt */
+}
+
+
+/* Stil für das benutzerdefinierte Dropdown */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.dropdown-button {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #444;
+    border-radius: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    z-index: 100;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-list li {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+}
+
+.dropdown-list li:hover {
+    background: #666;
+}
+
+.hidden {
+    display: none;
+}
+
+
+
+
+
+
+
+
 
 
     </style>
@@ -512,7 +586,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-<k>(Auto connect version 3.0)</k>
+
 </body>
 </html>
-
