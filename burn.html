@@ -60,19 +60,21 @@
         }
         /* Popup Styling */
         .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #222;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 1000;
-            width: 80%;
-            max-width: 400px;
-        }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    width: 80%;
+    max-width: 400px;
+    max-height: 80vh; /* Maximale Höhe auf 80% des Viewports begrenzen */
+    overflow-y: auto; /* Falls zu groß, wird das Popup scrollbar */
+}
 
 
 
@@ -356,32 +358,32 @@ function updatePrice() {
     const popup = document.createElement("div");
     popup.className = "popup";
     popup.innerHTML = `
-        <h2>✅ Zahlung erfolgreich!</h2>
+        <h3>✅ Zahlung erfolgreich!</h3>
         <p>Du hast für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.</p>
 	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️
         <div style="display: block; text-align: center;">
             <!-- Link zum Zahlungsnachweis senden -->
            <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-           <h3>Schritt 1:</h3>
-           <h6>📩 Zahlungsnachweis einreichen</h6>
+           <h4>Schritt 1:</h4>
+           <p>📩 Zahlungsnachweis einreichen</p>
                 <button onclick="window.open('${whatsappLink}', '_blank')" 
                     style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
                     📲 Per WhatsApp senden
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
-                <img src="${qrWhatsAppMessage}" style="width: 100px; height: 100px;">
+                <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
             </div>
 
             <!-- Link zur Community beitreten -->
             <div style="background: #333; padding: 15px; border-radius: 10px;">
-            <h3>Schritt 2:</h3>
-	    <h6>DeFi Syndicate - ${level} beitreten</h6>
+            <h4>Schritt 2:</h4>
+	    <p>DeFi Syndicate - ${level} beitreten</p>
                 <button onclick="window.open('${communityLink}', '_blank')" 
                     style="padding:10px; background:#0084FF; color:#fff; border-radius:5px;">
                     🚀 WhatsApp Community beitreten
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
-                <img src="${qrCommunityLink}" style="width: 100px; height: 100px;">
+                <img src="${qrCommunityLink}" style="width: 150px; height: 150px;">
                 <p style="font-size: 12px; color: #ccc;">Freischaltung erfolgt innerhalb von 3 bis 24 Stunden.</p>
             </div>
         </div>
@@ -507,7 +509,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🏁
+🚩
 </body>
 </html>
 
