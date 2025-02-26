@@ -72,7 +72,7 @@
     z-index: 1000;
     width: 80%;
     max-width: 400px;
-    max-height: 80vh; /* Maximale Höhe auf 80% des Viewports begrenzen */
+    max-height: 100vh; /* Maximale Höhe auf 80% des Viewports begrenzen */
     overflow-y: auto; /* Falls zu groß, wird das Popup scrollbar */
 }
 
@@ -357,13 +357,13 @@ function updatePrice() {
     const popup = document.createElement("div");
     popup.className = "popup";
     popup.innerHTML = `
-        <h3>✅ Zahlung erfolgreich!</h3>
-        <p>Du hast für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.</p>
-	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️
+        <h2>✅ Zahlung erfolgreich!</h2>
+        <br><p>Du hast für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.</p><br>
+	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️<br><br>
         <div style="display: block; text-align: center;">
             <!-- Link zum Zahlungsnachweis senden -->
            <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-           <h4>Schritt 1:</h4>
+           <h3>Schritt 1:</h3>
            <p>📩 Zahlungsnachweis einreichen</p>
                 <button onclick="window.open('${whatsappLink}', '_blank')" 
                     style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
@@ -371,11 +371,11 @@ function updatePrice() {
                 </button>
                 <p>📸 Oder scanne den QR-Code:</p>
                 <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
-            </div>
+            </div><br>
 
             <!-- Link zur Community beitreten -->
             <div style="background: #333; padding: 15px; border-radius: 10px;">
-            <h4>Schritt 2:</h4>
+            <h3>Schritt 2:</h3>
 	    <p>DeFi Syndicate - ${level} beitreten</p>
                 <button onclick="window.open('${communityLink}', '_blank')" 
                     style="padding:10px; background:#0084FF; color:#fff; border-radius:5px;">
@@ -508,7 +508,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🏳️
+💎
 </body>
 </html>
 
