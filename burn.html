@@ -350,11 +350,13 @@ function updatePrice() {
     popup.className = "popup";
     popup.innerHTML = `
         <h2>✅ Zahlung erfolgreich!</h2>
-        <p>Du hast für <b>${ethAmount} ETH</b> einen <b>${access}</b> für DeFi Syndicate im <b>${level}</b> Level erworben.</p>
+        <p>Du hast für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.</p>
+	⬇️ Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen Community beizutreten. ⬇️
         <div style="display: block; text-align: center;">
             <!-- Link zum Zahlungsnachweis senden -->
            <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                <h3>📩 Zahlungsnachweis senden</h3>
+           <h3>Schritt 1:</h3>
+           <h4>📩 Zahlungsnachweis einreichen</h4>
                 <button onclick="window.open('${whatsappLink}', '_blank')" 
                     style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
                     📲 Per WhatsApp senden
@@ -365,7 +367,8 @@ function updatePrice() {
 
             <!-- Link zur Community beitreten -->
             <div style="background: #333; padding: 15px; border-radius: 10px;">
-                <h3>DeFi Syndicate (${level}) beitreten</h3>
+            <h3>Schritt 2:</h3>
+	    <h4>DeFi Syndicate - ${level} beitreten</h4>
                 <button onclick="window.open('${communityLink}', '_blank')" 
                     style="padding:10px; background:#0084FF; color:#fff; border-radius:5px;">
                     🚀 WhatsApp Community beitreten
@@ -497,7 +500,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+🎖️
 </body>
 </html>
 
