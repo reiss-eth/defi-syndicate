@@ -185,6 +185,8 @@ const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
 const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";
 const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
 
+let walletAddress = ""; // Globale Variable für die Wallet-Adresse
+
 async function connectWallet() {
     if (!window.ethereum) {
         alert("Bitte MetaMask installieren!");
@@ -202,7 +204,9 @@ async function connectWallet() {
             await switchToSepolia();
         }
 
-        document.getElementById("walletStatus").innerText = "🔗 Wallet verbunden ✅";
+        walletAddress = await signer.getAddress(); // Wallet-Adresse abrufen und speichern
+       document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
+
         document.getElementById("swapButton").disabled = false;
     } catch (error) {
         console.error("Wallet-Verbindung fehlgeschlagen:", error);
@@ -493,7 +497,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-👀
+
 </body>
 </html>
 
