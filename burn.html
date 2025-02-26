@@ -373,7 +373,7 @@ function updatePrice() {
             </div>
         </div>
 
-        <button onclick="this.parentElement.remove()" 
+       <button onclick="closePopup(this.parentElement)" 
             style="margin-top:20px; padding:10px; background:#ff9800; color:#fff; border-radius:5px;">
             ✖ Schließen
         </button>
@@ -381,6 +381,13 @@ function updatePrice() {
 
     document.body.appendChild(popup);
 }
+
+function closePopup(popupElement) {
+    popupElement.remove();
+    window.location.href = "ab.html";
+}
+
+
 
 </script>
 
@@ -487,8 +494,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
-Go
+💎
 </body>
 </html>
 
