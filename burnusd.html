@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Syndicate Community Beitritt</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+
+
+    <style>
+        body {
+    font-family: 'Inter', sans-serif;
+    background: #0e0e0e;
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    background: linear-gradient(135deg, #1a1a1a, #292929);
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+        sselect, button, input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+/* Speziell für das Preisfeld */
+#ethAmount {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em; /* Macht den Text größer */
+    background: #333;
+    color: #fff;
+    border: none;
+}
+        select, input {
+            background: #333;
+            color: #fff;
+        }
+        button {
+    cursor: pointer;
+    font-weight: bold;
+    background: #2196F3;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #1976D2;
+}
+        .connect-btn {
+    background: #4CAF50;
+    color: white;
+}
+
+.connect-btn:hover {
+    background: #388E3C;
+}
+
+.swap-btn {
+    background: #FF9800;
+}
+
+.swap-btn:hover {
+    background: #E68900;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Dropdown Menü */
+.custom-dropdown {
+    position: relative;
+    margin-top: 15px;
+}
+
+.dropdown-button {
+    background: #444;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #555;
+    border-radius: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    z-index: 100;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-list li {
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+}
+
+.dropdown-list li:hover {
+    background: #666;
+}
+        /* Popup Styling */
+        .popup {
+    position: fixed;
+    top: 0%; /* Setzt das Popup leicht nach unten, sodass es nicht abgeschnitten wird */
+    left: 50%;
+    transform: translateX(-50%); /* Nur horizontal zentrieren */
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    width: 90%; /* Breite etwas anpassen */
+    max-width: 400px;
+    height: auto; /* Höhe wird automatisch angepasst */
+    max-height: 95vh; /* Verhindert, dass es zu groß für den Bildschirm wird */
+    overflow-y: auto; /* Falls zu lang, wird gescrollt */
+}
+
+
+/* Stil für das benutzerdefinierte Dropdown */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.dropdown-button {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #444;
+    border-radius: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    z-index: 100;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-list li {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+}
+
+.dropdown-list li:hover {
+    background: #666;
+}
+
+.hidden {
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+    <h3>DeFi Syndicate Community Zugang:</h3>
+    <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🔗 Wallet verbinden</button>
+    <p id="walletStatus">⛓️‍💥 Nicht verbunden ❌</p>
+
+    <br><h4>🌍 Community:</h4>
+    <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
+
+  <div class="custom-dropdown">
+    <br><h4>📚 Wähle dein Level:</h4>
+    <button class="dropdown-button" id="levelButton">-- Level wählen --</button>
+    <ul class="dropdown-list" id="levelList">
+        <li data-value="Fundamentale">Fundamentale</li>
+        <li data-value="Breakthrough">Breakthrough</li>
+        <li data-value="Elite">Elite</li>
+    </ul>
+    <input type="hidden" id="level">
+</div>
+
+<div class="custom-dropdown hidden" id="accessDiv">
+    <br><h4>⏳ Wähle deinen Zugang:</h4>
+    <button class="dropdown-button" id="accessButton">-- Zugangs Dauer wählen --</button>
+    <ul class="dropdown-list" id="accessList">
+        <li data-value="Monats Zugang">Monats Zugang</li>
+        <li data-value="Jahres Zugang">Jahres Zugang</li>
+        <li data-value="Lifetime Zugang">Lifetime Zugang</li>
+    </ul>
+    <input type="hidden" id="access">
+</div>
+
+<div id="priceDiv" class="hidden">
+    <br><h4>💰 Preis:</h4>
+    <input id="ethAmount" type="text" readonly>
+    <br><button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🔥 ETH senden & Community beitreten</button>
+</div>
+
+</div>
+
+<script>
+    let provider, signer;
+const SEPOLIA_CHAIN_ID = 11155111;
+const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";
+const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
+const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";
+const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
+
+let walletAddress = ""; // Globale Variable für die Wallet-Adresse
+
+async function connectWallet() {
+    if (!window.ethereum) {
+        alert("Bitte MetaMask installieren!");
+        return;
+    }
+
+    try {
+        provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+
+        const network = await provider.getNetwork();
+console.log("🔍 Aktuelles Netzwerk:", network.chainId);
+
+if (network.chainId !== SEPOLIA_CHAIN_ID) {
+    console.log("🔄 Wechsel zu Sepolia erforderlich...");
+    await switchToSepolia();
+} else {
+    console.log("✅ Wallet ist bereits auf Sepolia.");
+}
+
+
+        walletAddress = await signer.getAddress(); // Wallet-Adresse abrufen und speichern
+       document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
+
+        document.getElementById("swapButton").disabled = false;
+    } catch (error) {
+        console.error("Wallet-Verbindung fehlgeschlagen:", error);
+        alert("⛓️‍💥 Wallet Verbindung fehlgeschlagen.❌ Überprüfe die Konsole für Details.");
+    }
+}
+
+async function switchToSepolia() {
+    try {
+        console.log("🔄 Versuche, zur Sepolia Chain zu wechseln...");
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x" + SEPOLIA_CHAIN_ID.toString(16) }],
+        });
+        console.log("✅ Erfolgreich auf Sepolia gewechselt!");
+    } catch (switchError) {
+        console.error("❌ Netzwerkwechsel fehlgeschlagen:", switchError);
+
+        if (switchError.code === 4902) { // Sepolia ist noch nicht in MetaMask
+            console.log("➕ Sepolia-Netzwerk ist nicht hinzugefügt. Versuche, es hinzuzufügen...");
+            try {
+                await window.ethereum.request({
+                    method: "wallet_addEthereumChain",
+                    params: [{
+                        chainId: "0x" + SEPOLIA_CHAIN_ID.toString(16),
+                        chainName: "Ethereum Sepolia Testnet",
+                        nativeCurrency: {
+                            name: "SepoliaETH",
+                            symbol: "ETH",
+                            decimals: 18
+                        },
+                        rpcUrls: ["https://endpoints.omniatech.io/v1/eth/sepolia/public"],
+                        blockExplorerUrls: ["https://sepolia.etherscan.io"]
+                    }],
+                });
+                console.log("✅ Sepolia wurde erfolgreich hinzugefügt!");
+            } catch (addError) {
+                console.error("❌ Fehler beim Hinzufügen von Sepolia:", addError);
+                alert("⚠️ Dein Wallet erlaubt das automatische Hinzufügen von Sepolia nicht. Bitte wechsle das Netzwerk manuell in MetaMask.");
+            }
+        } else {
+            alert("⚠️ Deine Wallet erlaubt den automatischen Netzwerkwechsel nicht. Bitte öffne MetaMask und wechsle manuell zu Ethereum Sepolia.");
+        }
+    }
+}
+
+
+
+
+
+
+
+function updatePrice() {
+    const level = document.getElementById("level").value;
+    const access = document.getElementById("access").value;
+    let price = "0.0";
+
+    if (!level) {
+        document.getElementById("accessDiv").classList.add("hidden");
+        document.getElementById("priceDiv").classList.add("hidden");
+        return;
+    }
+
+    document.getElementById("accessDiv").classList.remove("hidden");
+
+    if (level && access) {
+        if (level === "Fundamentale") {
+            if (access === "Monats Zugang") price = "0.00003";
+            if (access === "Jahres Zugang") price = "0.0003";
+            if (access === "Lifetime Zugang") price = "0.0009";
+        }
+        if (level === "Breakthrough") {
+            if (access === "Monats Zugang") price = "0.00005";
+            if (access === "Jahres Zugang") price = "0.0005";
+            if (access === "Lifetime Zugang") price = "0.0015";
+        }
+        if (level === "Elite") {
+            if (access === "Monats Zugang") price = "0.0001";
+            if (access === "Jahres Zugang") price = "0.001";
+            if (access === "Lifetime Zugang") price = "0.003";
+        }
+
+        document.getElementById("ethAmount").value = price;
+        document.getElementById("priceDiv").classList.remove("hidden");
+        document.getElementById("swapButton").disabled = false;
+    } else {
+        document.getElementById("priceDiv").classList.add("hidden");
+        document.getElementById("swapButton").disabled = true;
+    }
+}
+
+
+
+  async function swapETHForTokens() {
+    if (!signer) {
+        alert("Bitte verbinde zuerst dein Wallet!");
+        return;
+    }
+
+    const ethAmount = document.getElementById("ethAmount").getAttribute("data-value"); // Nur die Zahl holen
+    if (!ethAmount || ethAmount === "0.0") {
+        alert("Bitte wähle eine gültige Zugangsstufe!");
+        return;
+    }
+
+    try {
+        const router = new ethers.Contract(
+            UNISWAP_ROUTER_ADDRESS,
+            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+            signer
+        );
+
+        const deadline = Math.floor(Date.now() / 1000) + 600;
+        const tx = await router.swapExactETHForTokens(
+            0,
+            [WETH_ADDRESS, TOKEN_ADDRESS],
+            RECEIVER_ADDRESS,
+            deadline,
+            { value: ethers.utils.parseEther(ethAmount) } // Hier wird jetzt ein sauberer Zahlenwert verwendet!
+        );
+
+        showPopup(tx.hash, ethAmount);
+    } catch (error) {
+        console.error("❌ Swap fehlgeschlagen:", error);
+        alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
+    }
+}
+
+
+    function showPopup(txHash, ethAmount) {
+    const level = document.getElementById("level").value; // Gewähltes Level abrufen
+    const access = document.getElementById("access").value; // Zugangs-Dauer abrufen
+
+    if (!access) {
+        console.error("Fehler: access ist leer oder undefined.");
+        alert("Es scheint ein Fehler bei der Auswahl der Zugangsdauer vorzuliegen.");
+        return;
+    }
+
+
+    let communityLink = "";
+    // WhatsApp-Community-Link abhängig vom gewählten Level setzen
+    if (level === "Fundamentale") {
+        communityLink = "https://chat.whatsapp.com/fundamental";
+    } else if (level === "Breakthrough") {
+        communityLink = "https://chat.whatsapp.com/breakthrough";
+    } else if (level === "Elite") {
+        communityLink = "https://chat.whatsapp.com/Elite";
+    }
+
+   const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
+    + `Ich habe für *${ethAmount} ETH* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
+    + `🔗 Transaktionslink: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
+    + `📩 Meine Wallet-Adresse: %0A *${walletAddress}* `;
+
+    const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(decodeURIComponent(whatsappMessage))}`;
+    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+    const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
+
+
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.innerHTML = `
+        <h2>✅ Zahlung erfolgreich!</h2>
+        <br><p>Du hast für ${ethAmount} ETH einen ${access} für DeFi Syndicate im ${level} Level erworben.</p><br>
+	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️<br><br>
+        <div style="display: block; text-align: center;">
+            <!-- Link zum Zahlungsnachweis senden -->
+           <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+           <h3><span style="text-decoration: underline;">Schritt 1:</span></h3>
+           <p>📩 Zahlungsnachweis einreichen</p>
+                <button onclick="window.open('${whatsappLink}', '_blank')" 
+                    style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
+                    📲 Per WhatsApp senden
+                </button>
+                <p>📸 Oder scanne den QR-Code:</p>
+                <img src="${qrWhatsAppMessage}" style="width: 150px; height: 150px;">
+            </div><br>
+
+            <!-- Link zur Community beitreten -->
+            <div style="background: #333; padding: 15px; border-radius: 10px;">
+            <h3><span style="text-decoration: underline;">Schritt 2:</span></h3>
+	    <p>DeFi Syndicate - ${level} beitreten</p>
+                <button onclick="window.open('${communityLink}', '_blank')" 
+                    style="padding:10px; background:#0084FF; color:#fff; border-radius:5px;">
+                    🚀 WhatsApp Community beitreten
+                </button>
+                <p>📸 Oder scanne den QR-Code:</p>
+                <img src="${qrCommunityLink}" style="width: 150px; height: 150px;">
+                <p style="font-size: 12px; color: #ccc;">Freischaltung erfolgt innerhalb von 3 bis 24 Stunden.</p>
+            </div>
+        </div>
+
+       <button onclick="closePopup(this.parentElement)" 
+            style="margin-top:20px; padding:10px; background:#ff9800; color:#fff; border-radius:5px;">
+            ✖ Schließen
+        <br></button><br><br><br>
+    `;
+
+    document.body.appendChild(popup);
+}
+
+function closePopup(popupElement) {
+    popupElement.remove();
+    window.location.href = "ab.html";
+}
+
+
+
+</script>
+
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Elemente für Level & Zugang abrufen
+    const levelButton = document.getElementById("levelButton");
+    const levelList = document.getElementById("levelList");
+    const levelInput = document.getElementById("level");
+
+    const accessButton = document.getElementById("accessButton");
+    const accessList = document.getElementById("accessList");
+    const accessInput = document.getElementById("access");
+
+    const accessDiv = document.getElementById("accessDiv");
+    const priceDiv = document.getElementById("priceDiv");
+
+    // Dropdown-Menüs öffnen/schließen
+    function setupDropdown(button, list, input, onSelect) {
+        button.addEventListener("click", function(event) {
+            event.stopPropagation(); // Verhindert sofortiges Schließen
+            list.style.display = (list.style.display === "block") ? "none" : "block";
+        });
+
+        list.querySelectorAll("li").forEach(item => {
+            item.addEventListener("click", function(event) {
+                event.stopPropagation();
+                button.innerText = this.innerText;
+                input.value = this.dataset.value;
+                list.style.display = "none";
+                if (onSelect) onSelect();
+            });
+        });
+
+        document.addEventListener("click", function(event) {
+            if (!button.contains(event.target) && !list.contains(event.target)) {
+                list.style.display = "none";
+            }
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                list.style.display = "none";
+            }
+        });
+    }
+
+    // Funktion für Preisberechnung
+    function updatePrice() {
+    const level = document.getElementById("level").value;
+    const access = document.getElementById("access").value;
+    let price = "0.0";
+
+    if (!level) {
+        document.getElementById("accessDiv").classList.add("hidden");
+        document.getElementById("priceDiv").classList.add("hidden");
+        return;
+    }
+
+    document.getElementById("accessDiv").classList.remove("hidden");
+
+    if (level && access) {
+        if (level === "Fundamentale") {
+            if (access === "Monats Zugang") price = "0.00003";
+            if (access === "Jahres Zugang") price = "0.0003";
+            if (access === "Lifetime Zugang") price = "0.0009";
+        }
+        if (level === "Breakthrough") {
+            if (access === "Monats Zugang") price = "0.00005";
+            if (access === "Jahres Zugang") price = "0.0005";
+            if (access === "Lifetime Zugang") price = "0.0015";
+        }
+        if (level === "Elite") {
+            if (access === "Monats Zugang") price = "0.0001";
+            if (access === "Jahres Zugang") price = "0.001";
+            if (access === "Lifetime Zugang") price = "0.003";
+        }
+
+        document.getElementById("ethAmount").value = price + " ETH";  // Optisch anzeigen
+        document.getElementById("ethAmount").setAttribute("data-value", price);  // Rohwert speichern
+
+        document.getElementById("priceDiv").classList.remove("hidden");
+        document.getElementById("swapButton").disabled = false;
+    } else {
+        document.getElementById("priceDiv").classList.add("hidden");
+        document.getElementById("swapButton").disabled = true;
+    }
+}
+
+
+    // Setup für beide Dropdowns
+    setupDropdown(levelButton, levelList, levelInput, updatePrice);
+    setupDropdown(accessButton, accessList, accessInput, updatePrice);
+});
+</script>
+
+
+
+
+
+</body>
+</html>
