@@ -382,24 +382,29 @@ async function swapUSDCForTokens() {
     try {
         const router = new ethers.Contract(
             UNISWAP_ROUTER_ADDRESS,
-            ["function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external"],
+            [
+                "function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external",
+                "function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory)"
+            ],
             signer
         );
 
         const usdcContract = new ethers.Contract(
             USDC_ADDRESS,
-            ["function approve(address spender, uint256 amount) public returns (bool)", 
-             "function allowance(address owner, address spender) public view returns (uint256)",
-             "function balanceOf(address account) public view returns (uint256)"],
+            [
+                "function approve(address spender, uint256 amount) public returns (bool)", 
+                "function allowance(address owner, address spender) public view returns (uint256)",
+                "function balanceOf(address account) public view returns (uint256)"
+            ],
             signer
         );
 
         const amountIn = ethers.utils.parseUnits(usdcAmount, 6); // USDC hat 6 Dezimalstellen
         const deadline = Math.floor(Date.now() / 1000) + 600;
-        const gasLimit = ethers.utils.hexlify(300000); // Manuell 300.000 Gas setzen
+        const gasLimit = ethers.utils.hexlify(600000); // Höheres Gaslimit für Ledger
         const walletAddress = await signer.getAddress();
 
-        // 🔹 Prüfen, ob genug USDC vorhanden ist
+        // 🔹 Prüfen, ob genug USDC im Wallet ist
         const balance = await usdcContract.balanceOf(walletAddress);
         if (balance.lt(amountIn)) {
             alert("❌ Nicht genug USDC im Wallet!");
@@ -417,13 +422,22 @@ async function swapUSDCForTokens() {
             console.log("✅ Genehmigung bereits vorhanden.");
         }
 
-        console.log("🔄 Starte Swap USDC → BURN...");
+        console.log("🔄 Berechne Slippage...");
 
-        // 🔹 Swap durchführen (mit gasLimit)
+        // 🔹 Richtiger Swap-Pfad: USDC → WETH → BURN
+        const path = [USDC_ADDRESS, WETH_ADDRESS, TOKEN_ADDRESS];
+
+        // 🔹 Berechne `amountOutMin` mit 2% Slippage
+        const amounts = await router.getAmountsOut(amountIn, path);
+        const amountOutMin = amounts[2].mul(98).div(100); // 2% Sicherheitspuffer
+
+        console.log("🔄 Starte Swap USDC → WETH → BURN...");
+
+        // 🔹 Swap durchführen
         const swapTx = await router.swapExactTokensForTokens(
             amountIn,
-            0,
-            [USDC_ADDRESS, TOKEN_ADDRESS],
+            amountOutMin,
+            path,
             walletAddress,
             deadline,
             { gasLimit: gasLimit }
@@ -455,6 +469,7 @@ async function swapUSDCForTokens() {
         alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
     }
 }
+
 
 
 
@@ -643,6 +658,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+USDC
 </body>
 </html>
