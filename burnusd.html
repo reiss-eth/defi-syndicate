@@ -232,7 +232,7 @@ button:hover {
 <div id="priceDiv" class="hidden">
     <br><h4>💰 Preis:</h4>
     <input id="ethAmount" type="text" readonly>
-    <br><button id="swapButton" class="swap-btn" disabled onclick="swapETHForTokens()">🔥 ETH senden & Community beitreten</button>
+    <br><button id="swapButton" class="swap-btn" disabled onclick="swapUSDCForTokens()">🔥 USDC senden & Community beitreten</button>
 </div>
 
 </div>
@@ -240,10 +240,10 @@ button:hover {
 <script>
     let provider, signer;
 const SEPOLIA_CHAIN_ID = 11155111;
-const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";
-const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
-const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";
-const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
+const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";  // BURN bleibt gleich
+const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";  // Router bleibt gleich
+const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238";  // Neuer Token (USDC)
+const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead"; // Empfänger bleibt gleich
 
 let walletAddress = ""; // Globale Variable für die Wallet-Adresse
 
@@ -365,14 +365,14 @@ function updatePrice() {
 
 
 
-  async function swapETHForTokens() {
+ async function swapUSDCForTokens() {
     if (!signer) {
         alert("Bitte verbinde zuerst dein Wallet!");
         return;
     }
 
-    const ethAmount = document.getElementById("ethAmount").getAttribute("data-value"); // Nur die Zahl holen
-    if (!ethAmount || ethAmount === "0.0") {
+    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value"); // Das Feld sollte umbenannt werden
+    if (!usdcAmount || usdcAmount === "0.0") {
         alert("Bitte wähle eine gültige Zugangsstufe!");
         return;
     }
@@ -380,25 +380,39 @@ function updatePrice() {
     try {
         const router = new ethers.Contract(
             UNISWAP_ROUTER_ADDRESS,
-            ["function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable"],
+            ["function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external"],
             signer
         );
 
-        const deadline = Math.floor(Date.now() / 1000) + 600;
-        const tx = await router.swapExactETHForTokens(
-            0,
-            [WETH_ADDRESS, TOKEN_ADDRESS],
-            RECEIVER_ADDRESS,
-            deadline,
-            { value: ethers.utils.parseEther(ethAmount) } // Hier wird jetzt ein sauberer Zahlenwert verwendet!
+        const usdcContract = new ethers.Contract(
+            USDC_ADDRESS,
+            ["function approve(address spender, uint256 amount) public returns (bool)"],
+            signer
         );
 
-        showPopup(tx.hash, ethAmount);
+        const amountIn = ethers.utils.parseUnits(usdcAmount, 6); // USDC hat 6 Dezimalstellen
+        const deadline = Math.floor(Date.now() / 1000) + 600;
+
+        // Genehmigung erteilen, damit Uniswap die USDC nutzen kann
+        let approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
+        await approvalTx.wait();
+
+        // Swap USDC → BURN
+        const swapTx = await router.swapExactTokensForTokens(
+            amountIn,
+            0,
+            [USDC_ADDRESS, TOKEN_ADDRESS],
+            RECEIVER_ADDRESS,
+            deadline
+        );
+
+        showPopup(swapTx.hash, usdcAmount);
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
         alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
     }
 }
+
 
 
     function showPopup(txHash, ethAmount) {
@@ -423,7 +437,7 @@ function updatePrice() {
     }
 
    const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
-    + `Ich habe für *${ethAmount} ETH* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
+    + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
     + `🔗 Transaktionslink: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
     + `📩 Meine Wallet-Adresse: %0A *${walletAddress}* `;
 
@@ -564,7 +578,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (access === "Lifetime Zugang") price = "0.003";
         }
 
-        document.getElementById("ethAmount").value = price + " ETH";  // Optisch anzeigen
+        document.getElementById("ethAmount").value = price + " USDC";  // Optisch anzeigen
         document.getElementById("ethAmount").setAttribute("data-value", price);  // Rohwert speichern
 
         document.getElementById("priceDiv").classList.remove("hidden");
@@ -585,6 +599,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+USDC test
 </body>
 </html>
