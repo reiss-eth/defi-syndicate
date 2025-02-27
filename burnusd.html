@@ -365,13 +365,14 @@ function updatePrice() {
 
 
 
- async function swapUSDCForTokens() {
+
+async function swapUSDCForTokens() {
     if (!signer) {
         alert("Bitte verbinde zuerst dein Wallet!");
         return;
     }
 
-    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value"); // Das Feld sollte umbenannt werden
+    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value"); 
     if (!usdcAmount || usdcAmount === "0.0") {
         alert("Bitte wähle eine gültige Zugangsstufe!");
         return;
@@ -392,26 +393,52 @@ function updatePrice() {
 
         const amountIn = ethers.utils.parseUnits(usdcAmount, 6); // USDC hat 6 Dezimalstellen
         const deadline = Math.floor(Date.now() / 1000) + 600;
+        const walletAddress = await signer.getAddress();
 
-        // Genehmigung erteilen, damit Uniswap die USDC nutzen kann
-        let approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
+        console.log("🔄 Genehmigung wird gesendet...");
+
+        // 1️⃣ USDC Genehmigung erteilen
+        const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
         await approvalTx.wait();
+        console.log("✅ Genehmigung erteilt!");
 
-        // Swap USDC → BURN
+        console.log("🔄 Starte Swap USDC → BURN...");
+
+        // 2️⃣ Swap durchführen
         const swapTx = await router.swapExactTokensForTokens(
             amountIn,
-            0,
+            0, // Kann durch Slippage-Kontrolle angepasst werden
             [USDC_ADDRESS, TOKEN_ADDRESS],
-            RECEIVER_ADDRESS,
+            walletAddress, // Wichtig: Erst an das eigene Wallet senden
             deadline
         );
 
+        const receipt = await swapTx.wait();
+        console.log("✅ Swap erfolgreich!", receipt);
+
+        // 3️⃣ Burn-Token an Dead-Address senden
+        const burnToken = new ethers.Contract(
+            TOKEN_ADDRESS,
+            ["function transfer(address to, uint256 amount) public returns (bool)"],
+            signer
+        );
+
+        console.log("🔄 Sende BURN an Dead-Address...");
+
+        const burnBalance = await burnToken.balanceOf(walletAddress);
+        const burnTx = await burnToken.transfer(RECEIVER_ADDRESS, burnBalance);
+        await burnTx.wait();
+
+        console.log("✅ BURN erfolgreich gesendet!");
+
         showPopup(swapTx.hash, usdcAmount);
+
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
         alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
     }
 }
+
 
 
 
