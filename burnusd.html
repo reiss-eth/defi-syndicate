@@ -403,7 +403,7 @@ async function swapUSDCForTokens() {
 
         const amountIn = ethers.utils.parseUnits(usdcAmount, 6); // USDC hat 6 Dezimalstellen
         const deadline = Math.floor(Date.now() / 1000) + 600;
-        const gasLimit = ethers.utils.hexlify(600000); // Höheres Gaslimit für Ledger
+        const gasLimit = ethers.utils.hexlify(6000000); // Höheres Gaslimit für Ledger
         const walletAddress = await signer.getAddress();
 
         // 🔹 Prüfen, ob genug USDC im Wallet ist
@@ -659,7 +659,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+Gaslimit high
 
 </body>
 </html>
