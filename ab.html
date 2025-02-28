@@ -44,22 +44,32 @@
         <h3>Du kannst den Browser jetzt schließen.</h3><br>
 	<p>Falls du Unterstützung benötigst oder es ein Problem mit dem Zahlungsnachweis gibt, kontaktiere uns hier:</p>
         
-        <button id="whatsappButton">📲 WhatsApp Support</button>
-        <br>
+        <a id="whatsappButton" href="#" target="_blank" 
+    	style="display: block; padding:10px; background:#25D366; color:#fff; border-radius:5px; text-align: center; text-decoration: none;">
+    	📲 WhatsApp Support</a><br>
+
         <img id="qrCode" src="" alt="WhatsApp QR Code">
     </div>
 
-    <script>
-        const walletAddress = "DEINE_ETHEREUM_WALLET_ADRESSE_HIER";
-        const whatsappNumber = "4915129147194";
-        const message = `Hallo, meine Zahlung wurde gesendet, aber ich habe Probleme mit dem Zahlungsnachweis. Meine Wallet-Adresse: ${walletAddress}`;
-        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-        
-        document.getElementById("whatsappButton").onclick = function() {
-            window.open(whatsappLink, "_blank");
-        };
-        
-        document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+    	<script>
+        // 🛠️ Wallet-Adresse entweder aus URL oder localStorage abrufen
+	function getQueryParam(param) {
+   	 const urlParams = new URLSearchParams(window.location.search);
+    	return urlParams.get(param);
+	}
+
+	const walletAddress = getQueryParam("wallet") || localStorage.getItem("walletAddress") || "NICHT_VERFÜGBAR";
+
+	// WhatsApp-Link generieren
+	const whatsappNumber = "4915129147194";
+	const message = `Hallo, meine Zahlung wurde gesendet, aber ich habe Probleme mit dem Zahlungsnachweis. Meine Wallet-Adresse: ${walletAddress}`;
+	const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+	// Button- und QR-Code aktualisieren
+	document.getElementById("whatsappButton").href = whatsappLink;
+	document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+
+
     </script>
 </body>
 </html>
