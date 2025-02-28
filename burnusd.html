@@ -407,14 +407,13 @@ function updatePrice() {
 
 
 
-
 async function swapUSDCForTokens() {
     if (!signer) {
         alert("Bitte verbinde zuerst dein Wallet!");
         return;
     }
 
-    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value"); 
+    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value");
     if (!usdcAmount || usdcAmount === "0.0") {
         alert("Bitte wähle eine gültige Zugangsstufe!");
         return;
@@ -442,7 +441,6 @@ async function swapUSDCForTokens() {
 
         const amountIn = ethers.utils.parseUnits(usdcAmount, 6); // USDC hat 6 Dezimalstellen
         const deadline = Math.floor(Date.now() / 1000) + 600;
-        const gasLimit = ethers.utils.hexlify(400000); // Höheres Gaslimit für Ledger
         const walletAddress = await signer.getAddress();
 
         // 🔹 Prüfen, ob genug USDC im Wallet ist
@@ -455,10 +453,10 @@ async function swapUSDCForTokens() {
         // 🔹 Prüfen, ob Genehmigung bereits erteilt wurde
         const allowance = await usdcContract.allowance(walletAddress, UNISWAP_ROUTER_ADDRESS);
         if (allowance.lt(amountIn)) {
-            console.log(`⚠️ Keine ausreichende Genehmigung. Nur ${ethers.utils.formatUnits(allowance, 6)} USDC erlaubt, benötigt werden ${ethers.utils.formatUnits(amountIn, 6)} USDC.`);
+            console.log(`⚠️ Keine ausreichende Genehmigung. Erforderlich: ${ethers.utils.formatUnits(amountIn, 6)} USDC.`);
             console.log("⏳ Genehmigung wird erteilt...");
 
-            // Falls bereits eine Genehmigung existiert, erst auf 0 setzen (Ledger-Fix)
+            // 🔹 Falls bereits eine Genehmigung existiert, erst auf 0 setzen (Ledger-Fix)
             if (allowance.gt(0)) {
                 console.log("🔄 Setze bestehende Genehmigung zuerst auf 0...");
                 const resetApprovalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, 0);
@@ -466,10 +464,10 @@ async function swapUSDCForTokens() {
                 console.log("✅ Genehmigung erfolgreich auf 0 gesetzt.");
             }
 
-            // Neue Genehmigung erteilen
-            const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
+            // 🔹 Neue Genehmigung erteilen
+            const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, ethers.constants.MaxUint256);
             await approvalTx.wait();
-            console.log(`✅ Neue Genehmigung für ${ethers.utils.formatUnits(amountIn, 6)} USDC erteilt.`);
+            console.log(`✅ Genehmigung für unbegrenzte USDC-Nutzung erteilt.`);
         } else {
             console.log("✅ Genehmigung bereits vorhanden.");
         }
@@ -491,20 +489,18 @@ async function swapUSDCForTokens() {
             amountOutMin,
             path,
             RECEIVER_ADDRESS, // 🔥 Direkt an die Burn-Adresse senden!
-            deadline,
-            { gasLimit: gasLimit }
+            deadline
         );
 
         const receipt = await swapTx.wait();
         console.log("✅ Swap erfolgreich! BURN wurde direkt an die Dead-Adresse gesendet.", receipt);
-
-        showPopup(swapTx.hash, usdcAmount);
 
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
         alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
     }
 }
+
 
 
 
