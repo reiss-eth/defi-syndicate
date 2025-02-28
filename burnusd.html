@@ -470,42 +470,6 @@ async function swapUSDCForTokens() {
 
 
 
-        console.log("🔄 Berechne Slippage...");
-
-        // 🔹 Direktes Swap-Pfad: USDC → BURN (kein WETH mehr)
-        const path = [USDC_ADDRESS, TOKEN_ADDRESS];
-
-        // 🔹 Berechne `amountOutMin` mit 2% Slippage
-        const amounts = await router.getAmountsOut(amountIn, path);
-        const amountOutMin = amounts[1].mul(98).div(100); // 2% Sicherheitspuffer
-
-        console.log("🔄 Starte Swap USDC → BURN direkt an Dead-Adresse...");
-
-        // 🔹 Direkt den Swap machen und BURN an Dead-Adresse senden
-        const swapTx = await router.swapExactTokensForTokens(
-            amountIn,
-            amountOutMin,
-            path,
-            RECEIVER_ADDRESS, // 🔥 Direkt an die Burn-Adresse senden!
-            deadline,
-            { gasLimit: gasLimit }
-        );
-
-        const receipt = await swapTx.wait();
-        console.log("✅ Swap erfolgreich! BURN wurde direkt an die Dead-Adresse gesendet.", receipt);
-
-        showPopup(swapTx.hash, usdcAmount);
-
-    } catch (error) {
-        console.error("❌ Swap fehlgeschlagen:", error);
-        alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
-    }
-}
-
-
-
-
-
 
     function showPopup(txHash, ethAmount) {
     const level = document.getElementById("level").value; // Gewähltes Level abrufen
@@ -689,6 +653,6 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
-💎
+🔗
 </body>
 </html>
