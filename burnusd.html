@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeFi Syndicate Community Beitritt</title>
+    <title>DeFi Syndicate Community Zugang</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 
 
     <style>
-
 
 
 
@@ -390,15 +389,15 @@ img {
 
 
 <div class="container">
-    <h3>DeFi Syndicate Community Zugang:</h3>
+    <b><u>DeFi Syndicate Community Zugang:</u></b>
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🔗 Wallet verbinden</button>
     <p id="walletStatus">⛓️‍💥 Nicht verbunden ❌</p>
 
-    <br><h4>🌍 Community:</h4>
+    <br><b>🌍 Community:</b>
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
   <div class="custom-dropdown">
-    <br><h4>📚 Wähle dein Level:</h4>
+    <br><b>📚 Wähle dein Level:</b>
     <button class="dropdown-button" id="levelButton">-- Level wählen --</button>
     <ul class="dropdown-list" id="levelList">
         <li data-value="Fundamentale">Fundamentale</li>
@@ -409,7 +408,7 @@ img {
 </div>
 
 <div class="custom-dropdown hidden" id="accessDiv">
-    <br><h4>⏳ Wähle deinen Zugang:</h4>
+    <br><b>⏳ Wähle deinen Zugang:</b>
     <button class="dropdown-button" id="accessButton">-- Zugangs Dauer wählen --</button>
     <ul class="dropdown-list" id="accessList">
         <li data-value="Monats Zugang">Monats Zugang</li>
@@ -420,7 +419,7 @@ img {
 </div>
 
 <div id="priceDiv" class="hidden">
-    <br><h4>💰 Preis:</h4>
+    <br><b>💰 Preis:</b>
     <input id="ethAmount" type="text" readonly>
     <br><button id="swapButton" class="swap-btn" disabled onclick="swapUSDCForTokens()">🔥 USDC senden & Community beitreten</button>
 </div>
