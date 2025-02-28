@@ -311,8 +311,9 @@ if (network.chainId !== SEPOLIA_CHAIN_ID) {
 }
 
 
-        walletAddress = await signer.getAddress(); // Wallet-Adresse abrufen und speichern
-       document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
+        walletAddress = await signer.getAddress();
+	localStorage.setItem("walletAddress", walletAddress); // Speichert Wallet-Adresse für spätere Nutzung.
+       	document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
 
         document.getElementById("swapButton").disabled = false;
     } catch (error) {
@@ -509,6 +510,7 @@ async function swapUSDCForTokens() {
 
 
     function showPopup(txHash, ethAmount) {
+    console.log("🚀 showPopup() aufgerufen mit TX Hash:", txHash, "und Betrag:", ethAmount);
     const level = document.getElementById("level").value; // Gewähltes Level abrufen
     const access = document.getElementById("access").value; // Zugangs-Dauer abrufen
 
@@ -532,16 +534,22 @@ async function swapUSDCForTokens() {
    const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
     + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
     + `🧾 Mein Zahlungsnachweis: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
-    + `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
+   const walletAddress = localStorage.getItem("walletAddress") || "UNBEKANNT"; // Falls nicht gesetzt, als Fallback "UNBEKANNT" verwenden.
++ `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
+
 
     const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(decodeURIComponent(whatsappMessage))}`;
     const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
     const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
 
 
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerHTML = `
+    	const existingPopup = document.querySelector(".popup");
+	if (existingPopup) existingPopup.remove(); // Löscht vorheriges Popup, falls vorhanden.
+
+	const popup = document.createElement("div");
+
+    	popup.className = "popup";
+    	popup.innerHTML = `
         <h2>✅ Zahlung erfolgreich!</h2>
         <br><p>Du hast für ${ethAmount} USDC einen ${access} für DeFi Syndicate im ${level} Level erworben.</p><br>
 	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️      Community beizutreten.      ⬇️<br><br>
@@ -693,6 +701,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+🔥
 </body>
 </html>
