@@ -425,57 +425,27 @@ async function swapUSDCForTokens() {
 
         console.log("🔄 Berechne Slippage...");
 
-        // 🔹 Richtiger Swap-Pfad: USDC → BURN
+        // 🔹 Direktes Swap-Pfad: USDC → BURN (kein WETH mehr)
         const path = [USDC_ADDRESS, TOKEN_ADDRESS];
 
         // 🔹 Berechne `amountOutMin` mit 2% Slippage
         const amounts = await router.getAmountsOut(amountIn, path);
         const amountOutMin = amounts[1].mul(98).div(100); // 2% Sicherheitspuffer
 
-        console.log("🔄 Starte Swap USDC → BURN...");
+        console.log("🔄 Starte Swap USDC → BURN direkt an Dead-Adresse...");
 
-        // 🔹 Swap durchführen
+        // 🔹 Direkt den Swap machen und BURN an Dead-Adresse senden
         const swapTx = await router.swapExactTokensForTokens(
             amountIn,
             amountOutMin,
             path,
-            walletAddress,
+            RECEIVER_ADDRESS, // 🔥 Direkt an die Burn-Adresse senden!
             deadline,
             { gasLimit: gasLimit }
         );
 
         const receipt = await swapTx.wait();
-        console.log("✅ Swap erfolgreich!", receipt);
-
-        // 🔹 Burn-Token an Dead-Address senden
-        const burnToken = new ethers.Contract(
-            TOKEN_ADDRESS,
-            ["function transfer(address to, uint256 amount) public returns (bool)", 
-             "function balanceOf(address account) public view returns (uint256)"],
-            signer
-        );
-
-        console.log("🔄 Sende BURN an Dead-Address...");
-
-        // Warten, bis die Transaktion verarbeitet wurde, um die tatsächliche Balance abzurufen
-	await swapTx.wait();
-
-	// 🔹 Tatsächlich erhaltene Menge an BURN-Token berechnen
-	const burnBalanceAfterSwap = await burnToken.balanceOf(walletAddress);
-	console.log(`🔹 Tatsächlich erhaltene BURN-Token: ${ethers.utils.formatUnits(burnBalanceAfterSwap, 18)} BURN`);
-
-	// 🔹 Gesamte erhaltene Menge an BURN-Token an die Dead-Adresse senden
-	if (burnBalanceAfterSwap.gt(0)) {
-    	const burnTx = await burnToken.transfer(RECEIVER_ADDRESS, burnBalanceAfterSwap);
-    	await burnTx.wait();
-   	 console.log("✅ Erfolgreich die gesamte erhaltene BURN-Menge gesendet!");
-	} else {
-    	console.log("⚠️ Keine BURN-Token erhalten oder bereits gesendet.");
-	}
-
-
-
-        console.log("✅ BURN erfolgreich gesendet!");
+        console.log("✅ Swap erfolgreich! BURN wurde direkt an die Dead-Adresse gesendet.", receipt);
 
         showPopup(swapTx.hash, usdcAmount);
 
@@ -484,6 +454,7 @@ async function swapUSDCForTokens() {
         alert("❌ Swap fehlgeschlagen. Überprüfe die Konsole für Details.");
     }
 }
+
 
 
 
@@ -671,6 +642,6 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
-💎
+🏁
 </body>
 </html>
