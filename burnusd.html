@@ -681,7 +681,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("ethAmount").setAttribute("data-value", price);  // Rohwert speichern
 
         document.getElementById("priceDiv").classList.remove("hidden");
-        document.getElementById("swapButton").disabled = false;
+
+
+        const swapButton = document.getElementById("swapButton");
+	swapButton.disabled = true;
+	swapButton.innerText = "⏳ Transaktion läuft...";
+
+	try {
+   	// Swap ausführen...
+   	showPopup(swapTx.hash, usdcAmount);
+	} catch (error) {
+   	alert("❌ Fehler beim Swap: " + error.message);
+	} finally {
+   	swapButton.disabled = false;
+   	swapButton.innerText = "🔥 USDC senden & Community beitreten";
+	}
+
     } else {
         document.getElementById("priceDiv").classList.add("hidden");
         document.getElementById("swapButton").disabled = true;
@@ -697,6 +712,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+🎖️
 </body>
 </html>
