@@ -533,31 +533,42 @@ async function swapUSDCForTokens() {
         communityLink = "https://chat.whatsapp.com/Elite";
     }
 
-   const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
-    + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
-    + `🧾 Mein Zahlungsnachweis: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
-  let walletAddress = localStorage.getItem("walletAddress");
-if (!walletAddress) {
-    walletAddress = await signer.getAddress();
-    localStorage.setItem("walletAddress", walletAddress);
+
+   getWalletAddress().then(walletAddress => {
+    const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
+        + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
+        + `🧾 Mein Zahlungsnachweis: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
+        + `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
+    
+    const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(decodeURIComponent(whatsappMessage))}`;
+    
+    // Erstelle das Popup erst nach dem Abruf der Wallet-Adresse
+    createPopup(walletAddress, whatsappLink, txHash, ethAmount, level, access);
+});
+
+  
+
+async function getWalletAddress() {
+    let walletAddress = localStorage.getItem("walletAddress");
+    if (!walletAddress) {
+        walletAddress = await signer.getAddress();
+        localStorage.setItem("walletAddress", walletAddress);
+    }
+    return walletAddress;
 }
 
-+ `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
 
 
-    const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(decodeURIComponent(whatsappMessage))}`;
-    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
-    const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
+	function createPopup(walletAddress, whatsappLink, txHash, ethAmount, level, access) {
+	const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
+   	const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
 
 
-    	const existingPopup = document.querySelector(".popup");
-	if (existingPopup) existingPopup.remove(); // Löscht vorheriges Popup, falls vorhanden.
-
-	const popup = document.createElement("div");
-
+    	const popup = document.createElement("div");
     	popup.className = "popup";
-    	popup.innerHTML = `
-        <h2>✅ Zahlung erfolgreich!</h2>
+   	popup.innerHTML = `
+
+	<h2>✅ Zahlung erfolgreich!</h2>
         <br><p>Du hast für ${ethAmount} USDC einen ${access} für DeFi Syndicate im ${level} Level erworben.</p><br>
 	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️      Community beizutreten.      ⬇️<br><br>
         <div style="display: block; text-align: center;">
@@ -567,12 +578,9 @@ if (!walletAddress) {
            <p>📩 Zahlungsnachweis einreichen</p>
                 <a id="whatsappButton" href="${whatsappLink}" target="_blank" style="display: block; padding: 10px; background:#25D366; 		color:#fff; border-radius:5px; text-align: center; text-decoration: none;">
     		📲 Per WhatsApp senden</a>
-		
-
-
-                <p>📸 Oder scanne den QR-Code:</p>
+		<p>📸 Oder scanne den QR-Code:</p>
                 <img src="${qrWhatsAppMessage}" style="width: 200px; height: 200px;">
-            </div><br>
+            	</div><br>
 
             <!-- Link zur Community beitreten -->
             <div style="background: #333; padding: 15px; border-radius: 10px;">
@@ -597,6 +605,7 @@ if (!walletAddress) {
 
     document.body.appendChild(popup);
 }
+
 
 function closePopup(popupElement) {
     popupElement.remove();
@@ -710,6 +719,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+💎
 </body>
 </html>
