@@ -415,22 +415,23 @@ async function swapUSDCForTokens() {
         // 🔹 Prüfen, ob Genehmigung bereits erteilt wurde
         const allowance = await usdcContract.allowance(walletAddress, UNISWAP_ROUTER_ADDRESS);
   	if (allowance.lt(amountIn)) {
-    	console.log(`⚠️ Keine ausreichende Genehmigung. Nur ${ethers.utils.formatUnits(allowance, 6)} USDC erlaubt, benötigt werden ${ethers.utils.formatUnits(amountIn, 6)} USDC.`);
-    	console.log("⏳ Genehmigung wird erteilt...");
-    
-    	// Prüfe, ob die bestehende Genehmigung zuerst auf 0 gesetzt werden muss (Ledger kann sonst blockieren)
-    	if (allowance.gt(0)) {
-        console.log("🔄 Setze vorherige Genehmigung auf 0 (Ledger-Fix)...");
-        const resetApprovalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, 0, { gasLimit: 100000 });
+    console.log(`⚠️ Keine ausreichende Genehmigung. Nur ${ethers.utils.formatUnits(allowance, 6)} USDC erlaubt, benötigt werden ${ethers.utils.formatUnits(amountIn, 6)} USDC.`);
+    console.log("⏳ Genehmigung wird erteilt...");
+
+    // 🔹 Wenn eine Genehmigung besteht, setze sie zuerst auf 0 (Ledger erfordert dies manchmal)
+    if (allowance.gt(0)) {
+        console.log("🔄 Setze bestehende Genehmigung zuerst auf 0...");
+        const resetApprovalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, 0);
         await resetApprovalTx.wait();
-        console.log("✅ Vorherige Genehmigung auf 0 gesetzt.");
+        console.log("✅ Genehmigung erfolgreich auf 0 gesetzt.");
     }
 
-    // Jetzt die neue Genehmigung setzen
-    const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn, { gasLimit: 200000 });
+    // 🔹 Danach erst die neue Genehmigung setzen
+    const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
     await approvalTx.wait();
     console.log(`✅ Neue Genehmigung für ${ethers.utils.formatUnits(amountIn, 6)} USDC erteilt.`);
 }
+
 
 
 
@@ -653,6 +654,6 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
-🔥
+🚩
 </body>
 </html>
