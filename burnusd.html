@@ -495,6 +495,8 @@ async function swapUSDCForTokens() {
 
         const receipt = await swapTx.wait();
         console.log("✅ Swap erfolgreich! BURN wurde direkt an die Dead-Adresse gesendet.", receipt);
+	showPopup(swapTx.hash, usdcAmount);
+
 
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
@@ -534,7 +536,12 @@ async function swapUSDCForTokens() {
    const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
     + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
     + `🧾 Mein Zahlungsnachweis: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
-   const walletAddress = localStorage.getItem("walletAddress") || "UNBEKANNT"; // Falls nicht gesetzt, als Fallback "UNBEKANNT" verwenden.
+  let walletAddress = localStorage.getItem("walletAddress");
+if (!walletAddress) {
+    walletAddress = await signer.getAddress();
+    localStorage.setItem("walletAddress", walletAddress);
+}
+
 + `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
 
 
@@ -593,7 +600,9 @@ async function swapUSDCForTokens() {
 
 function closePopup(popupElement) {
     popupElement.remove();
-    window.location.href = `ab.html?wallet=${walletAddress}`;
+    setTimeout(() => {
+        window.location.href = `ab.html?wallet=${walletAddress}`;
+    }, 1000); // 1 Sekunde Verzögerung
 }
 
 
@@ -701,6 +710,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🔥
+
 </body>
 </html>
