@@ -8,7 +8,8 @@
 
 
     <style>
-        body {
+        /* Allgemeine Stile */
+body {
     font-family: 'Inter', sans-serif;
     background: #0e0e0e;
     color: #fff;
@@ -17,6 +18,7 @@
     padding: 20px;
 }
 
+/* Container mit modernem Look */
 .container {
     background: linear-gradient(135deg, #1a1a1a, #292929);
     padding: 25px;
@@ -24,8 +26,31 @@
     max-width: 400px;
     margin: auto;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid #800000; /* Dunkelrot als Akzent */
 }
-        sselect, button, input {
+
+/* Überschriften */
+h2 {
+    font-size: 22px;
+    color: #d32f2f; /* Dunkelrot */
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 18px;
+    color: #bbb;
+    font-weight: normal;
+}
+
+p {
+    font-size: 16px;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+/* Eingabefelder */
+select, button, input {
     width: 100%;
     padding: 12px;
     margin-top: 12px;
@@ -36,32 +61,35 @@
     font-weight: 600;
     transition: all 0.3s ease;
 }
+
 /* Speziell für das Preisfeld */
 #ethAmount {
     text-align: center;
     font-weight: bold;
-    font-size: 1.2em; /* Macht den Text größer */
+    font-size: 1.2em; 
     background: #333;
     color: #fff;
     border: none;
 }
-        select, input {
-            background: #333;
-            color: #fff;
-        }
-        button {
-    cursor: pointer;
-    font-weight: bold;
-    background: #2196F3;
-    color: white;
+
+/* Allgemeine Buttons */
+button, a {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
     border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
     transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-button:hover {
-    background: #1976D2;
-}
-        .connect-btn {
+/* Wallet Connect Button */
+.connect-btn {
     background: #4CAF50;
     color: white;
 }
@@ -70,76 +98,23 @@ button:hover {
     background: #388E3C;
 }
 
+/* Swap Button */
 .swap-btn {
-    background: #FF9800;
+    background: #d32f2f; /* Dunkelrot */
+    color: white;
+    box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
 }
 
 .swap-btn:hover {
-    background: #E68900;
+    background: #b71c1c;
 }
 
+/* Hidden Elemente */
 .hidden {
     display: none;
 }
 
 /* Dropdown Menü */
-.custom-dropdown {
-    position: relative;
-    margin-top: 15px;
-}
-
-.dropdown-button {
-    background: #444;
-    color: #fff;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.dropdown-list {
-    display: none;
-    position: absolute;
-    width: 100%;
-    background: #555;
-    border-radius: 8px;
-    list-style: none;
-    padding: 0;
-    margin: 5px 0 0 0;
-    z-index: 100;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.dropdown-list li {
-    padding: 12px;
-    text-align: center;
-    cursor: pointer;
-    color: white;
-}
-
-.dropdown-list li:hover {
-    background: #666;
-}
-        /* Popup Styling */
-        .popup {
-    position: fixed;
-    top: 0%; /* Setzt das Popup leicht nach unten, sodass es nicht abgeschnitten wird */
-    left: 50%;
-    transform: translateX(-50%); /* Nur horizontal zentrieren */
-    background: #222;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    z-index: 1000;
-    width: 90%; /* Breite etwas anpassen */
-    max-width: 400px;
-    height: auto; /* Höhe wird automatisch angepasst */
-    max-height: 95vh; /* Verhindert, dass es zu groß für den Bildschirm wird */
-    overflow-y: auto; /* Falls zu lang, wird gescrollt */
-}
-
-
-/* Stil für das benutzerdefinierte Dropdown */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -155,6 +130,11 @@ button:hover {
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.dropdown-button:hover {
+    background: #444;
 }
 
 .dropdown-list {
@@ -181,9 +161,70 @@ button:hover {
     background: #666;
 }
 
-.hidden {
-    display: none;
+/* Popup Styling */
+.popup {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    max-height: 95vh;
+    overflow-y: auto;
+    border: 2px solid #800000;
 }
+
+/* Schließen Button */
+.close-btn {
+    background: #800000;
+    color: white;
+    box-shadow: 0 4px 8px rgba(128, 0, 0, 0.2);
+}
+
+.close-btn:hover {
+    background: #5a0000;
+}
+
+/* QR-Code Styling */
+img {
+    margin-top: 10px;
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    border: 2px solid #800000; /* Dunkelrot */
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    button, a {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
 
 
 
@@ -657,6 +698,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-Test
 </body>
 </html>

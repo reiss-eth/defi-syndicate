@@ -6,36 +6,126 @@
     <title>Zahlung Erfolgreich</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: #fff;
-            text-align: center;
-            margin: 20px;
-        }
-        .container {
-            background: #222;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 400px;
-            margin: auto;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            background: #25D366;
-            color: white;
-        }
-        img {
-            margin-top: 10px;
-            width: 150px;
-            height: 150px;
-        }
+    font-family: 'Inter', sans-serif;
+    background-color: #0e0e0e;
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    background: linear-gradient(135deg, #1a1a1a, #292929);
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid #800000; /* Dunkelrot als Akzent */
+}
+
+h2 {
+    font-size: 22px;
+    color: #d32f2f; /* Dunkelrot */
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 18px;
+    color: #bbb;
+    font-weight: normal;
+}
+
+p {
+    font-size: 16px;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+/* Button-Styling */
+button, a {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+    background: #d32f2f; /* Dunkelrot */
+    color: white;
+    box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+}
+
+.whatsapp-btn:hover {
+    background: #b71c1c;
+}
+
+/* Community Button */
+.community-btn {
+    background: #444;
+    color: white;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+.community-btn:hover {
+    background: #555;
+}
+
+/* Schließen Button */
+.close-btn {
+    background: #800000;
+    color: white;
+    box-shadow: 0 4px 8px rgba(128, 0, 0, 0.2);
+}
+
+.close-btn:hover {
+    background: #5a0000;
+}
+
+/* QR-Code Styling */
+img {
+    margin-top: 10px;
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    border: 2px solid #800000; /* Dunkelrot */
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .container {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    button, a {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
     </style>
 </head>
 <body>
