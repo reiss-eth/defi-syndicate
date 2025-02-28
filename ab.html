@@ -5,41 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zahlung Erfolgreich</title>
     <style>
-        body {
-    font-family: 'Inter', sans-serif;
-    background-color: #0e0e0e;
-    color: #ffffff;
+
+        
+
+/* Google Font: Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Allgemeine Stile */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f0f8ff, #e6f0ff); /* Helles Blau */
+    color: #333;
     text-align: center;
     margin: 0;
     padding: 20px;
 }
 
+/* Container */
 .container {
-    background: linear-gradient(135deg, #1a1a1a, #292929);
+    background: #ffffff;
     padding: 25px;
     border-radius: 12px;
     max-width: 400px;
     margin: auto;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    border: 1px solid #800000; /* Dunkelrot als Akzent */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #d0e2ff; /* Sanftes Blau */
 }
 
+/* Überschriften */
 h2 {
     font-size: 22px;
-    color: #d32f2f; /* Dunkelrot */
+    color: #0056b3; /* Dunkles Blau */
     font-weight: bold;
     margin-bottom: 15px;
 }
 
 h3 {
     font-size: 18px;
-    color: #bbb;
+    color: #444;
     font-weight: normal;
 }
 
 p {
     font-size: 16px;
-    color: #ccc;
+    color: #555;
     line-height: 1.6;
 }
 
@@ -61,35 +70,35 @@ button, a {
 
 /* WhatsApp Button */
 .whatsapp-btn {
-    background: #d32f2f; /* Dunkelrot */
+    background: #25D366; /* WhatsApp Grün */
     color: white;
-    box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.2);
 }
 
 .whatsapp-btn:hover {
-    background: #b71c1c;
+    background: #1da851;
 }
 
 /* Community Button */
 .community-btn {
-    background: #444;
+    background: #007BFF; /* Blau für Vertrauen */
     color: white;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
 .community-btn:hover {
-    background: #555;
+    background: #0056b3;
 }
 
 /* Schließen Button */
 .close-btn {
-    background: #800000;
+    background: #dc3545; /* Rot für Kontrast */
     color: white;
-    box-shadow: 0 4px 8px rgba(128, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
 }
 
 .close-btn:hover {
-    background: #5a0000;
+    background: #c82333;
 }
 
 /* QR-Code Styling */
@@ -98,7 +107,7 @@ img {
     width: 150px;
     height: 150px;
     border-radius: 8px;
-    border: 2px solid #800000; /* Dunkelrot */
+    border: 2px solid #007BFF; /* Blau als Akzent */
 }
 
 /* Responsive */
@@ -125,6 +134,9 @@ img {
         padding: 10px;
     }
 }
+
+
+
 
     </style>
 </head>
