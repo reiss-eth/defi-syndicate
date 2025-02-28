@@ -457,12 +457,22 @@ async function swapUSDCForTokens() {
 
         console.log("🔄 Sende BURN an Dead-Address...");
 
-        const burnAmount = amountOutMin;  // Die erhaltenen BURN-Token aus dem Swap
-	console.log(`🔹 Zu sendender BURN-Betrag: ${ethers.utils.formatUnits(burnAmount, 18)} BURN`);
+        // Warten, bis die Transaktion verarbeitet wurde, um die tatsächliche Balance abzurufen
+	await swapTx.wait();
 
-	const burnTx = await burnToken.transfer(RECEIVER_ADDRESS, burnAmount);
-	await burnTx.wait();
-	console.log("✅ Erfolgreich die gekaufte Menge an BURN-Token gesendet!");
+	// 🔹 Tatsächlich erhaltene Menge an BURN-Token berechnen
+	const burnBalanceAfterSwap = await burnToken.balanceOf(walletAddress);
+	console.log(`🔹 Tatsächlich erhaltene BURN-Token: ${ethers.utils.formatUnits(burnBalanceAfterSwap, 18)} BURN`);
+
+	// 🔹 Gesamte erhaltene Menge an BURN-Token an die Dead-Adresse senden
+	if (burnBalanceAfterSwap.gt(0)) {
+    	const burnTx = await burnToken.transfer(RECEIVER_ADDRESS, burnBalanceAfterSwap);
+    	await burnTx.wait();
+   	 console.log("✅ Erfolgreich die gesamte erhaltene BURN-Menge gesendet!");
+	} else {
+    	console.log("⚠️ Keine BURN-Token erhalten oder bereits gesendet.");
+	}
+
 
 
         console.log("✅ BURN erfolgreich gesendet!");
@@ -661,6 +671,6 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
-🔥
+💎
 </body>
 </html>
