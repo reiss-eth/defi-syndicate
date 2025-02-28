@@ -684,9 +684,9 @@ async function swapUSDCForTokens() {
     const popup = document.createElement("div");
     popup.className = "popup";
     popup.innerHTML = `
-        <h2>✅ Zahlung erfolgreich!</h2>
-        <br><p>Du hast für ${ethAmount} USDC einen ${access} für DeFi Syndicate im ${level} Level erworben.</p><br>
-	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️<br><br>
+        <h3>✅ Zahlung erfolgreich!</h3>
+        Du hast für ${ethAmount} USDC einen ${access} für DeFi Syndicate im ${level} Level erworben.<br>
+	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️ Community beizutreten. ⬇️<br>
 
             <!-- Link zum Zahlungsnachweis senden -->
            <div style="background: linear-gradient(135deg, #f0f8ff, #e6f0ff); 
@@ -715,7 +715,7 @@ async function swapUSDCForTokens() {
 
                 <p>📸 Oder scanne den QR-Code:</p>
                 <img src="${qrWhatsAppMessage}" style="width: 200px; height: 200px;">
-            </div><br>
+            </div>
 
             <!-- Link zur Community beitreten -->
             <div style="background: linear-gradient(135deg, #f0f8ff, #e6f0ff); 
