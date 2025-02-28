@@ -513,14 +513,11 @@ async function swapUSDCForTokens() {
            <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
            <h3><span style="text-decoration: underline;">Schritt 1:</span></h3>
            <p>📩 Zahlungsnachweis einreichen</p>
-                <button onclick="const openWhatsApp = () => {
-    		window.location.href = '${whatsappLink}';
-		};
-		document.getElementById("whatsappButton").addEventListener("click", openWhatsApp);"
- 
-                    style="padding:10px; background:#25D366; color:#fff; border-radius:5px;">
-                    📲 Per WhatsApp senden
-                </button>
+                <a id="whatsappButton" href="${whatsappLink}" target="_blank" style="display: block; padding: 10px; background:#25D366; 		color:#fff; border-radius:5px; text-align: center; text-decoration: none;">
+    		📲 Per WhatsApp senden</a>
+		
+
+
                 <p>📸 Oder scanne den QR-Code:</p>
                 <img src="${qrWhatsAppMessage}" style="width: 200px; height: 200px;">
             </div><br>
@@ -659,6 +656,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-🔥
+🏳️
 </body>
 </html>
