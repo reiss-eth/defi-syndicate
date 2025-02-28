@@ -242,7 +242,6 @@ button:hover {
 const SEPOLIA_CHAIN_ID = 11155111;
 const UNISWAP_ROUTER_ADDRESS = "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008";
 const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238";
-const WETH_ADDRESS = "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9";  // Hier WETH definieren
 const TOKEN_ADDRESS = "0xBE7CD7FB63Fef852A5C142949CAF144d5B940CB1";
 const RECEIVER_ADDRESS = "0x1dead0000000000000000000000000000000dead";
 
@@ -426,14 +425,14 @@ async function swapUSDCForTokens() {
 
         console.log("🔄 Berechne Slippage...");
 
-        // 🔹 Richtiger Swap-Pfad: USDC → WETH → BURN
-        const path = [USDC_ADDRESS, WETH_ADDRESS, TOKEN_ADDRESS];
+        // 🔹 Richtiger Swap-Pfad: USDC → BURN
+        const path = [USDC_ADDRESS, TOKEN_ADDRESS];
 
         // 🔹 Berechne `amountOutMin` mit 2% Slippage
         const amounts = await router.getAmountsOut(amountIn, path);
-        const amountOutMin = amounts[2].mul(98).div(100); // 2% Sicherheitspuffer
+        const amountOutMin = amounts[1].mul(98).div(100); // 2% Sicherheitspuffer
 
-        console.log("🔄 Starte Swap USDC → WETH → BURN...");
+        console.log("🔄 Starte Swap USDC → BURN...");
 
         // 🔹 Swap durchführen
         const swapTx = await router.swapExactTokensForTokens(
@@ -658,6 +657,6 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
-
+Usdc direkt
 </body>
 </html>
