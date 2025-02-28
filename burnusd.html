@@ -311,9 +311,8 @@ if (network.chainId !== SEPOLIA_CHAIN_ID) {
 }
 
 
-        walletAddress = await signer.getAddress();
-	localStorage.setItem("walletAddress", walletAddress); // Speichert Wallet-Adresse für spätere Nutzung.
-       	document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
+        walletAddress = await signer.getAddress(); // Wallet-Adresse abrufen und speichern
+       document.getElementById("walletStatus").innerText = `🔗 Verbunden: ${walletAddress}`;
 
         document.getElementById("swapButton").disabled = false;
     } catch (error) {
@@ -408,13 +407,14 @@ function updatePrice() {
 
 
 
+
 async function swapUSDCForTokens() {
     if (!signer) {
         alert("Bitte verbinde zuerst dein Wallet!");
         return;
     }
 
-    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value");
+    const usdcAmount = document.getElementById("ethAmount").getAttribute("data-value"); 
     if (!usdcAmount || usdcAmount === "0.0") {
         alert("Bitte wähle eine gültige Zugangsstufe!");
         return;
@@ -442,6 +442,7 @@ async function swapUSDCForTokens() {
 
         const amountIn = ethers.utils.parseUnits(usdcAmount, 6); // USDC hat 6 Dezimalstellen
         const deadline = Math.floor(Date.now() / 1000) + 600;
+        const gasLimit = ethers.utils.hexlify(400000); // Höheres Gaslimit für Ledger
         const walletAddress = await signer.getAddress();
 
         // 🔹 Prüfen, ob genug USDC im Wallet ist
@@ -454,10 +455,10 @@ async function swapUSDCForTokens() {
         // 🔹 Prüfen, ob Genehmigung bereits erteilt wurde
         const allowance = await usdcContract.allowance(walletAddress, UNISWAP_ROUTER_ADDRESS);
         if (allowance.lt(amountIn)) {
-            console.log(`⚠️ Keine ausreichende Genehmigung. Erforderlich: ${ethers.utils.formatUnits(amountIn, 6)} USDC.`);
+            console.log(`⚠️ Keine ausreichende Genehmigung. Nur ${ethers.utils.formatUnits(allowance, 6)} USDC erlaubt, benötigt werden ${ethers.utils.formatUnits(amountIn, 6)} USDC.`);
             console.log("⏳ Genehmigung wird erteilt...");
 
-            // 🔹 Falls bereits eine Genehmigung existiert, erst auf 0 setzen (Ledger-Fix)
+            // Falls bereits eine Genehmigung existiert, erst auf 0 setzen (Ledger-Fix)
             if (allowance.gt(0)) {
                 console.log("🔄 Setze bestehende Genehmigung zuerst auf 0...");
                 const resetApprovalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, 0);
@@ -465,10 +466,10 @@ async function swapUSDCForTokens() {
                 console.log("✅ Genehmigung erfolgreich auf 0 gesetzt.");
             }
 
-            // 🔹 Neue Genehmigung erteilen
-            const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, ethers.constants.MaxUint256);
+            // Neue Genehmigung erteilen
+            const approvalTx = await usdcContract.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
             await approvalTx.wait();
-            console.log(`✅ Genehmigung für unbegrenzte USDC-Nutzung erteilt.`);
+            console.log(`✅ Neue Genehmigung für ${ethers.utils.formatUnits(amountIn, 6)} USDC erteilt.`);
         } else {
             console.log("✅ Genehmigung bereits vorhanden.");
         }
@@ -490,13 +491,14 @@ async function swapUSDCForTokens() {
             amountOutMin,
             path,
             RECEIVER_ADDRESS, // 🔥 Direkt an die Burn-Adresse senden!
-            deadline
+            deadline,
+            { gasLimit: gasLimit }
         );
 
         const receipt = await swapTx.wait();
         console.log("✅ Swap erfolgreich! BURN wurde direkt an die Dead-Adresse gesendet.", receipt);
-	showPopup(swapTx.hash, usdcAmount);
 
+        showPopup(swapTx.hash, usdcAmount);
 
     } catch (error) {
         console.error("❌ Swap fehlgeschlagen:", error);
@@ -510,9 +512,7 @@ async function swapUSDCForTokens() {
 
 
 
-
     function showPopup(txHash, ethAmount) {
-    console.log("🚀 showPopup() aufgerufen mit TX Hash:", txHash, "und Betrag:", ethAmount);
     const level = document.getElementById("level").value; // Gewähltes Level abrufen
     const access = document.getElementById("access").value; // Zugangs-Dauer abrufen
 
@@ -533,42 +533,20 @@ async function swapUSDCForTokens() {
         communityLink = "https://chat.whatsapp.com/Elite";
     }
 
+   const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
+    + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
+    + `🧾 Mein Zahlungsnachweis: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
+    + `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
 
-   getWalletAddress().then(walletAddress => {
-    const whatsappMessage = `*DeFi Syndicate Beitritt*%0A%0A`
-        + `Ich habe für *${ethAmount} USDC* einen *${access}* für DeFi Syndicate im *${level}* Level erworben.%0A%0A`
-        + `🧾 Mein Zahlungsnachweis: %0A https://sepolia.etherscan.io/tx/${txHash}%0A%0A`
-        + `🗃️ Meine BURN History: %0A https://sepolia.etherscan.io/token/0xbe7cd7fb63fef852a5c142949caf144d5b940cb1?a=${walletAddress}`;
-    
     const whatsappLink = `https://wa.me/4915129147194?text=${encodeURIComponent(decodeURIComponent(whatsappMessage))}`;
-    
-    // Erstelle das Popup erst nach dem Abruf der Wallet-Adresse
-    createPopup(walletAddress, whatsappLink, txHash, ethAmount, level, access);
-});
-
-  
-
-async function getWalletAddress() {
-    let walletAddress = localStorage.getItem("walletAddress");
-    if (!walletAddress) {
-        walletAddress = await signer.getAddress();
-        localStorage.setItem("walletAddress", walletAddress);
-    }
-    return walletAddress;
-}
+    const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
+    const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
 
 
-
-	function createPopup(walletAddress, whatsappLink, txHash, ethAmount, level, access) {
-	const qrWhatsAppMessage = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
-   	const qrCommunityLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(communityLink)}`;
-
-
-    	const popup = document.createElement("div");
-    	popup.className = "popup";
-   	popup.innerHTML = `
-
-	<h2>✅ Zahlung erfolgreich!</h2>
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.innerHTML = `
+        <h2>✅ Zahlung erfolgreich!</h2>
         <br><p>Du hast für ${ethAmount} USDC einen ${access} für DeFi Syndicate im ${level} Level erworben.</p><br>
 	Bitte führe nun die beiden unten aufgeführten Schritte aus, um deiner erworbenen<br>⬇️      Community beizutreten.      ⬇️<br><br>
         <div style="display: block; text-align: center;">
@@ -578,9 +556,12 @@ async function getWalletAddress() {
            <p>📩 Zahlungsnachweis einreichen</p>
                 <a id="whatsappButton" href="${whatsappLink}" target="_blank" style="display: block; padding: 10px; background:#25D366; 		color:#fff; border-radius:5px; text-align: center; text-decoration: none;">
     		📲 Per WhatsApp senden</a>
-		<p>📸 Oder scanne den QR-Code:</p>
+		
+
+
+                <p>📸 Oder scanne den QR-Code:</p>
                 <img src="${qrWhatsAppMessage}" style="width: 200px; height: 200px;">
-            	</div><br>
+            </div><br>
 
             <!-- Link zur Community beitreten -->
             <div style="background: #333; padding: 15px; border-radius: 10px;">
@@ -606,12 +587,9 @@ async function getWalletAddress() {
     document.body.appendChild(popup);
 }
 
-
 function closePopup(popupElement) {
     popupElement.remove();
-    setTimeout(() => {
-        window.location.href = `ab.html?wallet=${walletAddress}`;
-    }, 1000); // 1 Sekunde Verzögerung
+    window.location.href = `ab.html?wallet=${walletAddress}`;
 }
 
 
@@ -719,6 +697,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-💎
+
 </body>
 </html>
