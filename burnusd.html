@@ -887,52 +887,44 @@ document.addEventListener("click", function(event) {
     const whatsappButton = event.target.closest("#whatsappButton");
     const communityButton = event.target.closest("#communityButton");
 
-    // WhatsApp Button Event
-    if (whatsappButton) {
-        event.preventDefault();
-        const whatsappLink = whatsappButton.getAttribute("href");
-
-        if (whatsappLink && whatsappLink !== "#") {
-            let newTab = window.open(whatsappLink, '_blank'); // Direkt versuchen, WhatsApp zu öffnen
+    function handleExternalLink(button, link) {
+        if (link && link !== "#") {
+            event.preventDefault();
+            let newTab = window.open(link, '_blank'); // Direkt versuchen, den Link zu öffnen
 
             if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
-                // Falls `window.open()` blockiert wird, nutze `window.location.href`
-                window.location.href = whatsappLink;
+                // Falls `window.open()` blockiert wird, nutze direkte Weiterleitung
+                window.location.href = link;
             }
 
             // **Setzt den href-Wert auf `#`, um erneute Blockierungen zu verhindern**
             setTimeout(() => {
-                whatsappButton.setAttribute("href", "#");
+                button.setAttribute("href", "#");
+                history.replaceState({}, document.title, window.location.pathname); // Entfernt WhatsApp-Link aus dem Verlauf
             }, 500);
         } else {
-            console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
+            console.error("Link ist nicht definiert oder fehlerhaft.");
         }
+    }
 
-        return; // **Stoppt das Event für WhatsApp, aber nicht für Dropdowns**
+    // WhatsApp Button Event
+    if (whatsappButton) {
+        handleExternalLink(whatsappButton, whatsappButton.getAttribute("href"));
+        return;
     }
 
     // Community Button Event
     if (communityButton) {
-        event.preventDefault();
-        const communityLink = communityButton.getAttribute("href");
+        handleExternalLink(communityButton, communityButton.getAttribute("href"));
+        return;
+    }
+});
 
-        if (communityLink && communityLink !== "#") {
-            let newTab = window.open(communityLink, '_blank'); // Direkt versuchen, die Community zu öffnen
-
-            if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
-                // Falls `window.open()` blockiert wird, nutze `window.location.href`
-                window.location.href = communityLink;
-            }
-
-            // **Setzt den href-Wert auf `#`, um erneute Blockierungen zu verhindern**
-            setTimeout(() => {
-                communityButton.setAttribute("href", "#");
-            }, 500);
-        } else {
-            console.error("Community-Link ist nicht definiert oder fehlerhaft.");
-        }
-
-        return; // **Stoppt das Event für Community, aber nicht für Dropdowns**
+// **Erzwingt KEIN vollständiges Neuladen, entfernt aber den zurückliegenden Verlaufseintrag**
+window.addEventListener("pageshow", function(event) {
+    if (event.persisted) {
+        console.log("🌍 Seite wurde aus dem Cache geladen. Entferne alte Weiterleitung.");
+        history.replaceState({}, document.title, window.location.pathname); // Entfernt den vorherigen Verlaufseintrag, aber lässt das Popup erhalten
     }
 });
 
@@ -943,7 +935,7 @@ document.addEventListener("click", function(event) {
 
 
 <footer>
-        <p>&copy; 2025 DeFi Syndicate <br>| Dezentral. Gemeinschaftlich. Stark.</p>
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
  </footer>
 </body>
 </html>

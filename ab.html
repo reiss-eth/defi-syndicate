@@ -198,7 +198,7 @@ document.addEventListener("click", function(event) {
         const whatsappLink = whatsappButton.getAttribute("href");
 
         if (whatsappLink && whatsappLink !== "#") {
-            let newTab = window.open(whatsappLink, '_blank'); // Versuche, WhatsApp direkt zu öffnen
+            let newTab = window.open(whatsappLink, '_blank'); // Direkt versuchen, WhatsApp zu öffnen
 
             if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
                 // Falls `window.open()` blockiert wurde, nutze `window.location.href`
@@ -208,12 +208,21 @@ document.addEventListener("click", function(event) {
             // **Setzt den href-Wert auf `#`, um erneute Meldungen zu verhindern**
             setTimeout(() => {
                 whatsappButton.setAttribute("href", "#");
+                history.replaceState({}, document.title, window.location.pathname); // Entfernt WhatsApp-Link aus dem Verlauf
             }, 500);
         } else {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
 
-        return; // Stoppt das Event für WhatsApp, aber nicht für andere Klicks
+        return; // Stoppt das Event für WhatsApp, aber nicht für Dropdowns
+    }
+});
+
+// **Erzwingt KEIN vollständiges Neuladen, entfernt aber den zurückliegenden Verlaufseintrag**
+window.addEventListener("pageshow", function(event) {
+    if (event.persisted) {
+        console.log("🌍 Seite wurde aus dem Cache geladen. Entferne alte Weiterleitung.");
+        history.replaceState({}, document.title, window.location.pathname); // Entfernt den vorherigen Verlaufseintrag, aber lässt das Popup erhalten
     }
 });
 
