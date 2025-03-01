@@ -181,15 +181,18 @@ img {
 
 
 document.addEventListener("click", function(event) {
-    // Prüfen, ob das geklickte Element der WhatsApp-Button ist
-    if (event.target.closest("#whatsappButton")) {
+    const whatsappButton = event.target.closest("#whatsappButton");
+
+    if (whatsappButton) {
         event.preventDefault();
 
         // Stelle sicher, dass der WhatsApp-Link korrekt gesetzt ist
         const whatsappLink = "https://wa.me/4915129147194"; // Dein Support-Link
 
         if (whatsappLink) {
-            window.open(whatsappLink, '_blank');
+            setTimeout(() => {
+                window.location.href = whatsappLink; // Öffnet den Link direkt
+            }, 100); // Kleine Verzögerung für Safari & Chrome
         } else {
             console.error("WhatsApp-Link ist nicht definiert.");
         }
