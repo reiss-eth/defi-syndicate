@@ -183,8 +183,15 @@ img {
 
 
 document.addEventListener("click", function(event) {
-    // Prüfen, ob auf den WhatsApp-Button geklickt wurde
+    // Prüfe, ob das geklickte Element der WhatsApp-Button ist
     const whatsappButton = event.target.closest("#whatsappButton");
+
+    // Prüfe, ob der Klick auf einen Dropdown-Button ging
+    const isDropdown = event.target.closest(".dropdown-button, .dropdown-list");
+
+    if (isDropdown) {
+        return; // Beendet das Event hier, damit Dropdowns funktionieren
+    }
 
     if (whatsappButton) {
         event.preventDefault();
@@ -202,16 +209,19 @@ document.addEventListener("click", function(event) {
                 } else {
                     window.location.href = whatsappLink; // Falls kein Tab geöffnet wurde, direkte Weiterleitung
                 }
-            }, 100); // Leichte Verzögerung für Safari/Chrome
+            }, 100);
         } else {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
 
-        return; // **Stoppt das Event hier, damit Dropdowns nicht beeinträchtigt werden**
+        return; // Stoppt das Event für WhatsApp, aber nicht für andere Klicks
     }
 });
 
-    </script>
+
+
+
+</script>
 
 
 <footer>

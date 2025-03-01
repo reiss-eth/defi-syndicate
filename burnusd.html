@@ -876,15 +876,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-<script>
 document.addEventListener("click", function(event) {
+    // Prüfen, ob auf einen Dropdown-Button oder das Dropdown-Menü geklickt wurde
+    const isDropdown = event.target.closest(".dropdown-button, .dropdown-list");
+    if (isDropdown) {
+        return; // Beendet das Event hier, damit Dropdowns funktionieren
+    }
+
+    // Prüfen, ob auf den WhatsApp-Button oder Community-Button geklickt wurde
     const whatsappButton = event.target.closest("#whatsappButton");
     const communityButton = event.target.closest("#communityButton");
 
     // WhatsApp Button Event
     if (whatsappButton) {
         event.preventDefault();
-        const whatsappLink = whatsappButton.getAttribute("href"); 
+        const whatsappLink = whatsappButton.getAttribute("href");
 
         if (whatsappLink && whatsappLink !== "#") {
             const newTab = window.open('', '_blank'); // Leeres Tab erstellen
@@ -900,7 +906,7 @@ document.addEventListener("click", function(event) {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
 
-        return; // **Verhindert, dass weitere Events (Dropdowns) blockiert werden**
+        return; // **Stoppt das Event für WhatsApp, aber nicht für Dropdowns**
     }
 
     // Community Button Event
@@ -922,14 +928,10 @@ document.addEventListener("click", function(event) {
             console.error("Community-Link ist nicht definiert oder fehlerhaft.");
         }
 
-        return; // **Verhindert, dass weitere Events (Dropdowns) blockiert werden**
+        return; // **Stoppt das Event für Community, aber nicht für Dropdowns**
     }
 });
 
-
-</script>
-</body>
-</html>
 
 
 </script>
@@ -937,7 +939,7 @@ document.addEventListener("click", function(event) {
 
 
 <footer>
-        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
+        <p>&copy; 2025 DeFi Syndicate <br>| Dezentral. Gemeinschaftlich. Stark.</p>
  </footer>
 </body>
 </html>
