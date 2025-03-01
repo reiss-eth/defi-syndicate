@@ -881,6 +881,7 @@ document.addEventListener("click", function(event) {
     const whatsappButton = event.target.closest("#whatsappButton");
     const communityButton = event.target.closest("#communityButton");
 
+    // WhatsApp Button Event
     if (whatsappButton) {
         event.preventDefault();
         const whatsappLink = whatsappButton.getAttribute("href"); 
@@ -894,12 +895,15 @@ document.addEventListener("click", function(event) {
                 } else {
                     window.location.href = whatsappLink; // Falls Tab-Blockade, direkte Weiterleitung
                 }
-            }, 100); // Leichte Verzögerung für Safari & Chrome
+            }, 100);
         } else {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
+
+        return; // **Verhindert, dass weitere Events (Dropdowns) blockiert werden**
     }
 
+    // Community Button Event
     if (communityButton) {
         event.preventDefault();
         const communityLink = communityButton.getAttribute("href");
@@ -917,8 +921,12 @@ document.addEventListener("click", function(event) {
         } else {
             console.error("Community-Link ist nicht definiert oder fehlerhaft.");
         }
+
+        return; // **Verhindert, dass weitere Events (Dropdowns) blockiert werden**
     }
 });
+
+
 </script>
 </body>
 </html>
@@ -929,7 +937,7 @@ document.addEventListener("click", function(event) {
 
 
 <footer>
-        <p>&copy; 2025 DeFi Syndicate <br>| Dezentral. Gemeinschaftlich. Stark.</p>
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
  </footer>
 </body>
 </html>

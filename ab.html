@@ -180,16 +180,19 @@ img {
 	document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
 
 
+
+
 document.addEventListener("click", function(event) {
+    // Prüfen, ob auf den WhatsApp-Button geklickt wurde
     const whatsappButton = event.target.closest("#whatsappButton");
 
     if (whatsappButton) {
         event.preventDefault();
 
         // Stelle sicher, dass der WhatsApp-Link korrekt gesetzt ist
-        const whatsappLink = "https://wa.me/4915129147194"; // Dein Support-Link
+        const whatsappLink = whatsappButton.getAttribute("href");
 
-        if (whatsappLink) {
+        if (whatsappLink && whatsappLink !== "#") {
             // Erst ein leeres Tab öffnen, um Browser-Blockaden zu vermeiden
             const newTab = window.open('', '_blank');
 
@@ -197,12 +200,14 @@ document.addEventListener("click", function(event) {
                 if (newTab) {
                     newTab.location.href = whatsappLink; // Leitet das neue Tab weiter
                 } else {
-                    window.location.href = whatsappLink; // Falls kein Tab geöffnet wurde, direkt weiterleiten
+                    window.location.href = whatsappLink; // Falls kein Tab geöffnet wurde, direkte Weiterleitung
                 }
             }, 100); // Leichte Verzögerung für Safari/Chrome
         } else {
-            console.error("WhatsApp-Link ist nicht definiert.");
+            console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
+
+        return; // **Stoppt das Event hier, damit Dropdowns nicht beeinträchtigt werden**
     }
 });
 
