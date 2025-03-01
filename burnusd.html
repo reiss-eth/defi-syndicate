@@ -24,7 +24,6 @@ body {
     padding: 20px;
 }
 
-/* Container mit modernem Look */
 .container {
     background: #ffffff;
     padding: 25px;
@@ -32,6 +31,16 @@ body {
     max-width: 400px;
     margin: auto;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #d0e2ff; /* Sanftes Blau */
+}
+
+.containerconect {
+    background: #E0ECFF;
+    padding: 10px;
+    border-radius: 20px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #d0e2ff; /* Sanftes Blau */
 }
 
@@ -96,7 +105,7 @@ button, a {
 
 /* Wallet Connect Button */
 .connect-btn {
-    background: #007BFF;
+    background: #66B2FF;
     color: white;
 }
 
@@ -388,12 +397,16 @@ img {
 <body>
 
 
-<div class="container">
-    <b><u>DeFi Syndicate Community Zugang:</u></b>
+ <b><u>DeFi Syndicate Community Zugang</u></b>
+
+<div class="containerconect">
+   
     <button id="connectWallet" class="connect-btn" onclick="connectWallet()">🔗 Wallet verbinden</button>
     <p id="walletStatus">⛓️‍💥 Nicht verbunden ❌</p>
+	</div>
 
-    <br><b>🌍 Community:</b>
+	<div class="container">
+    <b>🌍 Community:</b>
     <input type="text" value="DeFi Syndicate (001)" id="communityName" readonly style="padding: 10px; width: 100%; background: #333; color: #fff; border: none; text-align: center; font-weight: bold;">
 
   <div class="custom-dropdown">
