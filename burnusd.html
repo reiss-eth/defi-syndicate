@@ -872,12 +872,31 @@ document.addEventListener("DOMContentLoaded", function() {
     setupDropdown(levelButton, levelList, levelInput, updatePrice);
     setupDropdown(accessButton, accessList, accessInput, updatePrice);
 });
+
+
+
+
+document.addEventListener("click", function(event) {
+    // Prüfen, ob auf den WhatsApp-Button geklickt wurde
+    if (event.target.id === "whatsappButton") {
+        event.preventDefault();
+        window.open(event.target.href, '_blank');
+    }
+
+    // Prüfen, ob auf den Community-Button geklickt wurde
+    if (event.target.id === "communityButton") {
+        event.preventDefault();
+        window.open(event.target.href, '_blank');
+    }
+});
+
+
 </script>
 
 
 
 <footer>
-        <p>&copy; 2025 DeFi Syndicate |<br> Dezentral. Gemeinschaftlich. Stark.</p>
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
  </footer>
 </body>
 </html>

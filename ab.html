@@ -180,6 +180,22 @@ img {
 	document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
 
 
+document.addEventListener("click", function(event) {
+    // Prüfen, ob auf den WhatsApp-Button geklickt wurde
+    if (event.target.id === "whatsappButton") {
+        event.preventDefault();
+        
+        // Stelle sicher, dass der WhatsApp-Link korrekt gesetzt ist
+        const whatsappLink = "https://wa.me/4915129147194"; // WhatsApp-Support-Link anpassen
+        
+        if (whatsappLink) {
+            window.open(whatsappLink, '_blank');
+        } else {
+            console.error("WhatsApp-Link ist nicht definiert.");
+        }
+    }
+});
+
     </script>
 
 
