@@ -204,6 +204,11 @@ document.addEventListener("click", function(event) {
                 // Falls `window.open()` blockiert wurde, nutze `window.location.href`
                 window.location.href = whatsappLink;
             }
+
+            // **Setzt den href-Wert auf `#`, um erneute Meldungen zu verhindern**
+            setTimeout(() => {
+                whatsappButton.setAttribute("href", "#");
+            }, 500);
         } else {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
