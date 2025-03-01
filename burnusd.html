@@ -883,7 +883,7 @@ document.addEventListener("click", function(event) {
         return; // Beendet das Event hier, damit Dropdowns funktionieren
     }
 
-    // Prüfen, ob auf den WhatsApp-Button oder Community-Button geklickt wurde
+    // Prüfen, ob auf den WhatsApp- oder Community-Button geklickt wurde
     const whatsappButton = event.target.closest("#whatsappButton");
     const communityButton = event.target.closest("#communityButton");
 
@@ -893,15 +893,12 @@ document.addEventListener("click", function(event) {
         const whatsappLink = whatsappButton.getAttribute("href");
 
         if (whatsappLink && whatsappLink !== "#") {
-            const newTab = window.open('', '_blank'); // Leeres Tab erstellen
+            let newTab = window.open(whatsappLink, '_blank'); // Direkt versuchen, WhatsApp zu öffnen
 
-            setTimeout(() => {
-                if (newTab) {
-                    newTab.location.href = whatsappLink; // Link in neuem Tab laden
-                } else {
-                    window.location.href = whatsappLink; // Falls Tab-Blockade, direkte Weiterleitung
-                }
-            }, 100);
+            if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
+                // Falls der Browser das Öffnen blockiert, nutze `window.location.href`
+                window.location.href = whatsappLink;
+            }
         } else {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
@@ -915,15 +912,12 @@ document.addEventListener("click", function(event) {
         const communityLink = communityButton.getAttribute("href");
 
         if (communityLink && communityLink !== "#") {
-            const newTab = window.open('', '_blank'); // Leeres Tab erstellen
+            let newTab = window.open(communityLink, '_blank'); // Direkt versuchen, die Community zu öffnen
 
-            setTimeout(() => {
-                if (newTab) {
-                    newTab.location.href = communityLink; // Link in neuem Tab laden
-                } else {
-                    window.location.href = communityLink; // Falls Tab-Blockade, direkte Weiterleitung
-                }
-            }, 100);
+            if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
+                // Falls der Browser das Öffnen blockiert, nutze `window.location.href`
+                window.location.href = communityLink;
+            }
         } else {
             console.error("Community-Link ist nicht definiert oder fehlerhaft.");
         }
@@ -939,7 +933,7 @@ document.addEventListener("click", function(event) {
 
 
 <footer>
-        <p>&copy; 2025 DeFi Syndicate <br>| Dezentral. Gemeinschaftlich. Stark.</p>
+        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
  </footer>
 </body>
 </html>

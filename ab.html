@@ -183,15 +183,13 @@ img {
 
 
 document.addEventListener("click", function(event) {
-    // Prüfe, ob das geklickte Element der WhatsApp-Button ist
-    const whatsappButton = event.target.closest("#whatsappButton");
-
-    // Prüfe, ob der Klick auf einen Dropdown-Button ging
-    const isDropdown = event.target.closest(".dropdown-button, .dropdown-list");
-
-    if (isDropdown) {
+    // Prüfe, ob der Klick auf einen Dropdown-Button oder das Dropdown-Menü ging
+    if (event.target.closest(".dropdown-button, .dropdown-list")) {
         return; // Beendet das Event hier, damit Dropdowns funktionieren
     }
+
+    // Prüfe, ob das geklickte Element der WhatsApp-Button ist
+    const whatsappButton = event.target.closest("#whatsappButton");
 
     if (whatsappButton) {
         event.preventDefault();
@@ -200,16 +198,12 @@ document.addEventListener("click", function(event) {
         const whatsappLink = whatsappButton.getAttribute("href");
 
         if (whatsappLink && whatsappLink !== "#") {
-            // Erst ein leeres Tab öffnen, um Browser-Blockaden zu vermeiden
-            const newTab = window.open('', '_blank');
+            let newTab = window.open(whatsappLink, '_blank'); // Versuche, WhatsApp direkt zu öffnen
 
-            setTimeout(() => {
-                if (newTab) {
-                    newTab.location.href = whatsappLink; // Leitet das neue Tab weiter
-                } else {
-                    window.location.href = whatsappLink; // Falls kein Tab geöffnet wurde, direkte Weiterleitung
-                }
-            }, 100);
+            if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
+                // Falls `window.open()` blockiert wurde, nutze `window.location.href`
+                window.location.href = whatsappLink;
+            }
         } else {
             console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
         }
@@ -217,7 +211,6 @@ document.addEventListener("click", function(event) {
         return; // Stoppt das Event für WhatsApp, aber nicht für andere Klicks
     }
 });
-
 
 
 
