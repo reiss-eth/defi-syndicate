@@ -877,16 +877,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 document.addEventListener("click", function(event) {
-    // Prüfen, ob auf den WhatsApp-Button geklickt wurde
-    if (event.target.id === "whatsappButton") {
+    // Überprüfen, ob der Klick auf den WhatsApp-Button oder den Community-Button ging
+    const whatsappButton = event.target.closest("#whatsappButton");
+    const communityButton = event.target.closest("#communityButton");
+
+    if (whatsappButton) {
         event.preventDefault();
-        window.open(event.target.href, '_blank');
+        const whatsappLink = whatsappButton.getAttribute("href"); // Holt den Link aus dem <a>-Tag
+        if (whatsappLink && whatsappLink !== "#") {
+            window.open(whatsappLink, '_blank');
+        } else {
+            console.error("WhatsApp-Link ist nicht definiert oder fehlerhaft.");
+        }
     }
 
-    // Prüfen, ob auf den Community-Button geklickt wurde
-    if (event.target.id === "communityButton") {
+    if (communityButton) {
         event.preventDefault();
-        window.open(event.target.href, '_blank');
+        const communityLink = communityButton.getAttribute("href"); // Holt den Link aus dem <a>-Tag
+        if (communityLink && communityLink !== "#") {
+            window.open(communityLink, '_blank');
+        } else {
+            console.error("Community-Link ist nicht definiert oder fehlerhaft.");
+        }
     }
 });
 
@@ -896,7 +908,7 @@ document.addEventListener("click", function(event) {
 
 
 <footer>
-        <p>&copy; 2025 DeFi Syndicate | Dezentral. Gemeinschaftlich. Stark.</p>
+        <p>&copy; 2025 DeFi Syndicate <br>| Dezentral. Gemeinschaftlich. Stark.</p>
  </footer>
 </body>
 </html>

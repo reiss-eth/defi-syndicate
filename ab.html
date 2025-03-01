@@ -181,13 +181,13 @@ img {
 
 
 document.addEventListener("click", function(event) {
-    // Prüfen, ob auf den WhatsApp-Button geklickt wurde
-    if (event.target.id === "whatsappButton") {
+    // Prüfen, ob das geklickte Element der WhatsApp-Button ist
+    if (event.target.closest("#whatsappButton")) {
         event.preventDefault();
-        
+
         // Stelle sicher, dass der WhatsApp-Link korrekt gesetzt ist
-        const whatsappLink = "https://wa.me/4915129147194"; // WhatsApp-Support-Link anpassen
-        
+        const whatsappLink = "https://wa.me/4915129147194"; // Dein Support-Link
+
         if (whatsappLink) {
             window.open(whatsappLink, '_blank');
         } else {
