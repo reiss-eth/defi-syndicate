@@ -268,9 +268,17 @@ button, a {
 
 /* WhatsApp Button */
 .popup .whatsapp-btn {
-    background: #25D366; /* WhatsApp Grün */
-    color: white;
-    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.2);
+    display: block; 
+          padding: 12px 15px; 
+          background: linear-gradient(135deg, #25D366, #1DA851); 
+          color: white; 
+          border-radius: 8px; 
+          text-align: center; 
+          text-decoration: none; 
+          font-weight: 600;
+          font-size: 16px;
+          box-shadow: 0px 5px 10px rgba(37, 211, 102, 0.3);
+          transition: all 0.3s ease;
 }
 
 .popup .whatsapp-btn:hover {
@@ -279,9 +287,17 @@ button, a {
 
 /* Community Button */
 .popup .community-btn {
-    background: #007BFF; /* Blau für Vertrauen */
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    	  display: block; 
+          padding: 12px 15px; 
+          background: linear-gradient(135deg, #0084FF, #0056B3); 
+          color: white; 
+          border-radius: 8px; 
+          text-align: center; 
+          text-decoration: none; 
+          font-weight: 600;
+          font-size: 16px;
+          box-shadow: 0px 5px 10px rgba(0, 132, 255, 0.3);
+          transition: all 0.3s ease;
 }
 
 .popup .community-btn:hover {
@@ -711,18 +727,8 @@ async function swapUSDCForTokens() {
 
            <h3><span style="text-decoration: underline;">Schritt 1:</span></h3>
            <p>📩 Zahlungsnachweis einreichen</p>
-                <a id="whatsappButton" href="${whatsappLink}" target="_blank" 
-   	style="display: block; 
-          padding: 12px 15px; 
-          background: linear-gradient(135deg, #25D366, #1DA851); 
-          color: white; 
-          border-radius: 8px; 
-          text-align: center; 
-          text-decoration: none; 
-          font-weight: 600;
-          font-size: 16px;
-          box-shadow: 0px 5px 10px rgba(37, 211, 102, 0.3);
-          transition: all 0.3s ease;">📲 Per WhatsApp senden</a>
+                <a id="whatsappButton" href="${whatsappLink}" target="_blank">
+		📲 Per WhatsApp senden</a>
 		
 
 
@@ -740,18 +746,8 @@ async function swapUSDCForTokens() {
 
             <h3><span style="text-decoration: underline;">Schritt 2:</span></h3>
 	    <p>DeFi Syndicate - ${level} beitreten</p>
-                <a id="communityButton" href="${communityLink}" target="_blank" 
-   style="display: block; 
-          padding: 12px 15px; 
-          background: linear-gradient(135deg, #0084FF, #0056B3); 
-          color: white; 
-          border-radius: 8px; 
-          text-align: center; 
-          text-decoration: none; 
-          font-weight: 600;
-          font-size: 16px;
-          box-shadow: 0px 5px 10px rgba(0, 132, 255, 0.3);
-          transition: all 0.3s ease;">🚀 WhatsApp Community beitreten</a>
+            <a id="communityButton" href="${communityLink}" target="_blank">
+	    🚀 WhatsApp Community beitreten</a>
 
 
 
